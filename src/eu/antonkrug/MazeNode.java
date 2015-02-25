@@ -12,19 +12,16 @@ import java.awt.Point;
 public class MazeNode {
 
 	// distance from start heurestic
-	private int			g;
+	private int		g;
 
 	// manhatan distance to destination.
 	// short the range is maximum of 32767, but that would require maze about 16k
 	// long and wide and start & destination be far away from each other. there is
 	// no need for h be int.
-	private short		h;
+	private short	h;
 
 	// pointer to parent
-	private Point		parent;
-
-	// flag setting if we visited this point already
-	private boolean	visited;
+	private Point	parent;
 
 	// con save memory the F value is not stored, but always calculated
 
@@ -38,7 +35,6 @@ public class MazeNode {
 	 */
 	public MazeNode(Point parent, int previousCost, int currentX, int currentY, Point destination) {
 		this.parent = parent;
-		this.visited = false;
 		this.setG(previousCost);
 		this.setH(currentX, currentY, destination);
 	}
@@ -52,17 +48,17 @@ public class MazeNode {
 	 */
 	public MazeNode(Point parent, int previousCost, Point current, Point destination) {
 		this.parent = parent;
-		this.visited = false;
 		this.setG(previousCost);
 		this.setH(current.x, current.y, destination);
 	}
 
 	/**
-	 * Get G and F combined
+	 * Get G and F combined Want return Integer so on lamba expressions i just can
+	 * call getF().compare directly
 	 * 
 	 * @return
 	 */
-	public int getF() {
+	public Integer getF() {
 		return g + h;
 	}
 
@@ -92,18 +88,12 @@ public class MazeNode {
 	}
 
 	/**
-	 * @return the visited
-	 */
-	public boolean isVisited() {
-		return visited;
-	}
-
-	/**
 	 * @param previousCost
 	 *          will add 10 to this and store it into G
 	 */
 	public void setG(int previousCost) {
-		// not dealing with diagonals so 1 can be fixed and don't need 1.4 for diagonals
+		// not dealing with diagonals so 1 can be fixed and don't need 1.4 for
+		// diagonals
 		this.g = previousCost + 1;
 	}
 
@@ -133,14 +123,6 @@ public class MazeNode {
 	 */
 	public void setParent(Point parent) {
 		this.parent = parent;
-	}
-
-	/**
-	 * @param visited
-	 *          the visited to set
-	 */
-	public void setVisited(boolean visited) {
-		this.visited = visited;
 	}
 
 	@Override
