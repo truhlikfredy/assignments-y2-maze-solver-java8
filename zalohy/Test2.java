@@ -81,13 +81,16 @@ public class Test {
 		
 		//get smallest move, except the visited ones
 		Entry<Point, Node> min = Collections.min(visit.entrySet(), (Entry<Point, Node> a,
-				Entry<Point, Node> b) -> {
-			if (a.getValue().isVisited())
-				return Integer.MAX_VALUE;
-			else if (b.getValue().isVisited())
-				return Integer.MIN_VALUE;
-			else return a.getValue().getF().compareTo(b.getValue().getF());
-		});
+				Entry<Point, Node> b) -> a.getValue().getF().compareTo(b.getValue().getF()));
+		
+//		Entry<Point, Node> min = Collections.min(visit.entrySet(), (Entry<Point, Node> a,
+//				Entry<Point, Node> b) -> {
+//					if (a.getValue().isVisited())
+//						return Integer.MAX_VALUE;
+//					else if (b.getValue().isVisited())
+//						return Integer.MIN_VALUE;
+//					else return a.getValue().getF().compareTo(b.getValue().getF());
+//				});
 
 		System.out.println(min.getKey()+" "+min.getValue());
 		return min.getKey();		

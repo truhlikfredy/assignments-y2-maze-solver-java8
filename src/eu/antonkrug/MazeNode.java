@@ -11,7 +11,7 @@ import java.awt.Point;
  */
 public class MazeNode {
 
-	// distance from start
+	// distance from start heurestic
 	private int			g;
 
 	// manhatan distance to destination.
