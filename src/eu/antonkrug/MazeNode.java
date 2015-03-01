@@ -1,6 +1,7 @@
 package eu.antonkrug;
 
 import java.awt.Point;
+import java.util.LinkedList;
 
 /**
  * A node class used inside A* best path searching algoritm
@@ -11,20 +12,23 @@ import java.awt.Point;
  */
 public class MazeNode {
 
-	// distance from start heurestic
+	// distance from start
 	private int		g;
 
-	// manhatan distance to destination.
-	// short the range is maximum of 32767, but that would require maze about 16k
+	// H or heurestic is manhatan distance to destination.
+	// short has range of 32767, but that would require maze about 16k
 	// long and wide and start & destination be far away from each other. there is
-	// no need for h be int.
-	private short	h;
+	// no need for h be int. Maybe there is no gain having it short (JVM will
+	// probably use 32bit block to store it anyway, but there is no real need to
+	// be int either. And because I don't use any multiplication (where there is
+	// performance penaulty for mixing types) there is no direct drawback to not
+	// using it.
+	private short	heurestic;
 
 	// pointer to parent
 	private Point	parent;
 
 	// con save memory the F value is not stored, but always calculated
-
 	/**
 	 * Constructor using coordinates for current position
 	 * 
@@ -33,10 +37,15 @@ public class MazeNode {
 	 * @param currentY
 	 * @param destination
 	 */
-	public MazeNode(Point parent, int previousCost, int currentX, int currentY, Point destination) {
+	public MazeNode(Point parent, int previousCost, int currentX, int currentY,
+			LinkedList<Point> destinations) throws Exception {
+		
+		if (destinations.size()==0) throw new Exception("Before creating Nodes you have to set at least one destination!");
+		
 		this.parent = parent;
 		this.setG(previousCost);
-		this.setH(currentX, currentY, destination);
+		this.setH(currentX, currentY, destinations);
+		
 	}
 
 	/**
@@ -46,10 +55,13 @@ public class MazeNode {
 	 * @param current
 	 * @param destination
 	 */
-	public MazeNode(Point parent, int previousCost, Point current, Point destination) {
+	public MazeNode(Point parent, int previousCost, Point current, LinkedList<Point> destinations) throws Exception {
+		
+		if (destinations.size()==0) throw new Exception("Before creating Nodes you have to set at least one destination!");
+		
 		this.parent = parent;
 		this.setG(previousCost);
-		this.setH(current.x, current.y, destination);
+		this.setH(current.x, current.y, destinations);
 	}
 
 	/**
@@ -59,7 +71,7 @@ public class MazeNode {
 	 * @return
 	 */
 	public Integer getF() {
-		return g + h;
+		return g + heurestic;
 	}
 
 	/**
@@ -77,7 +89,16 @@ public class MazeNode {
 	 * @return the h
 	 */
 	public short getH() {
-		return h;
+		return heurestic;
+	}
+
+	/**
+	 * Get manhatan distance to destination
+	 * 
+	 * @return the h
+	 */
+	public short getHeurestic() {
+		return heurestic;
 	}
 
 	/**
@@ -99,10 +120,18 @@ public class MazeNode {
 
 	/**
 	 * @param h
-	 *          the h to set
+	 *          the heurestics set to specific value
 	 */
 	public void setH(short h) {
-		this.h = h;
+		this.heurestic = h;
+	}
+
+	/**
+	 * @param h
+	 *          the heurestics set to specific value
+	 */
+	public void setHeurestic(short h) {
+		this.heurestic = h;
 	}
 
 	/**
@@ -112,9 +141,19 @@ public class MazeNode {
 	 * @param currentY
 	 * @param destination
 	 */
-	public void setH(int currentX, int currentY, Point destination) {
+	public void setH(int currentX, int currentY, LinkedList<Point> destinations) {
+
+		short smallest = Short.MAX_VALUE;
+
+		// find closest destination for this point and use him as heurestics
+		for (Point destination : destinations) {
+			short heurestic = (short) (Math.abs(currentX - destination.x) + Math.abs(currentY
+					- destination.y));
+			if (heurestic < smallest) smallest = heurestic;
+		}
+
 		// manhatan distance
-		this.h = (short) (Math.abs(currentX - destination.x) + Math.abs(currentY - destination.y));
+		this.heurestic = smallest;
 	}
 
 	/**
@@ -127,7 +166,7 @@ public class MazeNode {
 
 	@Override
 	public String toString() {
-		return "Node [Parent = " + parent + ", G=" + g + ", H=" + h + ", F=" + getF() + "]";
+		return "Node [Parent = " + parent + ", G=" + g + ", H=" + heurestic + ", F=" + getF() + "]";
 	}
 
 }
