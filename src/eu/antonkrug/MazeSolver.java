@@ -24,10 +24,12 @@ public class MazeSolver {
 	private LinkedList<Point>										destinations;
 	// private Point destination;
 	private Point																origin;
+	private Maze																maze;
 
 	public static final boolean									DEBUG	= true;
 
-	public MazeSolver() {
+	public MazeSolver(Maze maze) {
+		this.maze = maze;
 
 		this.destinations = new LinkedList<>();
 
@@ -43,12 +45,25 @@ public class MazeSolver {
 		this.visitedAlready = new HashMap<>();
 	}
 
+	public void setDestinations(LinkedList<Point> destinations) {
+		this.destinations = destinations;
+	}
+
+	public void addStartingPositions(LinkedList<Point> starts) throws Exception {
+		for (Point point : starts) {
+			this.addStartPosition(point);
+		}
+	}
+
 	private void evaluatePoint(Point currentPoint, Point direction) {
 		Point testPoint = new Point(currentPoint);
 		testPoint.translate(direction.x, direction.y);
 
 		// if node is visited already do not continue
 		if (visitedAlready.containsKey(testPoint)) return;
+		
+		//if you can't walk on that block then do not continue
+		if (!maze.canWalkTo(testPoint)) return;
 
 		try {
 			MazeNode proposedNode = new MazeNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
@@ -116,7 +131,7 @@ public class MazeSolver {
 		return iteration;
 	}
 
-	public int backTracePath() {
+	public LinkedList<Point> backTracePath() {
 		if (DEBUG) {
 			System.out.println("**********");
 			System.out.println("Trace back");
@@ -127,22 +142,25 @@ public class MazeSolver {
 
 		// try to find between destination points a point which was visited.
 		// ie: find out if we "visited destination" aka "found destination"
-		Optional<Point> destination = destinations.parallelStream()
-				.filter(point -> visitedAlready.containsKey(point)).findFirst();
+		Optional<Point> destination = destinations.parallelStream().filter(visitedAlready::containsKey)
+				.findFirst();
 
 		// if we didn't found destination do not continue
-		if (!destination.isPresent()) return -1;
+		if (!destination.isPresent()) return null;
+		
+		LinkedList<Point> path = new LinkedList<>();
 
 		Point currentStep = destination.get();
 
 		while (currentStep != null) {
 			System.out.println(currentStep);
+			path.add(currentStep);
 			currentStep = visitedAlready.get(currentStep);
 			iteration++;
 		}
 
 		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
-		return iteration;
+		return path;
 	}
 
 	/**
