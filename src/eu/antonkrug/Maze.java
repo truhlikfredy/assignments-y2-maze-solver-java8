@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Maze {
-	
+
 	public enum Block {
 		NULL {
 			@Override
@@ -48,24 +48,24 @@ public class Maze {
 				return '*';
 			}
 		};
-		
-	  private static final Block[]	allEnums	= values();
 
-	  public static Block getEnum(char input) {
-	    for (Block block : allEnums) {
-	      if (block.getChar() == input) return block;
-	    }
-	    return Block.NULL;
-	  }
-	  
+		private static final Block[]	allEnums	= values();
+
+		public static Block getEnum(char input) {
+			for (Block block : allEnums) {
+				if (block.getChar() == input) return block;
+			}
+			return Block.NULL;
+		}
+
 		public char getChar() {
 			return ' ';
 		}
-		
+
 	}
 
-	private short			width;
-	private short			height;
+	private short	width;
+	private short	height;
 
 	/**
 	 * @return the width
@@ -75,7 +75,8 @@ public class Maze {
 	}
 
 	/**
-	 * @param width the width to set
+	 * @param width
+	 *          the width to set
 	 */
 	public void setWidth(short width) {
 		this.width = width;
@@ -89,7 +90,8 @@ public class Maze {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *          the height to set
 	 */
 	public void setHeight(short height) {
 		this.height = height;
@@ -155,35 +157,23 @@ public class Maze {
 		return false;
 	}
 
-	public boolean load(String fileName) {
+	public boolean load(String fileName) throws Exception {
 		BufferedReader br = null;
 		String line = new String();
 
-		try {
-			br = new BufferedReader(new FileReader(fileName));
+		br = new BufferedReader(new FileReader(fileName));
 
-			setDimenstions(br.readLine());
-			initialize();
+		setDimenstions(br.readLine());
+		initialize();
 
-			short lineNumber = 1;
-			while ((line = br.readLine()) != null) {
-				loadLineOfMaze(lineNumber, line);
-				lineNumber++;
-			}
-
-		} catch (Exception e) {
-			System.out.println("Error while reading file:");
-			e.printStackTrace();
-			return false;
-		} finally {
-			// when done, try to close file
-			try {
-				br.close();
-			} catch (Exception e) {
-				System.out.println("Error while closing file:");
-				e.printStackTrace();
-			}
+		short lineNumber = 1;
+		while ((line = br.readLine()) != null) {
+			loadLineOfMaze(lineNumber, line);
+			lineNumber++;
 		}
+
+		br.close();
+		
 		return true;
 	}
 

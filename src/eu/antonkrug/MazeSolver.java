@@ -25,10 +25,13 @@ public class MazeSolver {
 	// private Point destination;
 	private Point																origin;
 	private Maze																maze;
+	private boolean															doNotSolveAgain;
 
-	public static final boolean									DEBUG	= true;
+	public static final boolean									DEBUG	= false;
 
 	public MazeSolver(Maze maze) {
+
+		this.doNotSolveAgain = false;
 		this.maze = maze;
 
 		this.destinations = new LinkedList<>();
@@ -49,6 +52,27 @@ public class MazeSolver {
 		this.destinations = destinations;
 	}
 
+	/**
+	 * @return the visit
+	 */
+	public ConcurrentHashMap<Point, MazeNode> getVisit() {
+		return visit;
+	}
+
+	/**
+	 * @return the visitedAlready
+	 */
+	public HashMap<Point, Point> getVisitedAlready() {
+		return visitedAlready;
+	}
+
+	/**
+	 * @return the destinations
+	 */
+	public LinkedList<Point> getDestinations() {
+		return destinations;
+	}
+
 	public void addStartingPositions(LinkedList<Point> starts) throws Exception {
 		for (Point point : starts) {
 			this.addStartPosition(point);
@@ -61,8 +85,8 @@ public class MazeSolver {
 
 		// if node is visited already do not continue
 		if (visitedAlready.containsKey(testPoint)) return;
-		
-		//if you can't walk on that block then do not continue
+
+		// if you can't walk on that block then do not continue
 		if (!maze.canWalkTo(testPoint)) return;
 
 		try {
@@ -111,7 +135,7 @@ public class MazeSolver {
 	}
 
 	public int solvePath() {
-		if (origin == null) return -1;
+		if (origin == null || doNotSolveAgain) return -1;
 
 		int iteration = 0;
 
@@ -120,6 +144,8 @@ public class MazeSolver {
 			currentStep = doOneStep(currentStep);
 			iteration++;
 		}
+
+		doNotSolveAgain = true;
 
 		if (!destinations.contains(currentStep)) return -1;
 
@@ -138,6 +164,7 @@ public class MazeSolver {
 			System.out.println("**********");
 		}
 
+		@SuppressWarnings("unused")
 		int iteration = 0;
 
 		// try to find between destination points a point which was visited.
@@ -147,13 +174,13 @@ public class MazeSolver {
 
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
-		
+
 		LinkedList<Point> path = new LinkedList<>();
 
 		Point currentStep = destination.get();
 
 		while (currentStep != null) {
-			System.out.println(currentStep);
+			if (DEBUG) System.out.println(currentStep);
 			path.add(currentStep);
 			currentStep = visitedAlready.get(currentStep);
 			iteration++;
@@ -182,7 +209,7 @@ public class MazeSolver {
 		Entry<Point, MazeNode> min = Collections.min(visit.entrySet(), (Entry<Point, MazeNode> a,
 				Entry<Point, MazeNode> b) -> a.getValue().getF().compareTo(b.getValue().getF()));
 
-		System.out.println(min.getKey());
+		if (DEBUG) System.out.println(min.getKey());
 		return min.getKey();
 	}
 

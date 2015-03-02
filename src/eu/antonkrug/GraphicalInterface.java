@@ -12,9 +12,12 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -46,6 +49,17 @@ public class GraphicalInterface implements ActionListener {
 	// private JTextArea display, output;
 	private JFrame								frame;
 	private JLabel								statusBarLabel;
+	private JPanel								mazePanel;
+	private ImageIcon							mazeImage;
+	private Graphics							mazeImageGFX;
+	private Maze									maze;
+	private MazeSolver						solver;
+
+	private static final int			BLOCK_WIDTH						= 16;
+	private static final int			BLOCK_HEIGHT					= 16;
+
+	private static final int			BLOCK_SPACING_WIDTH		= BLOCK_WIDTH + 1;
+	private static final int			BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
 
 	public GraphicalInterface() {
 		makeFrame();
@@ -60,12 +74,23 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	/**
+	 * Just Helper method which can be used for button when there is not action
+	 * implemented yet
+	 */
+	@SuppressWarnings("unused")
+	private void buttonActionNoImplemented() {
+		statusBarLabel.setText("This button action is not implemented yet");
+	}
+
+	/**
 	 * Add a button to the button panel.
 	 */
-	private void addButton(Container panel, String buttonText) {
+	private void addButton(Container panel, String buttonText, Runnable actionPerformed) {
 		JButton button = new JButton(buttonText);
 		button.addActionListener(this);
 		panel.add(button);
+
+		actions.put(buttonText, actionPerformed);
 	}
 
 	/**
@@ -90,56 +115,47 @@ public class GraphicalInterface implements ActionListener {
 		// contentPane.setLayout(new BorderLayout());
 		uiPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-		// buttons
-		// display = new JTextArea(15, 30);
-		// output = new JTextArea(15, 30);
-		// name = new JTextField();
+		// buttons and desired actions for buttons
+		actions = new HashMap<>();
+
+		// addAction("Load", this::loadMaze);
+		// addAction("displayAll", this::printAllNames);
+		// addAction("details", this::printPerson);
+		// addAction("parents", this::printParents);)
+		// addAction("children", this::printChildren);
+		// addAction("grandChildren", this::grandChildren);
+		// addAction("clear", this::clearText);
 		JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
-		addButton(buttonPanel, "Load");
-		addButton(buttonPanel, "Generate");
-		addButton(buttonPanel, "Save");
-		addButton(buttonPanel, "Solve");
-		addButton(buttonPanel, "Flush solution");
-		addButton(buttonPanel, "Step");
-		addButton(buttonPanel, "Animate");
-		addButton(buttonPanel, "Exit");
-		
-		JPanel displayPanel = new JPanel();
+
+		addButton(buttonPanel, "Load", this::loadMaze);
+
+		addButton(buttonPanel, "Generate", this::buttonActionNoImplemented);
+		addButton(buttonPanel, "Save", this::buttonActionNoImplemented);
+
+		addButton(buttonPanel, "Solve", this::solve);
+
+		addButton(buttonPanel, "Flush solution", this::buttonActionNoImplemented);
+		addButton(buttonPanel, "Step", this::buttonActionNoImplemented);
+		addButton(buttonPanel, "Animate", this::buttonActionNoImplemented);
+		addButton(buttonPanel, "Exit", this::buttonActionNoImplemented);
+
 		//		displayPanel.add(new JLabel(Messages.getString("FamilyTree.display"))); //$NON-NLS-1$
 
 		// will ocuppy all space
-		displayPanel.setLayout(new BorderLayout());
-		
-		Canvas mazeCanvas = new Canvas();
-		mazeCanvas.createImage(400, 400);
-		
-		JPanel dd = new JPanel();
-		dd.setMinimumSize(new Dimension(900,900));
-		dd.setMaximumSize(new Dimension(900,900));
-//		dd.preferredSize();
-		dd.setVisible(true);
-		dd.setBackground(new java.awt.Color(0, 255, 255));
-		
-		BufferedImage buf = new BufferedImage(900, 900, BufferedImage.TYPE_INT_ARGB);
-		
-		Graphics bufG;
-		
-		bufG = buf.getGraphics();
-//		bufG.
-		bufG.setColor(Color.red);
-    bufG.drawString("Testing",100,100);
-    
-    JLabel picLabel;
-//    ImageIcon test = new ImageIcon(buf);
-    picLabel = new JLabel(new ImageIcon(buf));
-    
+		mazePanel = new JPanel();
+		mazePanel.setLayout(new BorderLayout());
 
-		//make the text area scrollable and resizes by content window
-  	displayPanel.add(new JScrollPane(picLabel), BorderLayout.CENTER);
+		// create empty maze image and wrap it in desired objects
+		BufferedImage noMazeBuf = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+		Graphics noMazeBufGraphics;
+		noMazeBufGraphics = noMazeBuf.getGraphics();
+		noMazeBufGraphics.setColor(Color.red);
+		noMazeBufGraphics.drawString("No maze", 100, 100);
+		mazeImage = new ImageIcon(noMazeBuf);
 
-		// JPanel outputPanel = new JPanel();
-		//		outputPanel.add(new JLabel(Messages.getString("FamilyTree.output"))); //$NON-NLS-1$
-		uiPane.add(displayPanel, BorderLayout.CENTER);
+		// make the text area scrollable and resizes by content window
+		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
+		uiPane.add(mazePanel, BorderLayout.CENTER);
 
 		// will ocuppy all space
 		// outputPanel.setLayout(new BorderLayout());
@@ -151,17 +167,139 @@ public class GraphicalInterface implements ActionListener {
 		// uiPane.add(outputPanel, BorderLayout.EAST);
 		frame.pack();
 
-		// actions for buttons
-		actions = new HashMap<>();
+	}
 
-		// addAction("loadDB", this::loadDatabase);
-		// addAction("displayAll", this::printAllNames);
-		// addAction("details", this::printPerson);
-		// addAction("parents", this::printParents);
-		// addAction("children", this::printChildren);
-		// addAction("grandChildren", this::grandChildren);
-		// addAction("clear", this::clearText);
+	/**
+	 * Adds lambda runnable to collection of action events
+	 * 
+	 * @param text
+	 * @param runnable
+	 */
+	private void addAction(String text, Runnable runnable) {
+		// actions.put(Messages.getString("FamilyTree." + text), runnable);
+	}
 
+	private void swapMazePanel(BufferedImage buffer) {
+		mazeImage = new ImageIcon(buffer);
+
+		mazePanel.remove(0);
+		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
+		frame.pack();
+	}
+
+	private void setStatusBarException(Exception exception) {
+		statusBarLabel.setText(exception.toString());
+	}
+
+	/**
+	 * Just fill maze block with given color
+	 * 
+	 * @param gfx
+	 * @param position
+	 * @param color
+	 */
+	private void drawBlock(Graphics gfx, Point position, Color color) {
+		gfx.setColor(color);
+		gfx.fillRect(position.x * BLOCK_SPACING_WIDTH, position.y * BLOCK_SPACING_HEIGHT, BLOCK_WIDTH,
+				BLOCK_HEIGHT);
+	}
+
+	/**
+	 * Paste into the maze block a image file (icon)
+	 * 
+	 * @param gfx
+	 * @param position
+	 * @param icon
+	 */
+	private void drawBlock(Graphics gfx, Point position, BufferedImage icon) {
+		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH, position.y * BLOCK_SPACING_HEIGHT, null);
+	}
+
+	private void solve() {
+		if (maze == null) {
+			statusBarLabel.setText("No maze loaded to be solved");
+		} else if (solver.solvePath() > 0) {
+
+			for (Point point : solver.backTracePath()) {
+				drawBlock(mazeImageGFX, point, Color.GREEN);
+			}
+
+			drawMazeIcons(false);
+			mazePanel.repaint();
+			statusBarLabel.setText("Solution found");
+
+		} else {
+			statusBarLabel
+					.setText("Something wrong (no origin, or no possible path, or clicked Solve button multiple times)");
+		}
+	}
+
+	private void drawMazeIcons(boolean blankBlock) {
+		try {
+			// get icons ready
+			BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
+			BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
+
+			// draw all start icons
+			for (Point point : maze.getAllBlock(Maze.Block.START)) {
+				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+				drawBlock(mazeImageGFX, point, iconStart);
+			}
+
+			// draw all finish icons
+			for (Point point : solver.getDestinations()) {
+				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+				drawBlock(mazeImageGFX, point, iconFinish);
+			}
+
+		} catch (IOException loadingImgFilesException) {
+			setStatusBarException(loadingImgFilesException);
+		}
+	}
+
+	private void drawMaze() {
+		BufferedImage noMazeBuf = new BufferedImage(maze.getWidth() * BLOCK_SPACING_WIDTH,
+				maze.getHeight() * BLOCK_SPACING_HEIGHT, BufferedImage.TYPE_INT_RGB);
+		mazeImageGFX = noMazeBuf.getGraphics();
+
+		try {
+			// draw wall JPG as the wall background
+			BufferedImage wall = ImageIO.read(new File("img/wall.jpg"));
+			mazeImageGFX.drawImage(wall, 0, 0, null);
+
+			// draw all empty blocks, starts and destinations
+			for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
+				drawBlock(mazeImageGFX, point, Color.WHITE);
+			}
+
+			drawMazeIcons(true);
+
+			// replace the old maze graphics inside the jframe with this one
+			swapMazePanel(noMazeBuf);
+
+		} catch (IOException loadingImgFilesException) {
+			setStatusBarException(loadingImgFilesException);
+		}
+
+	}
+
+	private void loadMaze() {
+		maze = new Maze();
+
+		try {
+
+			maze.load("mazes/tiny.maze");
+			solver = new MazeSolver(maze);
+			solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
+			solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
+
+			drawMaze();
+
+			statusBarLabel.setText("Maze loaded");
+
+		} catch (Exception loadException) {
+			setStatusBarException(loadException);
+		}
 	}
 
 	/**
