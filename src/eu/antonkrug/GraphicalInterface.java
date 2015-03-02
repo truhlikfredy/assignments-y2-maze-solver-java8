@@ -2,7 +2,6 @@ package eu.antonkrug;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.LinkedList;
 
 import edu.princeton.cs.introcs.StdDraw;
 

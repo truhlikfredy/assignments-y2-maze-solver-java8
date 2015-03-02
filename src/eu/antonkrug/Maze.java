@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Maze {
+	
 	public enum Block {
 		NULL {
 			@Override
@@ -47,10 +48,20 @@ public class Maze {
 				return '*';
 			}
 		};
+		
+	  private static final Block[]	allEnums	= values();
 
+	  public static Block getEnum(char input) {
+	    for (Block block : allEnums) {
+	      if (block.getChar() == input) return block;
+	    }
+	    return Block.NULL;
+	  }
+	  
 		public char getChar() {
 			return ' ';
 		}
+		
 	}
 
 	private short			width;
@@ -84,21 +95,21 @@ public class Maze {
 		this.height = height;
 	}
 
-	private char[][]	maze;
+	private Block[][]	maze;
 
 	public Maze() {
-		maze = new char[1][1];
+		maze = new Block[1][1];
 	}
 
 	public void initialize() {
-		maze = new char[width][height];
+		maze = new Block[width][height];
 		for (int x = 0; x < width; x++) {
-			maze[x][0] = Block.WALL.getChar();
-			maze[x][height - 1] = Block.WALL.getChar();
+			maze[x][0] = Block.WALL;
+			maze[x][height - 1] = Block.WALL;
 		}
 		for (int y = 0; y < height; y++) {
-			maze[0][y] = Block.WALL.getChar();
-			maze[width - 1][y] = Block.WALL.getChar();
+			maze[0][y] = Block.WALL;
+			maze[width - 1][y] = Block.WALL;
 		}
 	}
 
@@ -119,7 +130,7 @@ public class Maze {
 
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				if (maze[x][y] == block.getChar()) list.add(new Point(x, y));
+				if (maze[x][y] == block) list.add(new Point(x, y));
 
 		return list;
 	}
@@ -133,14 +144,14 @@ public class Maze {
 
 	private void loadLineOfMaze(short lineNumber, String line) {
 		for (int x = 0; x < width - 2; x++) {
-			maze[x + 1][lineNumber] = line.charAt(x);
+			maze[x + 1][lineNumber] = Block.getEnum(line.charAt(x));
 		}
 	}
 
 	public boolean canWalkTo(Point point) {
-		if (maze[point.x][point.y] == Block.EMPTY.getChar()) return true;
-		if (maze[point.x][point.y] == Block.START.getChar()) return true;
-		if (maze[point.x][point.y] == Block.FINISH.getChar()) return true;
+		if (maze[point.x][point.y] == Block.EMPTY) return true;
+		if (maze[point.x][point.y] == Block.START) return true;
+		if (maze[point.x][point.y] == Block.FINISH) return true;
 		return false;
 	}
 
