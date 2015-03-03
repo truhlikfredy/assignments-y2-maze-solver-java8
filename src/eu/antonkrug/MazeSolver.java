@@ -26,6 +26,7 @@ public class MazeSolver {
 	private Point																origin;
 	private Maze																maze;
 	private boolean															doNotSolveAgain;
+	private Point																currentStep;
 
 	public static final boolean									DEBUG	= false;
 
@@ -33,12 +34,13 @@ public class MazeSolver {
 
 		this.doNotSolveAgain = false;
 		this.maze = maze;
+		this.currentStep = null;
 
 		this.destinations = new LinkedList<>();
 
 		// this.allDirections = Collections.EMPTY_LIST;
 		this.allDirections = new LinkedList<>();
-		// acumulative delta movement for up,down,left and right
+		// all cardinal direction for up,down,left and right
 		this.allDirections.add(new Point(-1, 0));
 		this.allDirections.add(new Point(1, 0));
 		this.allDirections.add(new Point(0, 1));
@@ -135,16 +137,52 @@ public class MazeSolver {
 	}
 
 	public int solvePath() {
-		if (origin == null || doNotSolveAgain) return -1;
 
 		int iteration = 0;
 
-		Point currentStep = origin;
-		while (!destinations.contains(currentStep) && visit.size() > 0) {
-			currentStep = doOneStep(currentStep);
+		if (solveStepInit() < 0) return -1;
+
+		while (solveStepCondition()) {
+			solveStepOneIteration();
 			iteration++;
 		}
 
+		if (solveStepFinish() < 0) return -1;
+
+		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
+
+		return iteration;
+	}
+	
+	public boolean solveStepDidntStarted() {
+		return currentStep==null;
+	}
+
+	public int solveStepInit() {
+		if (origin == null || doNotSolveAgain) {
+			doNotSolveAgain=true;
+			return -1;
+		}
+		currentStep = origin;
+		return 0;
+	}
+
+	public boolean solveStepCondition() {
+		return !destinations.contains(currentStep) && visit.size() > 0;
+	}
+
+	/**
+	 * @return the doNotSolveAgain
+	 */
+	public boolean isDoNotSolveAgain() {
+		return doNotSolveAgain;
+	}
+
+	public void solveStepOneIteration() {
+		currentStep = doOneStep(currentStep);
+	}
+
+	public int solveStepFinish() {
 		doNotSolveAgain = true;
 
 		if (!destinations.contains(currentStep)) return -1;
@@ -153,8 +191,7 @@ public class MazeSolver {
 		// which destionation we reached
 		markNodeAsVisited(currentStep);
 
-		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
-		return iteration;
+		return 0;
 	}
 
 	public LinkedList<Point> backTracePath() {

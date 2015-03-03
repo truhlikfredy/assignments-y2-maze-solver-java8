@@ -1,13 +1,11 @@
 package eu.antonkrug;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,18 +19,14 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JViewport;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
-import edu.princeton.cs.introcs.StdDraw;
+import utils.Pair;
 
 /**
  * 
@@ -44,7 +38,7 @@ import edu.princeton.cs.introcs.StdDraw;
  */
 public class GraphicalInterface implements ActionListener {
 
-	private Map<String, Runnable>	actions;
+	private Map<String, Pair<JButton,Runnable>>	actions;
 
 	// private JTextArea display, output;
 	private JFrame								frame;
@@ -70,7 +64,7 @@ public class GraphicalInterface implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent event) {
 		String action = event.getActionCommand();
-		if (actions.containsKey(action)) actions.get(action).run();
+		if (actions.containsKey(action)) actions.get(action).second.run();
 	}
 
 	/**
@@ -90,7 +84,7 @@ public class GraphicalInterface implements ActionListener {
 		button.addActionListener(this);
 		panel.add(button);
 
-		actions.put(buttonText, actionPerformed);
+		actions.put(buttonText, new Pair<JButton,Runnable>(button,actionPerformed));
 	}
 
 	/**
@@ -134,9 +128,9 @@ public class GraphicalInterface implements ActionListener {
 
 		addButton(buttonPanel, "Solve", this::solve);
 
-		addButton(buttonPanel, "Flush solution", this::buttonActionNoImplemented);
-		addButton(buttonPanel, "Step", this::buttonActionNoImplemented);
-		addButton(buttonPanel, "Animate", this::buttonActionNoImplemented);
+		addButton(buttonPanel, "Flush solution", this::flushSolver);
+		addButton(buttonPanel, "Step", this::stepChecks);
+		addButton(buttonPanel, "Animate", this::animate);
 		addButton(buttonPanel, "Exit", this::buttonActionNoImplemented);
 
 		//		displayPanel.add(new JLabel(Messages.getString("FamilyTree.display"))); //$NON-NLS-1$
@@ -220,17 +214,62 @@ public class GraphicalInterface implements ActionListener {
 			statusBarLabel.setText("No maze loaded to be solved");
 		} else if (solver.solvePath() > 0) {
 
-			for (Point point : solver.backTracePath()) {
-				drawBlock(mazeImageGFX, point, Color.GREEN);
-			}
-
-			drawMazeIcons(false);
-			mazePanel.repaint();
-			statusBarLabel.setText("Solution found");
+			drawSolvedPath();
 
 		} else {
 			statusBarLabel
-					.setText("Something wrong (no origin, or no possible path, or clicked Solve button multiple times)");
+					.setText("Something wrong (no origin, or no possible path, or clicked button multiple times)");
+		}
+	}
+	
+	private void animate() {
+		actions.entrySet().forEach( s -> s.getValue().first.setEnabled(false));
+//	button.setEnabled(false);		
+	}
+
+	private void drawSolvedPath() {
+		for (Point point : solver.backTracePath()) {
+			drawBlock(mazeImageGFX, point, Color.GREEN);
+		}
+
+		drawMazeIcons(false);
+		statusBarLabel.setText("Solution found");
+	}
+
+	private void stepExecute() {
+		if (solver.solveStepDidntStarted()) solver.solveStepInit();
+
+		if (solver.solveStepCondition()) {
+			solver.solveStepOneIteration();
+
+			solver.getVisit().entrySet()
+					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
+			solver.getVisitedAlready().entrySet()
+					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY));
+			drawMazeIcons(false);
+
+			statusBarLabel.setText("Made step #"+solver.getVisitedAlready().size()+" nodesToVisit=" + solver.getVisit().size());
+
+		} else {
+			if (solver.solveStepFinish() < 0) {
+				statusBarLabel.setText("No solution found");
+			} else {
+				drawSolvedPath();
+				statusBarLabel.setText("Solution found");
+			}
+		}
+	}
+
+	private void stepChecks() {
+		if (maze == null) {
+			statusBarLabel.setText("No maze loaded to be solved");
+		} else {
+			if (!solver.isDoNotSolveAgain()) {
+				stepExecute();
+			} else {
+				statusBarLabel
+						.setText("Something wrong (no origin, or no possible path, or clicked button multiple times)");
+			}
 		}
 	}
 
@@ -239,6 +278,19 @@ public class GraphicalInterface implements ActionListener {
 			// get icons ready
 			BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
 			BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
+			
+//			// draw all start icons
+//			maze.getAllBlock(Maze.Block.START).stream().forEach(point -> {
+//				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+//				drawBlock(mazeImageGFX, point, iconStart);
+//			});
+//
+//			// draw all finish icons
+//			solver.getDestinations().stream().forEach(point -> {
+//				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+//				drawBlock(mazeImageGFX, point, iconFinish);
+//			});
+			
 
 			// draw all start icons
 			for (Point point : maze.getAllBlock(Maze.Block.START)) {
@@ -251,6 +303,8 @@ public class GraphicalInterface implements ActionListener {
 				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
 				drawBlock(mazeImageGFX, point, iconFinish);
 			}
+
+			mazePanel.repaint();
 
 		} catch (IOException loadingImgFilesException) {
 			setStatusBarException(loadingImgFilesException);
@@ -283,20 +337,31 @@ public class GraphicalInterface implements ActionListener {
 
 	}
 
+	private void flushSolver() {
+		if (maze == null) {
+			statusBarLabel.setText("No maze loaded to be solved");
+		} else {
+			solver = new MazeSolver(maze);
+			solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
+			try {
+				
+				solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
+				drawMaze();
+				statusBarLabel.setText("Maze loaded");
+				
+			} catch (Exception lackingNodesException) {
+				setStatusBarException(lackingNodesException);
+			}
+		}
+	}
+
 	private void loadMaze() {
 		maze = new Maze();
 
 		try {
 
 			maze.load("mazes/tiny.maze");
-			solver = new MazeSolver(maze);
-			solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-			solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
-
-			drawMaze();
-
-			statusBarLabel.setText("Maze loaded");
-
+			flushSolver();
 		} catch (Exception loadException) {
 			setStatusBarException(loadException);
 		}
@@ -312,67 +377,6 @@ public class GraphicalInterface implements ActionListener {
 	public static void main(String[] args) {
 		GraphicalInterface app = new GraphicalInterface();
 		app.run();
-
-		// Maze maze = new Maze();
-		//
-		// maze.load("mazes/tiny.maze");
-		// // maze.printDebugMaze();
-		// StdDraw.setXscale(0.0, (double) maze.getWidth());
-		// StdDraw.setYscale((double) maze.getHeight(), 0.0);
-		// StdDraw.setPenRadius(0.08);
-		//
-		// MazeSolver solver = new MazeSolver(maze);
-		//
-		// solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-		// StdDraw.setPenColor(Color.GREEN);
-		// for (Point point : maze.getAllBlock(Maze.Block.FINISH)) {
-		// StdDraw.point(point.x, point.y);
-		// }
-		//
-		// StdDraw.setPenColor(Color.RED);
-		// for (Point point : maze.getAllBlock(Maze.Block.WALL)) {
-		// StdDraw.point(point.x, point.y);
-		// }
-		//
-		// try {
-		// solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
-		// StdDraw.setPenColor(Color.MAGENTA);
-		// for (Point point : maze.getAllBlock(Maze.Block.START)) {
-		// StdDraw.point(point.x, point.y);
-		// }
-		//
-		// if (solver.solvePath() > 0) {
-		// StdDraw.setPenColor(Color.BLACK);
-		// StdDraw.setPenRadius(0.04);
-		//
-		// for (Point point : solver.backTracePath()) {
-		// StdDraw.point(point.x, point.y);
-		// }
-		// } else {
-		// System.out.print("Can't find path (no origin, or no possible path)");
-		// }
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
-		// MazeSolver solver = new MazeSolver();
-		//
-		// solver.addDestinationPosition(new Point(17,3));
-		//
-		// try {
-		// solver.addStartPosition(new Point(10, 10));
-		//
-		// if (solver.solvePath() > 0) {
-		// solver.backTracePath();
-		// } else {
-		// System.out.print("Can't find path (no origin, or no possible path)");
-		// }
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
 	}
 
 }
