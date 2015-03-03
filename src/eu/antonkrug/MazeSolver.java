@@ -27,6 +27,8 @@ public class MazeSolver {
 	private Maze																maze;
 	private boolean															doNotSolveAgain;
 	private Point																currentStep;
+	private Long                                timeStart;
+	private Long																timeStop; 
 
 	public static final boolean									DEBUG	= false;
 
@@ -35,6 +37,9 @@ public class MazeSolver {
 		this.doNotSolveAgain = false;
 		this.maze = maze;
 		this.currentStep = null;
+		
+		this.timeStart=System.nanoTime();
+		this.timeStop=this.timeStart;
 
 		this.destinations = new LinkedList<>();
 
@@ -48,6 +53,10 @@ public class MazeSolver {
 
 		this.visit = new ConcurrentHashMap<>();
 		this.visitedAlready = new HashMap<>();
+	}
+	
+	public long timeTaken() {
+		return (timeStop-timeStart)/1000000;
 	}
 
 	public void setDestinations(LinkedList<Point> destinations) {
@@ -163,6 +172,7 @@ public class MazeSolver {
 			doNotSolveAgain=true;
 			return -1;
 		}
+		this.timeStart=System.nanoTime();
 		currentStep = origin;
 		return 0;
 	}
@@ -183,6 +193,8 @@ public class MazeSolver {
 	}
 
 	public int solveStepFinish() {
+		this.timeStop=System.nanoTime();
+		
 		doNotSolveAgain = true;
 
 		if (!destinations.contains(currentStep)) return -1;

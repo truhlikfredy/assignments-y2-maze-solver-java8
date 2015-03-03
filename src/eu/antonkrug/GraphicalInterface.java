@@ -233,7 +233,7 @@ public class GraphicalInterface implements ActionListener {
 		}
 
 		drawMazeIcons(false);
-		statusBarLabel.setText("Solution found");
+		statusBarLabel.setText("Solution found, took "+solver.timeTaken()+" ms.");
 	}
 
 	private void stepExecute() {
@@ -255,7 +255,7 @@ public class GraphicalInterface implements ActionListener {
 				statusBarLabel.setText("No solution found");
 			} else {
 				drawSolvedPath();
-				statusBarLabel.setText("Solution found");
+				statusBarLabel.setText("Solution found, took "+solver.timeTaken()+" ms.");
 			}
 		}
 	}
