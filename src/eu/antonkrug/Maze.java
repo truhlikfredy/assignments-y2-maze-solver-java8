@@ -17,6 +17,9 @@ import java.util.Scanner;
 
 public class Maze {
 
+	private final static short	MAX_MAZE_WIDTH	= 1000;
+	private final static short	MAX_MAZE_HEIGHT	= 1000;
+
 	public enum Block {
 		NULL {
 			@Override
@@ -78,7 +81,12 @@ public class Maze {
 	 * @param width
 	 *          the width to set
 	 */
-	public void setWidth(short width) {
+	public void setWidth(short width) throws Exception {
+
+		if (width > MAX_MAZE_WIDTH)
+			throw new Exception(String.format("Width %d is bigger than maximum allowed width %d", width,
+					MAX_MAZE_WIDTH));
+
 		this.width = width;
 	}
 
@@ -93,7 +101,12 @@ public class Maze {
 	 * @param height
 	 *          the height to set
 	 */
-	public void setHeight(short height) {
+	public void setHeight(short height) throws Exception {
+
+		if (height > MAX_MAZE_HEIGHT)
+			throw new Exception(String.format("Height %d is bigger than maximum allowed height %d",
+					height, MAX_MAZE_HEIGHT));
+
 		this.height = height;
 	}
 
@@ -137,10 +150,12 @@ public class Maze {
 		return list;
 	}
 
-	private void setDimenstions(String line) {
+	private void setDimenstions(String line) throws Exception {
 		Scanner dimensions = new Scanner(line);
-		this.width = (short) (2 + Short.parseShort(dimensions.next()));
-		this.height = (short) (2 + Short.parseShort(dimensions.next()));
+
+		setWidth((short) (2 + Short.parseShort(dimensions.next())));
+		setHeight((short) (2 + Short.parseShort(dimensions.next())));
+
 		dimensions.close();
 	}
 
@@ -173,7 +188,7 @@ public class Maze {
 		}
 
 		br.close();
-		
+
 		return true;
 	}
 

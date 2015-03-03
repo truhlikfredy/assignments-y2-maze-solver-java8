@@ -38,22 +38,22 @@ import utils.Pair;
  */
 public class GraphicalInterface implements ActionListener {
 
-	private Map<String, Pair<JButton,Runnable>>	actions;
+	private Map<String, Pair<JButton, Runnable>>	actions;
 
 	// private JTextArea display, output;
-	private JFrame								frame;
-	private JLabel								statusBarLabel;
-	private JPanel								mazePanel;
-	private ImageIcon							mazeImage;
-	private Graphics							mazeImageGFX;
-	private Maze									maze;
-	private MazeSolver						solver;
+	private JFrame																frame;
+	private JLabel																statusBarLabel;
+	private JPanel																mazePanel;
+	private ImageIcon															mazeImage;
+	private Graphics															mazeImageGFX;
+	private Maze																	maze;
+	private MazeSolver														solver;
 
-	private static final int			BLOCK_WIDTH						= 16;
-	private static final int			BLOCK_HEIGHT					= 16;
+	private static final int											BLOCK_WIDTH						= 16;
+	private static final int											BLOCK_HEIGHT					= 16;
 
-	private static final int			BLOCK_SPACING_WIDTH		= BLOCK_WIDTH + 1;
-	private static final int			BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
+	private static final int											BLOCK_SPACING_WIDTH		= BLOCK_WIDTH + 1;
+	private static final int											BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
 
 	public GraphicalInterface() {
 		makeFrame();
@@ -84,7 +84,7 @@ public class GraphicalInterface implements ActionListener {
 		button.addActionListener(this);
 		panel.add(button);
 
-		actions.put(buttonText, new Pair<JButton,Runnable>(button,actionPerformed));
+		actions.put(buttonText, new Pair<JButton, Runnable>(button, actionPerformed));
 	}
 
 	/**
@@ -132,6 +132,11 @@ public class GraphicalInterface implements ActionListener {
 		addButton(buttonPanel, "Step", this::stepChecks);
 		addButton(buttonPanel, "Animate", this::animate);
 		addButton(buttonPanel, "Exit", this::buttonActionNoImplemented);
+		
+		buttonDisableAll();
+		buttonEnable("Load");
+		buttonEnable("Generate");
+		buttonEnable("Exit");
 
 		//		displayPanel.add(new JLabel(Messages.getString("FamilyTree.display"))); //$NON-NLS-1$
 
@@ -163,6 +168,22 @@ public class GraphicalInterface implements ActionListener {
 
 	}
 
+	private void buttonDisableAll() {
+		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));		
+	}
+	
+	private void buttonEnable(String name) {
+		if (actions.containsKey(name)) {
+			actions.get(name).first.setEnabled(true);
+		}
+	}
+
+	private void buttonDisable(String name) {
+		if (actions.containsKey(name)) {
+			actions.get(name).first.setEnabled(false);
+		}
+	}
+	
 	/**
 	 * Adds lambda runnable to collection of action events
 	 * 
@@ -206,7 +227,7 @@ public class GraphicalInterface implements ActionListener {
 	 * @param icon
 	 */
 	private void drawBlock(Graphics gfx, Point position, BufferedImage icon) {
-		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH, position.y * BLOCK_SPACING_HEIGHT, null);
+		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH+1, position.y * BLOCK_SPACING_HEIGHT+1, null);
 	}
 
 	private void solve() {
@@ -221,19 +242,36 @@ public class GraphicalInterface implements ActionListener {
 					.setText("Something wrong (no origin, or no possible path, or clicked button multiple times)");
 		}
 	}
-	
+
 	private void animate() {
-		actions.entrySet().forEach( s -> s.getValue().first.setEnabled(false));
-//	button.setEnabled(false);		
+		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
+		// button.setEnabled(false);
+	}
+
+	private void drawArrow(Graphics gfx, Point at, Point to, Color color) {
+		if (at != null && to != null) {
+			int difX = to.x - at.x;
+			int difY = to.y - at.y;
+
+			int pixMiddleX = at.x * BLOCK_SPACING_WIDTH + BLOCK_WIDTH / 2;
+			int pixMiddleY = at.y * BLOCK_SPACING_HEIGHT + BLOCK_HEIGHT / 2;
+
+			int pixEndX = pixMiddleX + difX * BLOCK_WIDTH / 2;
+			int pixEndY = pixMiddleY + difY * BLOCK_HEIGHT / 2;
+
+			gfx.setColor(color);
+			gfx.drawLine(pixMiddleX, pixMiddleY, pixEndX, pixEndY);
+		}
 	}
 
 	private void drawSolvedPath() {
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
+			// TODO use arrow ale aj inde to treba
 		}
 
 		drawMazeIcons(false);
-		statusBarLabel.setText("Solution found, took "+solver.timeTaken()+" ms.");
+		statusBarLabel.setText(String.format("Solution found, took %d ms ",solver.timeTaken()));
 	}
 
 	private void stepExecute() {
@@ -242,20 +280,31 @@ public class GraphicalInterface implements ActionListener {
 		if (solver.solveStepCondition()) {
 			solver.solveStepOneIteration();
 
+			//draw the block from the open and closed list (visit and visited)
 			solver.getVisit().entrySet()
 					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
-			solver.getVisitedAlready().entrySet()
-					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY));
+			
+			solver.getVisitedAlready().entrySet().forEach(node -> {
+				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
+				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
+			});
+			
+			//higlight next planed block
+			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
+			
+			//draw the start / finish icons over the blocks
 			drawMazeIcons(false);
 
-			statusBarLabel.setText("Made step #"+solver.getVisitedAlready().size()+" nodesToVisit=" + solver.getVisit().size());
+			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s", solver
+					.getVisitedAlready().size(), solver.getVisit().size(), solver.getCurrentStep()));
+			
 
 		} else {
 			if (solver.solveStepFinish() < 0) {
 				statusBarLabel.setText("No solution found");
 			} else {
 				drawSolvedPath();
-				statusBarLabel.setText("Solution found, took "+solver.timeTaken()+" ms.");
+				statusBarLabel.setText(String.format("Solution found, took %d ms ",solver.timeTaken()));
 			}
 		}
 	}
@@ -273,36 +322,44 @@ public class GraphicalInterface implements ActionListener {
 		}
 	}
 
+	private void drawMazeIconsStart(boolean blankBlock) throws IOException {
+		BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
+
+		// draw all start icons
+		for (Point point : maze.getAllBlock(Maze.Block.START)) {
+			if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+			drawBlock(mazeImageGFX, point, iconStart);
+		}
+	}
+
+	private void drawMazeIconsFinish(boolean blankBlock) throws IOException {
+		BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
+
+		// draw all finish icons
+		for (Point point : solver.getDestinations()) {
+			if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+			drawBlock(mazeImageGFX, point, iconFinish);
+		}
+	}
+
 	private void drawMazeIcons(boolean blankBlock) {
 		try {
 			// get icons ready
-			BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
-			BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
-			
-//			// draw all start icons
-//			maze.getAllBlock(Maze.Block.START).stream().forEach(point -> {
-//				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-//				drawBlock(mazeImageGFX, point, iconStart);
-//			});
-//
-//			// draw all finish icons
-//			solver.getDestinations().stream().forEach(point -> {
-//				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-//				drawBlock(mazeImageGFX, point, iconFinish);
-//			});
-			
 
-			// draw all start icons
-			for (Point point : maze.getAllBlock(Maze.Block.START)) {
-				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-				drawBlock(mazeImageGFX, point, iconStart);
-			}
+			// // draw all start icons
+			// maze.getAllBlock(Maze.Block.START).stream().forEach(point -> {
+			// if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+			// drawBlock(mazeImageGFX, point, iconStart);
+			// });
+			//
+			// // draw all finish icons
+			// solver.getDestinations().stream().forEach(point -> {
+			// if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
+			// drawBlock(mazeImageGFX, point, iconFinish);
+			// });
 
-			// draw all finish icons
-			for (Point point : solver.getDestinations()) {
-				if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-				drawBlock(mazeImageGFX, point, iconFinish);
-			}
+			drawMazeIconsStart(blankBlock);
+			drawMazeIconsFinish(blankBlock);
 
 			mazePanel.repaint();
 
@@ -344,11 +401,11 @@ public class GraphicalInterface implements ActionListener {
 			solver = new MazeSolver(maze);
 			solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
 			try {
-				
+
 				solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
 				drawMaze();
 				statusBarLabel.setText("Maze loaded");
-				
+
 			} catch (Exception lackingNodesException) {
 				setStatusBarException(lackingNodesException);
 			}

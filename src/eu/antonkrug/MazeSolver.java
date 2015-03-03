@@ -27,8 +27,17 @@ public class MazeSolver {
 	private Maze																maze;
 	private boolean															doNotSolveAgain;
 	private Point																currentStep;
-	private Long                                timeStart;
-	private Long																timeStop; 
+	private Long																timeStart;
+	private Long																timeStop;
+	
+	
+
+	/**
+	 * @return the currentStep
+	 */
+	public Point getCurrentStep() {
+		return currentStep;
+	}
 
 	public static final boolean									DEBUG	= false;
 
@@ -37,9 +46,9 @@ public class MazeSolver {
 		this.doNotSolveAgain = false;
 		this.maze = maze;
 		this.currentStep = null;
-		
-		this.timeStart=System.nanoTime();
-		this.timeStop=this.timeStart;
+
+		this.timeStart = System.nanoTime();
+		this.timeStop = this.timeStart;
 
 		this.destinations = new LinkedList<>();
 
@@ -54,9 +63,9 @@ public class MazeSolver {
 		this.visit = new ConcurrentHashMap<>();
 		this.visitedAlready = new HashMap<>();
 	}
-	
+
 	public long timeTaken() {
-		return (timeStop-timeStart)/1000000;
+		return (timeStop - timeStart) / 1000000;
 	}
 
 	public void setDestinations(LinkedList<Point> destinations) {
@@ -162,17 +171,17 @@ public class MazeSolver {
 
 		return iteration;
 	}
-	
+
 	public boolean solveStepDidntStarted() {
-		return currentStep==null;
+		return currentStep == null;
 	}
 
 	public int solveStepInit() {
 		if (origin == null || doNotSolveAgain) {
-			doNotSolveAgain=true;
+			doNotSolveAgain = true;
 			return -1;
 		}
-		this.timeStart=System.nanoTime();
+		this.timeStart = System.nanoTime();
 		currentStep = origin;
 		return 0;
 	}
@@ -193,8 +202,8 @@ public class MazeSolver {
 	}
 
 	public int solveStepFinish() {
-		this.timeStop=System.nanoTime();
-		
+		this.timeStop = System.nanoTime();
+
 		doNotSolveAgain = true;
 
 		if (!destinations.contains(currentStep)) return -1;
@@ -255,8 +264,12 @@ public class MazeSolver {
 		markNodeAsVisited(currentPosition);
 
 		// get smallest node from not visited ones so we can use it as next move
-		Entry<Point, MazeNode> min = Collections.min(visit.entrySet(), (Entry<Point, MazeNode> a,
-				Entry<Point, MazeNode> b) -> a.getValue().getF().compareTo(b.getValue().getF()));
+		
+		// Entry<Point, MazeNode> min = Collections.min(visit.entrySet(),
+		// (Entry<Point, MazeNode> a, Entry<Point, MazeNode> b) ->
+		// a.getValue().getF().compareTo(b.getValue().getF()));
+		Entry<Point, MazeNode> min = Collections.min(visit.entrySet(), (a, b) -> a.getValue().getF()
+				.compareTo(b.getValue().getF()));
 
 		if (DEBUG) System.out.println(min.getKey());
 		return min.getKey();
