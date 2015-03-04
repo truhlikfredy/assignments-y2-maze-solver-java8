@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -48,6 +49,7 @@ public class GraphicalInterface implements ActionListener {
 	private Graphics															mazeImageGFX;
 	private Maze																	maze;
 	private MazeSolver														solver;
+	private Timer																	animationTimer;
 
 	private static final int											BLOCK_WIDTH						= 16;
 	private static final int											BLOCK_HEIGHT					= 16;
@@ -56,7 +58,80 @@ public class GraphicalInterface implements ActionListener {
 	private static final int											BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
 
 	public GraphicalInterface() {
+		animationTimer = new Timer(200, (actionEvent) -> (this.stepChecks()));
+		
 		makeFrame();
+	}
+
+	public enum GuiButton {
+		NULL {
+			@Override
+			public String toString() {
+				return " ";
+			}
+		},
+		LOAD {
+			@Override
+			public String toString() {
+				return "Load";
+			}
+		},
+		GENERATE {
+			@Override
+			public String toString() {
+				return "Generate";
+			}
+		},
+		SAVE {
+			@Override
+			public String toString() {
+				return "Save";
+			}
+		},
+		SOLVE {
+			@Override
+			public String toString() {
+				return "Solve";
+			}
+		},
+		FLUSH {
+			@Override
+			public String toString() {
+				return "Flush solution";
+			}
+		},
+		STEP {
+			@Override
+			public String toString() {
+				return "Step";
+			}
+		},
+		ANIMATE {
+			@Override
+			public String toString() {
+				return "Toggle animation";
+			}
+		},
+		EXIT {
+			@Override
+			public String toString() {
+				return "Exit";
+			}
+		};
+
+		private static final GuiButton[]	allEnums	= values();
+
+		public static GuiButton getEnum(String input) {
+			for (GuiButton button : allEnums) {
+				if (button.equals(input)) return button;
+			}
+			return GuiButton.NULL;
+		}
+
+		public String toString() {
+			return "";
+		}
+
 	}
 
 	/**
@@ -79,18 +154,19 @@ public class GraphicalInterface implements ActionListener {
 	/**
 	 * Add a button to the button panel.
 	 */
-	private void addButton(Container panel, String buttonText, Runnable actionPerformed) {
-		JButton button = new JButton(buttonText);
+	private void addButton(Container panel, GuiButton buttonText, Runnable actionPerformed) {
+		JButton button = new JButton(buttonText.toString());
 		button.addActionListener(this);
 		panel.add(button);
 
-		actions.put(buttonText, new Pair<JButton, Runnable>(button, actionPerformed));
+		actions.put(buttonText.toString(), new Pair<JButton, Runnable>(button, actionPerformed));
 	}
 
 	/**
 	 * Create GUI parts
 	 */
 	private void makeFrame() {
+		// creates window with minimum resolution
 		frame = new JFrame("Maze solver");
 		frame.setMinimumSize(new Dimension(640, 400));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,38 +185,7 @@ public class GraphicalInterface implements ActionListener {
 		// contentPane.setLayout(new BorderLayout());
 		uiPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-		// buttons and desired actions for buttons
-		actions = new HashMap<>();
-
-		// addAction("Load", this::loadMaze);
-		// addAction("displayAll", this::printAllNames);
-		// addAction("details", this::printPerson);
-		// addAction("parents", this::printParents);)
-		// addAction("children", this::printChildren);
-		// addAction("grandChildren", this::grandChildren);
-		// addAction("clear", this::clearText);
-		JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
-
-		addButton(buttonPanel, "Load", this::loadMaze);
-
-		addButton(buttonPanel, "Generate", this::buttonActionNoImplemented);
-		addButton(buttonPanel, "Save", this::buttonActionNoImplemented);
-
-		addButton(buttonPanel, "Solve", this::solve);
-
-		addButton(buttonPanel, "Flush solution", this::flushSolver);
-		addButton(buttonPanel, "Step", this::stepChecks);
-		addButton(buttonPanel, "Animate", this::animate);
-		addButton(buttonPanel, "Exit", this::buttonActionNoImplemented);
-		
-		buttonDisableAll();
-		buttonEnable("Load");
-		buttonEnable("Generate");
-		buttonEnable("Exit");
-
-		//		displayPanel.add(new JLabel(Messages.getString("FamilyTree.display"))); //$NON-NLS-1$
-
-		// will ocuppy all space
+		// will ocuppy all avaiable space
 		mazePanel = new JPanel();
 		mazePanel.setLayout(new BorderLayout());
 
@@ -152,38 +197,51 @@ public class GraphicalInterface implements ActionListener {
 		noMazeBufGraphics.drawString("No maze", 100, 100);
 		mazeImage = new ImageIcon(noMazeBuf);
 
-		// make the text area scrollable and resizes by content window
+		// make the maze scrollable and resizes by content window
 		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
 		uiPane.add(mazePanel, BorderLayout.CENTER);
 
-		// will ocuppy all space
-		// outputPanel.setLayout(new BorderLayout());
+		// ******* buttons and desired actions for buttons *******
+		actions = new HashMap<>();
 
-		// make the text area scrollable and resizes by content window
-		// outputPanel.add(new JScrollPane(output), BorderLayout.CENTER);
+		JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
+
+		addButton(buttonPanel, GuiButton.LOAD, this::loadMaze);
+		addButton(buttonPanel, GuiButton.GENERATE, this::buttonActionNoImplemented);
+		addButton(buttonPanel, GuiButton.SAVE, this::buttonActionNoImplemented);
+		addButton(buttonPanel, GuiButton.SOLVE, this::solve);
+		addButton(buttonPanel, GuiButton.FLUSH, this::flushSolver);
+		addButton(buttonPanel, GuiButton.STEP, this::stepChecks);
+		addButton(buttonPanel, GuiButton.ANIMATE, this::animate);
+		addButton(buttonPanel, GuiButton.EXIT, this::exit);
+
+		// just leave some buttons enabled
+		buttonDisableAll();
+		buttonEnable(GuiButton.LOAD);
+		buttonEnable(GuiButton.GENERATE);
+		buttonEnable(GuiButton.EXIT);
 
 		uiPane.add(buttonPanel, BorderLayout.WEST);
-		// uiPane.add(outputPanel, BorderLayout.EAST);
-		frame.pack();
 
+		frame.pack();
 	}
 
 	private void buttonDisableAll() {
-		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));		
+		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
 	}
-	
-	private void buttonEnable(String name) {
-		if (actions.containsKey(name)) {
-			actions.get(name).first.setEnabled(true);
+
+	private void buttonEnable(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			actions.get(name.toString()).first.setEnabled(true);
 		}
 	}
 
-	private void buttonDisable(String name) {
-		if (actions.containsKey(name)) {
-			actions.get(name).first.setEnabled(false);
+	private void buttonDisable(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			actions.get(name.toString()).first.setEnabled(false);
 		}
 	}
-	
+
 	/**
 	 * Adds lambda runnable to collection of action events
 	 * 
@@ -227,25 +285,42 @@ public class GraphicalInterface implements ActionListener {
 	 * @param icon
 	 */
 	private void drawBlock(Graphics gfx, Point position, BufferedImage icon) {
-		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH+1, position.y * BLOCK_SPACING_HEIGHT+1, null);
+		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH + 1,
+				position.y * BLOCK_SPACING_HEIGHT + 1, null);
 	}
 
 	private void solve() {
-		if (maze == null) {
-			statusBarLabel.setText("No maze loaded to be solved");
-		} else if (solver.solvePath() > 0) {
+		if (solver.solvePath() > 0) {
 
 			drawSolvedPath();
 
 		} else {
-			statusBarLabel
-					.setText("Something wrong (no origin, or no possible path, or clicked button multiple times)");
+			// when solution is not found disable some buttons
+			buttonDisable(GuiButton.SOLVE);
+			buttonDisable(GuiButton.STEP);
+			buttonDisable(GuiButton.ANIMATE);
+			buttonEnable(GuiButton.FLUSH);
+
+			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
 		}
 	}
 
 	private void animate() {
-		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
-		// button.setEnabled(false);
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+			buttonEnable(GuiButton.LOAD);
+			buttonEnable(GuiButton.GENERATE);
+			
+		} else {
+			// disable everything just itself
+			buttonDisableAll();
+			buttonEnable(GuiButton.ANIMATE);
+			buttonEnable(GuiButton.STEP);
+			buttonEnable(GuiButton.EXIT);
+
+			animationTimer.start();
+		}
+
 	}
 
 	private void drawArrow(Graphics gfx, Point at, Point to, Color color) {
@@ -265,60 +340,71 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	private void drawSolvedPath() {
+		
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+			buttonEnable(GuiButton.LOAD);
+			buttonEnable(GuiButton.GENERATE);
+		}			
+		
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
-			// TODO use arrow ale aj inde to treba
+			// TODO draw arrows here as well (not sure if it will look nice :/ )
 		}
 
 		drawMazeIcons(false);
-		statusBarLabel.setText(String.format("Solution found, took %d ms ",solver.timeTaken()));
+		statusBarLabel.setText(String.format("Solution found, took %d ms ", solver.timeTaken()));
+
+		// when solution is found disable some buttons
+		buttonDisable(GuiButton.SOLVE);
+		buttonDisable(GuiButton.STEP);
+		buttonEnable(GuiButton.FLUSH);
+		buttonDisable(GuiButton.ANIMATE);
 	}
 
 	private void stepExecute() {
+		buttonEnable(GuiButton.FLUSH);
+		buttonDisable(GuiButton.SOLVE);
+
 		if (solver.solveStepDidntStarted()) solver.solveStepInit();
 
 		if (solver.solveStepCondition()) {
 			solver.solveStepOneIteration();
 
-			//draw the block from the open and closed list (visit and visited)
+			// draw the block from the open and closed list (visit and visited)
 			solver.getVisit().entrySet()
 					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
-			
+
 			solver.getVisitedAlready().entrySet().forEach(node -> {
 				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
 				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
 			});
-			
-			//higlight next planed block
+
+			// higlight next planed block
 			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
-			
-			//draw the start / finish icons over the blocks
+
+			// draw the start / finish icons over the blocks
 			drawMazeIcons(false);
 
 			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s", solver
 					.getVisitedAlready().size(), solver.getVisit().size(), solver.getCurrentStep()));
-			
 
 		} else {
 			if (solver.solveStepFinish() < 0) {
 				statusBarLabel.setText("No solution found");
 			} else {
 				drawSolvedPath();
-				statusBarLabel.setText(String.format("Solution found, took %d ms ",solver.timeTaken()));
+				statusBarLabel.setText(String.format("Solution found, took %d ms ", solver.timeTaken()));
 			}
 		}
 	}
 
 	private void stepChecks() {
-		if (maze == null) {
-			statusBarLabel.setText("No maze loaded to be solved");
+		if (!solver.isDoNotSolveAgain()) {
+			stepExecute();
 		} else {
-			if (!solver.isDoNotSolveAgain()) {
-				stepExecute();
-			} else {
-				statusBarLabel
-						.setText("Something wrong (no origin, or no possible path, or clicked button multiple times)");
-			}
+			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
+			buttonDisable(GuiButton.STEP);
 		}
 	}
 
@@ -394,21 +480,38 @@ public class GraphicalInterface implements ActionListener {
 
 	}
 
+	private void exit() {
+		// frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+		frame.setVisible(false);
+		frame.dispose();
+	}
+
 	private void flushSolver() {
-		if (maze == null) {
-			statusBarLabel.setText("No maze loaded to be solved");
-		} else {
-			solver = new MazeSolver(maze);
-			solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-			try {
+		
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+			buttonEnable(GuiButton.LOAD);
+			buttonEnable(GuiButton.GENERATE);			
+		}
+		
+		solver = new MazeSolver(maze);
+		solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
+		try {
 
-				solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
-				drawMaze();
-				statusBarLabel.setText("Maze loaded");
+			solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
+			drawMaze();
+			statusBarLabel.setText("Maze loaded");
 
-			} catch (Exception lackingNodesException) {
-				setStatusBarException(lackingNodesException);
-			}
+			// when flushed or loaded allow /disable some buttons
+			// buttonEnable(GuiButton.SAVE);
+			buttonEnable(GuiButton.SOLVE);
+			buttonEnable(GuiButton.STEP);
+			buttonEnable(GuiButton.ANIMATE);
+			buttonDisable(GuiButton.FLUSH);
+			
+
+		} catch (Exception lackingNodesException) {
+			setStatusBarException(lackingNodesException);
 		}
 	}
 
@@ -419,6 +522,7 @@ public class GraphicalInterface implements ActionListener {
 
 			maze.load("mazes/tiny.maze");
 			flushSolver();
+
 		} catch (Exception loadException) {
 			setStatusBarException(loadException);
 		}

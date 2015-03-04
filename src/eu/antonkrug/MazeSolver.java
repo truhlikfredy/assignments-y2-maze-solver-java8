@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import eu.antonkrug.GraphicalInterface.GuiButton;
+
 /**
  * 
  * @author Anton Krug
@@ -183,6 +185,7 @@ public class MazeSolver {
 		}
 		this.timeStart = System.nanoTime();
 		currentStep = origin;
+		
 		return 0;
 	}
 
