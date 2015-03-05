@@ -17,7 +17,6 @@ package eu.antonkrug;
 import java.awt.Point;
 import java.util.LinkedList;
 
-
 public class MazeNode {
 
 	// distance from start
@@ -47,13 +46,14 @@ public class MazeNode {
 	 */
 	public MazeNode(Point parent, int previousCost, int currentX, int currentY,
 			LinkedList<Point> destinations) throws Exception {
-		
-		if (destinations.size()==0) throw new Exception("Before creating Nodes you have to set at least one destination!");
-		
+
+		if (destinations.size() == 0)
+			throw new Exception("Before creating Nodes you have to set at least one destination!");
+
 		this.parent = parent;
 		this.setG(previousCost);
 		this.setH(currentX, currentY, destinations);
-		
+
 	}
 
 	/**
@@ -63,10 +63,12 @@ public class MazeNode {
 	 * @param current
 	 * @param destination
 	 */
-	public MazeNode(Point parent, int previousCost, Point current, LinkedList<Point> destinations) throws Exception {
-		
-		if (destinations.size()==0) throw new Exception("Before creating Nodes you have to set at least one destination!");
-		
+	public MazeNode(Point parent, int previousCost, Point current, LinkedList<Point> destinations)
+			throws Exception {
+
+		if (destinations.size() == 0)
+			throw new Exception("Before creating Nodes you have to set at least one destination!");
+
 		this.parent = parent;
 		this.setG(previousCost);
 		this.setH(current.x, current.y, destinations);
@@ -83,8 +85,8 @@ public class MazeNode {
 	}
 
 	/**
-	 * Get distantance traveled from start. Return Integer so on lamba expressions i just can
-	 * call getG().compare directly
+	 * Get distantance traveled from start. Return Integer so on lamba expressions
+	 * i just can call getG().compare directly
 	 * 
 	 * @return the g
 	 */
@@ -128,22 +130,6 @@ public class MazeNode {
 	}
 
 	/**
-	 * @param h
-	 *          the heurestics set to specific value
-	 */
-	public void setH(short h) {
-		this.heurestic = h;
-	}
-
-	/**
-	 * @param h
-	 *          the heurestics set to specific value
-	 */
-	public void setHeurestic(short h) {
-		this.heurestic = h;
-	}
-
-	/**
 	 * Calculates manhatan distance to destination and sets it as H
 	 * 
 	 * @param currentX
@@ -163,6 +149,22 @@ public class MazeNode {
 
 		// manhatan distance
 		this.heurestic = smallest;
+	}
+
+	/**
+	 * @param h
+	 *          the heurestics set to specific value
+	 */
+	public void setH(short h) {
+		this.heurestic = h;
+	}
+
+	/**
+	 * @param h
+	 *          the heurestics set to specific value
+	 */
+	public void setHeurestic(short h) {
+		this.heurestic = h;
 	}
 
 	/**

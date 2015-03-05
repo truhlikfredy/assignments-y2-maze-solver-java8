@@ -25,41 +25,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MazeSolver {
 
+	public static final boolean	DEBUG	= false;
 	private LinkedList<Point>										allDirections;
-	private ConcurrentHashMap<Point, MazeNode>	visit;
-	private HashMap<Point, Point>								visitedAlready;
-	private LinkedList<Point>										destinations;
-	// private Point destination;
-	private Point																origin;
-	private Maze																maze;
-	private boolean															doNotSolveAgain;
 	private Point																currentStep;
+	private LinkedList<Point>										destinations;
+	private boolean															destinationVisible;
+	private boolean															doNotSolveAgain;
+	private Maze																maze;
+	private Point																origin;
 	private Long																timeStart;
 	private Long																timeStop;
-	private boolean															destinationVisible;
+	private ConcurrentHashMap<Point, MazeNode>	visit;
 
-	/**
-	 * @return the currentStep
-	 */
-	public Point getCurrentStep() {
-		return currentStep;
-	}
-
-	/**
-	 * @return the destinationVisible
-	 */
-	public boolean isDestinationVisible() {
-		return destinationVisible;
-	}
-
-	/**
-	 * @param destinationVisible the destinationVisible to set
-	 */
-	public void setDestinationVisible(boolean destinationVisible) {
-		this.destinationVisible = destinationVisible;
-	}
-
-	public static final boolean	DEBUG	= false;
+	private HashMap<Point, Point>								visitedAlready;
 
 	public MazeSolver(Maze maze, boolean destinationVisible) {
 
@@ -85,70 +63,6 @@ public class MazeSolver {
 		this.visitedAlready = new HashMap<>();
 	}
 
-	public long timeTaken() {
-		return (timeStop - timeStart) / 1000000;
-	}
-
-	public void setDestinations(LinkedList<Point> destinations) {
-		this.destinations = destinations;
-	}
-
-	/**
-	 * @return the visit
-	 */
-	public ConcurrentHashMap<Point, MazeNode> getVisit() {
-		return visit;
-	}
-
-	/**
-	 * @return the visitedAlready
-	 */
-	public HashMap<Point, Point> getVisitedAlready() {
-		return visitedAlready;
-	}
-
-	/**
-	 * @return the destinations
-	 */
-	public LinkedList<Point> getDestinations() {
-		return destinations;
-	}
-
-	public void addStartingPositions(LinkedList<Point> starts) throws Exception {
-		for (Point point : starts) {
-			this.addStartPosition(point);
-		}
-	}
-
-	private void evaluatePoint(Point currentPoint, Point direction) {
-		Point testPoint = new Point(currentPoint);
-		testPoint.translate(direction.x, direction.y);
-
-		// if node is visited already do not continue
-		if (visitedAlready.containsKey(testPoint)) return;
-
-		// if you can't walk on that block then do not continue
-		if (!maze.canWalkTo(testPoint)) return;
-
-		try {
-			MazeNode proposedNode = new MazeNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
-					destinations);
-
-			// System.out.println(testPoint);
-			// System.out.println(proposedNode);
-
-			// will replace if it's not found already or when it found a entry, but
-			// new node has better value. i.e. always put new/replace entry unless it
-			// has already best one
-			if (!visit.containsKey(testPoint) || visit.get(testPoint).getF() > proposedNode.getF())
-				visit.put(testPoint, proposedNode);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	/**
 	 * Will add one or more destinations to maze
 	 * 
@@ -160,8 +74,10 @@ public class MazeSolver {
 		}
 	}
 
-	public void messg() {
-
+	public void addStartingPositions(LinkedList<Point> starts) throws Exception {
+		for (Point point : starts) {
+			this.addStartPosition(point);
+		}
 	}
 
 	/**
@@ -173,68 +89,6 @@ public class MazeSolver {
 	public void addStartPosition(Point origin) throws Exception {
 		visit.put(origin, new MazeNode(null, 0, origin, destinations));
 		this.origin = origin;
-	}
-
-	public int solvePath() {
-
-		int iteration = 0;
-
-		if (solveStepInit() < 0) return -1;
-
-		while (solveStepCondition()) {
-			solveStepOneIteration();
-			iteration++;
-		}
-
-		if (solveStepFinish() < 0) return -1;
-
-		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
-
-		return iteration;
-	}
-
-	public boolean solveStepDidntStarted() {
-		return currentStep == null;
-	}
-
-	public int solveStepInit() {
-		if (origin == null || doNotSolveAgain) {
-			doNotSolveAgain = true;
-			return -1;
-		}
-		this.timeStart = System.nanoTime();
-		currentStep = origin;
-
-		return 0;
-	}
-
-	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && visit.size() > 0;
-	}
-
-	/**
-	 * @return the doNotSolveAgain
-	 */
-	public boolean isDoNotSolveAgain() {
-		return doNotSolveAgain;
-	}
-
-	public void solveStepOneIteration() {
-		currentStep = doOneStep(currentStep);
-	}
-
-	public int solveStepFinish() {
-		this.timeStop = System.nanoTime();
-
-		doNotSolveAgain = true;
-
-		if (!destinations.contains(currentStep)) return -1;
-
-		// last step, when destination and current step are the same, we will flag
-		// which destionation we reached
-		markNodeAsVisited(currentStep);
-
-		return 0;
 	}
 
 	public LinkedList<Point> backTracePath() {
@@ -307,6 +161,77 @@ public class MazeSolver {
 		return min.getKey();
 	}
 
+	private void evaluatePoint(Point currentPoint, Point direction) {
+		Point testPoint = new Point(currentPoint);
+		testPoint.translate(direction.x, direction.y);
+
+		// if node is visited already do not continue
+		if (visitedAlready.containsKey(testPoint)) return;
+
+		// if you can't walk on that block then do not continue
+		if (!maze.canWalkTo(testPoint)) return;
+
+		try {
+			MazeNode proposedNode = new MazeNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
+					destinations);
+
+			// System.out.println(testPoint);
+			// System.out.println(proposedNode);
+
+			// will replace if it's not found already or when it found a entry, but
+			// new node has better value. i.e. always put new/replace entry unless it
+			// has already best one
+			if (!visit.containsKey(testPoint) || visit.get(testPoint).getF() > proposedNode.getF())
+				visit.put(testPoint, proposedNode);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @return the currentStep
+	 */
+	public Point getCurrentStep() {
+		return currentStep;
+	}
+
+	/**
+	 * @return the destinations
+	 */
+	public LinkedList<Point> getDestinations() {
+		return destinations;
+	}
+
+	/**
+	 * @return the visit
+	 */
+	public ConcurrentHashMap<Point, MazeNode> getVisit() {
+		return visit;
+	}
+
+	/**
+	 * @return the visitedAlready
+	 */
+	public HashMap<Point, Point> getVisitedAlready() {
+		return visitedAlready;
+	}
+
+	/**
+	 * @return the destinationVisible
+	 */
+	public boolean isDestinationVisible() {
+		return destinationVisible;
+	}
+
+	/**
+	 * @return the doNotSolveAgain
+	 */
+	public boolean isDoNotSolveAgain() {
+		return doNotSolveAgain;
+	}
+
 	private void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
 		if (visit.containsKey(index)) {
@@ -314,5 +239,75 @@ public class MazeSolver {
 			visitedAlready.put(index, visit.get(index).getParent());
 			visit.remove(index);
 		}
+	}
+
+	public void setDestinations(LinkedList<Point> destinations) {
+		this.destinations = destinations;
+	}
+	
+	/**
+	 * @param destinationVisible the destinationVisible to set
+	 */
+	public void setDestinationVisible(boolean destinationVisible) {
+		this.destinationVisible = destinationVisible;
+	}
+
+	public int solvePath() {
+
+		int iteration = 0;
+
+		if (solveStepInit() < 0) return -1;
+
+		while (solveStepCondition()) {
+			solveStepOneIteration();
+			iteration++;
+		}
+
+		if (solveStepFinish() < 0) return -1;
+
+		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
+
+		return iteration;
+	}
+
+	public boolean solveStepCondition() {
+		return !destinations.contains(currentStep) && visit.size() > 0;
+	}
+
+	public boolean solveStepDidntStarted() {
+		return currentStep == null;
+	}
+
+	public int solveStepFinish() {
+		this.timeStop = System.nanoTime();
+
+		doNotSolveAgain = true;
+
+		if (!destinations.contains(currentStep)) return -1;
+
+		// last step, when destination and current step are the same, we will flag
+		// which destionation we reached
+		markNodeAsVisited(currentStep);
+
+		return 0;
+	}
+
+	public int solveStepInit() {
+		if (origin == null || doNotSolveAgain) {
+			doNotSolveAgain = true;
+			return -1;
+		}
+		this.timeStart = System.nanoTime();
+		currentStep = origin;
+
+		return 0;
+	}
+
+	public void solveStepOneIteration() {
+		currentStep = doOneStep(currentStep);
+	}
+
+	public long timeTaken() {
+		return (timeStop - timeStart) / 1000000;
 	}
 }

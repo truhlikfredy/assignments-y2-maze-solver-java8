@@ -24,26 +24,23 @@ import java.util.Scanner;
 
 public class Maze {
 
-	private final static short	MAX_MAZE_WIDTH	= 1000;
-	private final static short	MAX_MAZE_HEIGHT	= 1000;
-
 	public enum Block {
-		NULL {
-			@Override
-			public char getChar() {
-				return ' ';
-			}
-		},
 		EMPTY {
 			@Override
 			public char getChar() {
 				return '.';
 			}
 		},
-		WALL {
+		FINISH {
 			@Override
 			public char getChar() {
-				return '#';
+				return '*';
+			}
+		},
+		NULL {
+			@Override
+			public char getChar() {
+				return ' ';
 			}
 		},
 		START {
@@ -52,10 +49,10 @@ public class Maze {
 				return 'o';
 			}
 		},
-		FINISH {
+		WALL {
 			@Override
 			public char getChar() {
-				return '*';
+				return '#';
 			}
 		};
 
@@ -73,78 +70,24 @@ public class Maze {
 		}
 
 	}
+	private final static short	MAX_MAZE_HEIGHT	= 1000;
+
+	private final static short	MAX_MAZE_WIDTH	= 1000;
+
+	private short	height;
+	private Block[][]	maze;
 
 	private short	width;
-	private short	height;
-
-	/**
-	 * @return the width
-	 */
-	public short getWidth() {
-		return width;
-	}
-
-	/**
-	 * @param width
-	 *          the width to set
-	 */
-	public void setWidth(short width) throws Exception {
-
-		if (width > MAX_MAZE_WIDTH)
-			throw new Exception(String.format("Width %d is bigger than maximum allowed width %d", width,
-					MAX_MAZE_WIDTH));
-
-		this.width = width;
-	}
-
-	/**
-	 * @return the height
-	 */
-	public short getHeight() {
-		return height;
-	}
-
-	/**
-	 * @param height
-	 *          the height to set
-	 */
-	public void setHeight(short height) throws Exception {
-
-		if (height > MAX_MAZE_HEIGHT)
-			throw new Exception(String.format("Height %d is bigger than maximum allowed height %d",
-					height, MAX_MAZE_HEIGHT));
-
-		this.height = height;
-	}
-
-	private Block[][]	maze;
 
 	public Maze() {
 		maze = new Block[1][1];
 	}
 
-	public void initialize() {
-		maze = new Block[width][height];
-		for (int x = 0; x < width; x++) {
-			maze[x][0] = Block.WALL;
-			maze[x][height - 1] = Block.WALL;
-		}
-		for (int y = 0; y < height; y++) {
-			maze[0][y] = Block.WALL;
-			maze[width - 1][y] = Block.WALL;
-		}
-	}
-
-	public void printDebugMaze() {
-		System.out.println(width);
-		System.out.println(height);
-
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				System.out.print(maze[x][y]);
-			}
-			System.out.println("");
-		}
+	public boolean canWalkTo(Point point) {
+		if (maze[point.x][point.y] == Block.EMPTY) return true;
+		if (maze[point.x][point.y] == Block.START) return true;
+		if (maze[point.x][point.y] == Block.FINISH) return true;
+		return false;
 	}
 
 	public LinkedList<Point> getAllBlock(Block block) {
@@ -157,26 +100,30 @@ public class Maze {
 		return list;
 	}
 
-	private void setDimenstions(String line) throws Exception {
-		Scanner dimensions = new Scanner(line);
-
-		setWidth((short) (2 + Short.parseShort(dimensions.next())));
-		setHeight((short) (2 + Short.parseShort(dimensions.next())));
-
-		dimensions.close();
+	/**
+	 * @return the height
+	 */
+	public short getHeight() {
+		return height;
 	}
 
-	private void loadLineOfMaze(short lineNumber, String line) {
-		for (int x = 0; x < width - 2; x++) {
-			maze[x + 1][lineNumber] = Block.getEnum(line.charAt(x));
+	/**
+	 * @return the width
+	 */
+	public short getWidth() {
+		return width;
+	}
+
+	public void initialize() {
+		maze = new Block[width][height];
+		for (int x = 0; x < width; x++) {
+			maze[x][0] = Block.WALL;
+			maze[x][height - 1] = Block.WALL;
 		}
-	}
-
-	public boolean canWalkTo(Point point) {
-		if (maze[point.x][point.y] == Block.EMPTY) return true;
-		if (maze[point.x][point.y] == Block.START) return true;
-		if (maze[point.x][point.y] == Block.FINISH) return true;
-		return false;
+		for (int y = 0; y < height; y++) {
+			maze[0][y] = Block.WALL;
+			maze[width - 1][y] = Block.WALL;
+		}
 	}
 
 	public boolean load(String fileName) throws Exception {
@@ -197,6 +144,59 @@ public class Maze {
 		br.close();
 
 		return true;
+	}
+
+	private void loadLineOfMaze(short lineNumber, String line) {
+		for (int x = 0; x < width - 2; x++) {
+			maze[x + 1][lineNumber] = Block.getEnum(line.charAt(x));
+		}
+	}
+
+	public void printDebugMaze() {
+		System.out.println(width);
+		System.out.println(height);
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				System.out.print(maze[x][y]);
+			}
+			System.out.println("");
+		}
+	}
+
+	private void setDimenstions(String line) throws Exception {
+		Scanner dimensions = new Scanner(line);
+
+		setWidth((short) (2 + Short.parseShort(dimensions.next())));
+		setHeight((short) (2 + Short.parseShort(dimensions.next())));
+
+		dimensions.close();
+	}
+
+	/**
+	 * @param height
+	 *          the height to set
+	 */
+	public void setHeight(short height) throws Exception {
+
+		if (height > MAX_MAZE_HEIGHT)
+			throw new Exception(String.format("Height %d is bigger than maximum allowed height %d",
+					height, MAX_MAZE_HEIGHT));
+
+		this.height = height;
+	}
+
+	/**
+	 * @param width
+	 *          the width to set
+	 */
+	public void setWidth(short width) throws Exception {
+
+		if (width > MAX_MAZE_WIDTH)
+			throw new Exception(String.format("Width %d is bigger than maximum allowed width %d", width,
+					MAX_MAZE_WIDTH));
+
+		this.width = width;
 	}
 
 }
