@@ -244,6 +244,8 @@ public class GraphicalInterface implements ActionListener {
 		try {
 			maze.setWidth((short)(62));
 			maze.setHeight((short)(150));
+//			maze.setWidth((short)(562));
+//			maze.setHeight((short)(550));
 			
 			maze.initialize();
 			maze.fill();
@@ -416,12 +418,16 @@ public class GraphicalInterface implements ActionListener {
 			buttonClearToggle(GuiButton.ANIMATE);
 		}
 
-		//draw attempted nodes as well
+		// draw the blocks from the open and closed list (visit and visited)
+		solver.getVisit().entrySet()
+				.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
+
 		solver.getVisitedAlready().entrySet().forEach(node -> {
 			drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
 			drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
 		});
 		
+		//draw the final path
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
 			// TODO draw arrows here as well (not sure if it will look nice :/ )
@@ -534,7 +540,7 @@ public class GraphicalInterface implements ActionListener {
 		// ******* buttons and desired actions for buttons *******
 		actions = new HashMap<>();
 
-		JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
+		JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
 
 		addButton(buttonPanel,false, GuiButton.LOAD, this::loadMaze);
 		addButton(buttonPanel,false, GuiButton.GENERATE, this::generateMaze);
