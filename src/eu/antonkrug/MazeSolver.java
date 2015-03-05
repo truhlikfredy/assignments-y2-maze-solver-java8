@@ -16,9 +16,11 @@ package eu.antonkrug;
  */
 
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MazeSolver {
 
 	public static final boolean	DEBUG	= false;
-	private LinkedList<Point>										allDirections;
+	private List<Point>										allDirections;
 	private Point																currentStep;
 	private LinkedList<Point>										destinations;
 	private boolean															destinationVisible;
@@ -39,9 +41,9 @@ public class MazeSolver {
 
 	private HashMap<Point, Point>								visitedAlready;
 
-	public MazeSolver(Maze maze, boolean destinationVisible) {
+	public MazeSolver(Maze maze) {
 
-		this.destinationVisible = destinationVisible;
+		this.destinationVisible = true;
 		this.doNotSolveAgain = false;
 		this.maze = maze;
 		this.currentStep = null;
@@ -52,12 +54,19 @@ public class MazeSolver {
 		this.destinations = new LinkedList<>();
 
 		// this.allDirections = Collections.EMPTY_LIST;
-		this.allDirections = new LinkedList<>();
+
 		// all cardinal direction for up,down,left and right
-		this.allDirections.add(new Point(-1, 0));
-		this.allDirections.add(new Point(1, 0));
-		this.allDirections.add(new Point(0, 1));
-		this.allDirections.add(new Point(0, -1));
+		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
+				new Point(0, -1));
+
+		//TODO clean up
+		
+//		this.allDirections = new LinkedList<>();
+//		// all cardinal direction for up,down,left and right
+//		this.allDirections.add(new Point(-1, 0));
+//		this.allDirections.add(new Point(1, 0));
+//		this.allDirections.add(new Point(0, 1));
+//		this.allDirections.add(new Point(0, -1));
 
 		this.visit = new ConcurrentHashMap<>();
 		this.visitedAlready = new HashMap<>();

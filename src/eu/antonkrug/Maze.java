@@ -15,11 +15,17 @@ package eu.antonkrug;
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
 
-
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+//import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Maze {
@@ -70,17 +76,33 @@ public class Maze {
 		}
 
 	}
+
 	private final static short	MAX_MAZE_HEIGHT	= 1000;
 
 	private final static short	MAX_MAZE_WIDTH	= 1000;
 
-	private short	height;
-	private Block[][]	maze;
+	private List<Point>					allDirections;
 
-	private short	width;
+	private short								height;
+	private Block[][]						maze;
+	private ArrayList<Point>		wallList;
+
+	private short								width;
 
 	public Maze() {
 		maze = new Block[1][1];
+	}
+	
+	public void addStart(Point point) {
+		maze[point.x][point.y]=Block.START;
+	}
+
+	public void addWalkablePath(Point point) {
+		maze[point.x][point.y]=Block.EMPTY;
+	}
+
+	public void addFinish(Point point) {
+		maze[point.x][point.y]=Block.FINISH;
 	}
 
 	public boolean canWalkTo(Point point) {
@@ -116,6 +138,10 @@ public class Maze {
 
 	public void initialize() {
 		maze = new Block[width][height];
+		border();
+	}
+	
+	public void border() {
 		for (int x = 0; x < width; x++) {
 			maze[x][0] = Block.WALL;
 			maze[x][height - 1] = Block.WALL;
@@ -123,6 +149,65 @@ public class Maze {
 		for (int y = 0; y < height; y++) {
 			maze[0][y] = Block.WALL;
 			maze[width - 1][y] = Block.WALL;
+		}		
+	}
+
+	public void fill() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				maze[x][y] = Block.WALL;
+			}
+		}
+	}
+
+	private void generateAddWalls(int x, int y) {
+
+		// make center walkable
+		maze[x][y] = Block.EMPTY;
+
+		// all around add to list
+		for (Point point : allDirections) {
+			if (x > 1 && y > 1 && x < width - 2 && y < height - 2
+					&& maze[x + point.x][y + point.y] == Block.WALL)
+				wallList.add(new Point(x + point.x, y + point.y));
+		}
+	}
+
+	public void generate() {
+		// all cardinal direction for up,down,left and right
+		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
+				new Point(0, -1));
+
+		wallList = new ArrayList<>();
+		generateAddWalls(width / 2, height / 2);
+		//generateAddWalls( 3, 3);
+
+		Random rand = new Random();
+
+		while (wallList.size() > 0) {
+			Point wall = wallList.get(rand.nextInt(wallList.size()));
+
+			int emptyWallX = wall.x;
+			int emptyWallY = wall.y;
+
+			for (Point point : allDirections) {
+				if (maze[wall.x + point.x][wall.y + point.y] == Block.EMPTY) {
+					emptyWallX = wall.x + point.x;
+					emptyWallY = wall.y + point.y;
+				}
+			}
+
+			// find if oposite direction is empty by inverting the delta
+			int deltaX = wall.x - emptyWallX;
+			int deltaY = wall.y - emptyWallY;
+
+
+			if (maze[wall.x + deltaX][wall.y + deltaY] == Block.WALL) {
+				maze[wall.x][wall.y] = Block.EMPTY;
+				generateAddWalls(wall.x+deltaX , wall.y+deltaY );
+			}
+
+			wallList.remove(wall);
 		}
 	}
 
@@ -143,6 +228,22 @@ public class Maze {
 
 		br.close();
 
+		return true;
+	}
+
+	public boolean save(String fileName) throws Exception {
+		PrintWriter printer = new PrintWriter(new File(fileName));
+		printer.write(width+" "+height+"\n");
+		
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				printer.write(maze[x][y].getChar());
+			}
+			printer.write("\n");
+		}
+		printer.flush();
+		printer.close();
+		
 		return true;
 	}
 

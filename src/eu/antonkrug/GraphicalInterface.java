@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -128,7 +129,7 @@ public class GraphicalInterface implements ActionListener {
 	private JLabel																			statusBarLabel;
 
 	public GraphicalInterface() {
-		animationTimer = new Timer(200, actionEvent -> this.stepChecks());
+		animationTimer = new Timer(100, actionEvent -> this.stepChecks());
 
 		makeFrame();
 	}
@@ -144,6 +145,14 @@ public class GraphicalInterface implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		String action = event.getActionCommand();
 		if (actions.containsKey(action)) actions.get(action).second.run();
+	}
+	
+	public void saveMaze() {
+		try {
+			maze.save("mazes/test.maze");
+		} catch (Exception e) {
+			setStatusBarException(e);
+		}
 	}
 
 	/**
@@ -228,6 +237,51 @@ public class GraphicalInterface implements ActionListener {
 	private void destinationIgnoreToggle() {
 		solver.setDestinationVisible(!solver.isDestinationVisible());
 	}
+	
+	private void generateMaze() {
+		maze = new Maze();
+		
+		try {
+			maze.setWidth((short)(62));
+			maze.setHeight((short)(150));
+			
+			maze.initialize();
+			maze.fill();
+			maze.generate();
+
+			Random rand = new Random();
+			
+			//add some random points, hopefuly will create a loop or few
+			//how many depends on the maze size
+			int walkablePoints=(maze.getWidth()+maze.getHeight())/20;
+			for (int count=0;count<walkablePoints;count++) {
+				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight())));
+			}
+			
+			//make border around maze as fail safe
+			maze.border();
+			
+			Point startPoint;
+			Point endPoint;
+			int minimumDistance=(maze.getWidth()+maze.getHeight())/3;
+			
+			//add start & finish somewhere randomly, but bit far away from each other
+			do {
+				 startPoint = new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight()));
+				 endPoint = new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight()));
+			} while (!maze.canWalkTo(startPoint) || !maze.canWalkTo(endPoint) || startPoint.distance(endPoint)<minimumDistance );
+			
+			maze.addStart(startPoint);
+			maze.addFinish(endPoint);
+
+			buttonEnable(GuiButton.SAVE);
+			//prepare solver & refresh screen
+			flushSolver();
+			
+		} catch (Exception e) {
+			setStatusBarException(e);			
+		}
+	}
 
 	private void drawArrow(Graphics gfx, Point at, Point to, Color color) {
 		if (at != null && to != null) {
@@ -278,7 +332,18 @@ public class GraphicalInterface implements ActionListener {
 		try {
 			// draw wall JPG as the wall background
 			BufferedImage wall = ImageIO.read(new File("img/wall.jpg"));
-			mazeImageGFX.drawImage(wall, 0, 0, null);
+			
+			//if maze is bigger than background tile the background
+      int iw = wall.getWidth();
+      int ih = wall.getHeight();
+      if (iw > 0 && ih > 0) {
+          for (int x = 0; x < noMazeBuf.getWidth(); x += iw) {
+              for (int y = 0; y < noMazeBuf.getHeight(); y += ih) {
+              	mazeImageGFX.drawImage(wall, x, y, null);
+              }
+          }
+      }			
+			
 
 			// draw all empty blocks, starts and destinations
 			for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
@@ -351,6 +416,12 @@ public class GraphicalInterface implements ActionListener {
 			buttonClearToggle(GuiButton.ANIMATE);
 		}
 
+		//draw attempted nodes as well
+		solver.getVisitedAlready().entrySet().forEach(node -> {
+			drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
+			drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
+		});
+		
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
 			// TODO draw arrows here as well (not sure if it will look nice :/ )
@@ -383,7 +454,7 @@ public class GraphicalInterface implements ActionListener {
 			buttonClearToggle(GuiButton.ANIMATE);
 		}
 
-		solver = new MazeSolver(maze, true);
+		solver = new MazeSolver(maze);
 		solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
 		try {
 
@@ -466,8 +537,8 @@ public class GraphicalInterface implements ActionListener {
 		JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
 
 		addButton(buttonPanel,false, GuiButton.LOAD, this::loadMaze);
-		addButton(buttonPanel,false, GuiButton.GENERATE, this::buttonActionNoImplemented);
-		addButton(buttonPanel,false, GuiButton.SAVE, this::buttonActionNoImplemented);
+		addButton(buttonPanel,false, GuiButton.GENERATE, this::generateMaze);
+		addButton(buttonPanel,false, GuiButton.SAVE, this::saveMaze);
 		addButton(buttonPanel,false, GuiButton.SOLVE, this::solve);
 		addButton(buttonPanel,false, GuiButton.FLUSH, this::flushSolver);
 		addButton(buttonPanel,false, GuiButton.STEP, this::stepChecks);
