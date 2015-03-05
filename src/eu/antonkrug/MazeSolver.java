@@ -1,15 +1,5 @@
 package eu.antonkrug;
 
-import java.awt.Point;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
-import eu.antonkrug.GraphicalInterface.GuiButton;
-
 /**
  * 
  * @author Anton Krug
@@ -18,6 +8,21 @@ import eu.antonkrug.GraphicalInterface.GuiButton;
  * @requires Java 8!
  * 
  */
+
+/* Copyright (C) Anton Krug - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
+
+import java.awt.Point;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MazeSolver {
 
 	private LinkedList<Point>										allDirections;
@@ -31,8 +36,7 @@ public class MazeSolver {
 	private Point																currentStep;
 	private Long																timeStart;
 	private Long																timeStop;
-	
-	
+	private boolean															destinationVisible;
 
 	/**
 	 * @return the currentStep
@@ -41,10 +45,25 @@ public class MazeSolver {
 		return currentStep;
 	}
 
-	public static final boolean									DEBUG	= false;
+	/**
+	 * @return the destinationVisible
+	 */
+	public boolean isDestinationVisible() {
+		return destinationVisible;
+	}
 
-	public MazeSolver(Maze maze) {
+	/**
+	 * @param destinationVisible the destinationVisible to set
+	 */
+	public void setDestinationVisible(boolean destinationVisible) {
+		this.destinationVisible = destinationVisible;
+	}
 
+	public static final boolean	DEBUG	= false;
+
+	public MazeSolver(Maze maze, boolean destinationVisible) {
+
+		this.destinationVisible = destinationVisible;
 		this.doNotSolveAgain = false;
 		this.maze = maze;
 		this.currentStep = null;
@@ -185,7 +204,7 @@ public class MazeSolver {
 		}
 		this.timeStart = System.nanoTime();
 		currentStep = origin;
-		
+
 		return 0;
 	}
 
@@ -267,12 +286,22 @@ public class MazeSolver {
 		markNodeAsVisited(currentPosition);
 
 		// get smallest node from not visited ones so we can use it as next move
-		
+
 		// Entry<Point, MazeNode> min = Collections.min(visit.entrySet(),
 		// (Entry<Point, MazeNode> a, Entry<Point, MazeNode> b) ->
 		// a.getValue().getF().compareTo(b.getValue().getF()));
-		Entry<Point, MazeNode> min = Collections.min(visit.entrySet(), (a, b) -> a.getValue().getF()
-				.compareTo(b.getValue().getF()));
+
+		//depending if I'm allowed to see destination or not. The heurestics (H value) is
+		//knowledge of the destination and F=G+H so getting G value instead of F will ignore
+		//the heurestic part and will behave like it doesn't know the destination
+		Entry<Point, MazeNode> min;
+		if (destinationVisible) {
+			min = Collections.min(visit.entrySet(),
+					(a, b) -> a.getValue().getF().compareTo(b.getValue().getF()));
+		} else {
+			min = Collections.min(visit.entrySet(),
+					(a, b) -> a.getValue().getG().compareTo(b.getValue().getG()));
+		}
 
 		if (DEBUG) System.out.println(min.getKey());
 		return min.getKey();

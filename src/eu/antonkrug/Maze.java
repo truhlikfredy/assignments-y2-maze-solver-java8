@@ -9,6 +9,13 @@ package eu.antonkrug;
  * 
  */
 
+/* Copyright (C) Anton Krug - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
+
+
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileReader;

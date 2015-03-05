@@ -1,8 +1,5 @@
 package eu.antonkrug;
 
-import java.awt.Point;
-import java.util.LinkedList;
-
 /**
  * A node class used inside A* best path searching algoritm
  * 
@@ -10,6 +7,17 @@ import java.util.LinkedList;
  * @date 2015/02/22
  * @version 1
  */
+
+/* Copyright (C) Anton Krug - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
+
+import java.awt.Point;
+import java.util.LinkedList;
+
+
 public class MazeNode {
 
 	// distance from start
@@ -65,7 +73,7 @@ public class MazeNode {
 	}
 
 	/**
-	 * Get G and F combined Want return Integer so on lamba expressions i just can
+	 * Get G and F combined Want return Integer so on lamba expressions just can
 	 * call getF().compare directly
 	 * 
 	 * @return
@@ -75,11 +83,12 @@ public class MazeNode {
 	}
 
 	/**
-	 * Get distantance traveled from start
+	 * Get distantance traveled from start. Return Integer so on lamba expressions i just can
+	 * call getG().compare directly
 	 * 
 	 * @return the g
 	 */
-	public int getG() {
+	public Integer getG() {
 		return g;
 	}
 
