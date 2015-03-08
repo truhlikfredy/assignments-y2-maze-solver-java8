@@ -184,12 +184,13 @@ public class GraphicalInterface implements ActionListener {
 			animationTimer.stop();
 			buttonEnable(GuiButton.LOAD);
 			buttonEnable(GuiButton.GENERATE);
+			buttonEnable(GuiButton.FLUSH);
 
 		} else {
 			// disable everything just keep couple buttons
 			buttonDisableAll();
 			buttonEnable(GuiButton.ANIMATE);
-			buttonEnable(GuiButton.FLUSH);
+//			buttonEnable(GuiButton.FLUSH);
 			buttonEnable(GuiButton.STEP);
 			buttonEnable(GuiButton.DESTINATION_IGNORE);
 			buttonEnable(GuiButton.EXIT);
@@ -651,7 +652,9 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	private void stepExecute() {
-		buttonEnable(GuiButton.FLUSH);
+		if (!animationTimer.isRunning()) { 
+			buttonEnable(GuiButton.FLUSH);
+		}
 		buttonDisable(GuiButton.SOLVE);
 
 		if (solver.solveStepDidntStarted()) solver.solveStepInit();
