@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 
 import utils.Pair;
 
@@ -123,7 +124,7 @@ public class GraphicalInterface implements ActionListener {
 	private ImageIcon																		mazeImage;
 	private Graphics																		mazeImageGFX;
 	private JPanel																			mazePanel;
-	
+
 	private MazeSolver																	solver;
 
 	private JLabel																			statusBarLabel;
@@ -146,27 +147,32 @@ public class GraphicalInterface implements ActionListener {
 		String action = event.getActionCommand();
 		if (actions.containsKey(action)) actions.get(action).second.run();
 	}
-	
+
 	public void saveMaze() {
-		try {
-			maze.save("mazes/test.maze");
-		} catch (Exception e) {
-			setStatusBarException(e);
+		String fileName = openSaveDialog(true);
+
+		if (fileName != null) {
+			try {
+				maze.save(fileName);
+			} catch (Exception e) {
+				setStatusBarException(e);
+			}
 		}
 	}
 
 	/**
 	 * Add a button to the button panel.
 	 */
-	private void addButton(Container panel,boolean toggle, GuiButton buttonText, Runnable actionPerformed) {
+	private void addButton(Container panel, boolean toggle, GuiButton buttonText,
+			Runnable actionPerformed) {
 		AbstractButton button;
-		
+
 		if (toggle) {
 			button = new JToggleButton(buttonText.toString());
 		} else {
 			button = new JButton(buttonText.toString());
 		}
-		
+
 		button.addActionListener(this);
 		panel.add(button);
 
@@ -223,7 +229,7 @@ public class GraphicalInterface implements ActionListener {
 			actions.get(name.toString()).first.setEnabled(false);
 		}
 	}
-	
+
 	private void buttonDisableAll() {
 		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
 	}
@@ -237,51 +243,53 @@ public class GraphicalInterface implements ActionListener {
 	private void destinationIgnoreToggle() {
 		solver.setDestinationVisible(!solver.isDestinationVisible());
 	}
-	
+
 	private void generateMaze() {
 		maze = new Maze();
-		
+
 		try {
-			maze.setWidth((short)(62));
-			maze.setHeight((short)(150));
-//			maze.setWidth((short)(562));
-//			maze.setHeight((short)(550));
-			
+			maze.setWidth((short) (62));
+			maze.setHeight((short) (150));
+			// maze.setWidth((short)(562));
+			// maze.setHeight((short)(550));
+
 			maze.initialize();
 			maze.fill();
 			maze.generate();
 
 			Random rand = new Random();
-			
-			//add some random points, hopefuly will create a loop or few
-			//how many depends on the maze size
-			int walkablePoints=(maze.getWidth()+maze.getHeight())/20;
-			for (int count=0;count<walkablePoints;count++) {
-				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight())));
+
+			// add some random points, hopefuly will create a loop or few
+			// how many depends on the maze size
+			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 20;
+			for (int count = 0; count < walkablePoints; count++) {
+				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),
+						rand.nextInt(maze.getHeight())));
 			}
-			
-			//make border around maze as fail safe
+
+			// make border around maze as fail safe
 			maze.border();
-			
+
 			Point startPoint;
 			Point endPoint;
-			int minimumDistance=(maze.getWidth()+maze.getHeight())/3;
-			
-			//add start & finish somewhere randomly, but bit far away from each other
+			int minimumDistance = (maze.getWidth() + maze.getHeight()) / 3;
+
+			// add start & finish somewhere randomly, but bit far away from each other
 			do {
-				 startPoint = new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight()));
-				 endPoint = new Point(rand.nextInt(maze.getWidth()),rand.nextInt(maze.getHeight()));
-			} while (!maze.canWalkTo(startPoint) || !maze.canWalkTo(endPoint) || startPoint.distance(endPoint)<minimumDistance );
-			
+				startPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
+				endPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
+			} while (!maze.canWalkTo(startPoint) || !maze.canWalkTo(endPoint)
+					|| startPoint.distance(endPoint) < minimumDistance);
+
 			maze.addStart(startPoint);
 			maze.addFinish(endPoint);
 
 			buttonEnable(GuiButton.SAVE);
-			//prepare solver & refresh screen
+			// prepare solver & refresh screen
 			flushSolver();
-			
+
 		} catch (Exception e) {
-			setStatusBarException(e);			
+			setStatusBarException(e);
 		}
 	}
 
@@ -334,18 +342,17 @@ public class GraphicalInterface implements ActionListener {
 		try {
 			// draw wall JPG as the wall background
 			BufferedImage wall = ImageIO.read(new File("img/wall.jpg"));
-			
-			//if maze is bigger than background tile the background
-      int iw = wall.getWidth();
-      int ih = wall.getHeight();
-      if (iw > 0 && ih > 0) {
-          for (int x = 0; x < noMazeBuf.getWidth(); x += iw) {
-              for (int y = 0; y < noMazeBuf.getHeight(); y += ih) {
-              	mazeImageGFX.drawImage(wall, x, y, null);
-              }
-          }
-      }			
-			
+
+			// if maze is bigger than background tile the background
+			int iw = wall.getWidth();
+			int ih = wall.getHeight();
+			if (iw > 0 && ih > 0) {
+				for (int x = 0; x < noMazeBuf.getWidth(); x += iw) {
+					for (int y = 0; y < noMazeBuf.getHeight(); y += ih) {
+						mazeImageGFX.drawImage(wall, x, y, null);
+					}
+				}
+			}
 
 			// draw all empty blocks, starts and destinations
 			for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
@@ -426,16 +433,16 @@ public class GraphicalInterface implements ActionListener {
 			drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
 			drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
 		});
-		
-		//draw the final path
+
+		// draw the final path
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
 			// TODO draw arrows here as well (not sure if it will look nice :/ )
 		}
 
 		drawMazeIcons(false);
-		statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.", solver.timeTaken(),solver.getVisitedAlready().size()));
-		
+		statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
+				solver.timeTaken(), solver.getVisitedAlready().size()));
 
 		// when solution is found disable some buttons
 		buttonDisable(GuiButton.SOLVE);
@@ -476,7 +483,7 @@ public class GraphicalInterface implements ActionListener {
 
 			buttonEnable(GuiButton.DESTINATION_IGNORE);
 			buttonClearToggle(GuiButton.DESTINATION_IGNORE);
-			
+
 			buttonDisable(GuiButton.FLUSH);
 
 		} catch (Exception lackingNodesException) {
@@ -484,17 +491,60 @@ public class GraphicalInterface implements ActionListener {
 		}
 	}
 
+	private String openSaveDialog(boolean saveDialog) {
+		// Choose maze file filter
+		FileFilter ff = new FileFilter() {
+			public boolean accept(File f) {
+				if (f.isDirectory())
+					return true;
+				else if (f.getName().endsWith(".txt"))
+					return true;
+				else if (f.getName().endsWith(".maze"))
+					return true;
+				else return false;
+			}
+
+			public String getDescription() {
+				return "All supported maze files";
+			}
+		};
+
+		// Choose maze dialog
+		final JFileChooser fc = new JFileChooser("./mazes");
+		fc.setFileFilter(ff);
+
+		if (saveDialog) {
+			if (fc.showSaveDialog(frame) != JFileChooser.APPROVE_OPTION) return null;
+		} else {
+			if (fc.showOpenDialog(frame) != JFileChooser.APPROVE_OPTION) return null;
+		}
+
+		java.io.File file = fc.getSelectedFile();
+		return file.getPath();
+
+	}
+
+	/**
+	 * Gui file chooser and loader dialog
+	 * 
+	 */
 	private void loadMaze() {
 		maze = new Maze();
 
-		try {
+		String fileName = openSaveDialog(false);
 
-//			maze.load("mazes/tiny.maze");
-			maze.load("mazes/another.maze");
-			flushSolver();
+		if (fileName != null) {
+			try {
 
-		} catch (Exception loadException) {
-			setStatusBarException(loadException);
+				// maze.load("mazes/tiny.maze");
+				// maze.load("mazes/another.maze");
+				// maze.load("mazes/test.maze");
+				maze.load(fileName);
+				flushSolver();
+
+			} catch (Exception loadException) {
+				setStatusBarException(loadException);
+			}
 		}
 	}
 
@@ -542,15 +592,15 @@ public class GraphicalInterface implements ActionListener {
 
 		JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
 
-		addButton(buttonPanel,false, GuiButton.LOAD, this::loadMaze);
-		addButton(buttonPanel,false, GuiButton.GENERATE, this::generateMaze);
-		addButton(buttonPanel,false, GuiButton.SAVE, this::saveMaze);
-		addButton(buttonPanel,false, GuiButton.SOLVE, this::solve);
-		addButton(buttonPanel,false, GuiButton.FLUSH, this::flushSolver);
-		addButton(buttonPanel,false, GuiButton.STEP, this::stepChecks);
-		addButton(buttonPanel,true, GuiButton.DESTINATION_IGNORE, this::destinationIgnoreToggle);
-		addButton(buttonPanel,true, GuiButton.ANIMATE, this::animate);
-		addButton(buttonPanel,false, GuiButton.EXIT, this::exit);
+		addButton(buttonPanel, false, GuiButton.LOAD, this::loadMaze);
+		addButton(buttonPanel, false, GuiButton.GENERATE, this::generateMaze);
+		addButton(buttonPanel, false, GuiButton.SAVE, this::saveMaze);
+		addButton(buttonPanel, false, GuiButton.SOLVE, this::solve);
+		addButton(buttonPanel, false, GuiButton.FLUSH, this::flushSolver);
+		addButton(buttonPanel, false, GuiButton.STEP, this::stepChecks);
+		addButton(buttonPanel, true, GuiButton.DESTINATION_IGNORE, this::destinationIgnoreToggle);
+		addButton(buttonPanel, true, GuiButton.ANIMATE, this::animate);
+		addButton(buttonPanel, false, GuiButton.EXIT, this::exit);
 
 		// disable all, just leave some buttons enabled
 		buttonDisableAll();
@@ -632,7 +682,8 @@ public class GraphicalInterface implements ActionListener {
 				statusBarLabel.setText("No solution found");
 			} else {
 				drawSolvedPath();
-//				statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.", solver.timeTaken(),solver.getVisitedAlready().size()));
+				// statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
+				// solver.timeTaken(),solver.getVisitedAlready().size()));
 			}
 		}
 	}

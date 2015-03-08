@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MazeSolver {
 
-	public static final boolean	DEBUG	= false;
-	private List<Point>										allDirections;
+	public static final boolean									DEBUG	= false;
+	private List<Point>													allDirections;
 	private Point																currentStep;
 	private LinkedList<Point>										destinations;
 	private boolean															destinationVisible;
@@ -59,14 +59,14 @@ public class MazeSolver {
 		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
 				new Point(0, -1));
 
-		//TODO clean up
-		
-//		this.allDirections = new LinkedList<>();
-//		// all cardinal direction for up,down,left and right
-//		this.allDirections.add(new Point(-1, 0));
-//		this.allDirections.add(new Point(1, 0));
-//		this.allDirections.add(new Point(0, 1));
-//		this.allDirections.add(new Point(0, -1));
+		// TODO clean up
+
+		// this.allDirections = new LinkedList<>();
+		// // all cardinal direction for up,down,left and right
+		// this.allDirections.add(new Point(-1, 0));
+		// this.allDirections.add(new Point(1, 0));
+		// this.allDirections.add(new Point(0, 1));
+		// this.allDirections.add(new Point(0, -1));
 
 		this.visit = new ConcurrentHashMap<>();
 		this.visitedAlready = new HashMap<>();
@@ -148,22 +148,28 @@ public class MazeSolver {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
-		// get smallest node from not visited ones so we can use it as next move
+		Entry<Point, MazeNode> min = null;
 
-		// Entry<Point, MazeNode> min = Collections.min(visit.entrySet(),
-		// (Entry<Point, MazeNode> a, Entry<Point, MazeNode> b) ->
-		// a.getValue().getF().compareTo(b.getValue().getF()));
+		// Check if we just didn't deleted the very last point in the visit list
+		if (visit.size() > 0) {
 
-		//depending if I'm allowed to see destination or not. The heurestics (H value) is
-		//knowledge of the destination and F=G+H so getting G value instead of F will ignore
-		//the heurestic part and will behave like it doesn't know the destination
-		Entry<Point, MazeNode> min;
-		if (destinationVisible) {
-			min = Collections.min(visit.entrySet(),
-					(a, b) -> a.getValue().getF().compareTo(b.getValue().getF()));
+			// Depending if I'm allowed to see destination or not. The heurestics (H
+			// value) is knowledge of the destination and F=G+H so getting G value
+			// instead of F will ignore the heurestic part and will behave like it
+			// doesn't know the destination
+			if (destinationVisible) {
+
+				// get smallest node from not visited ones so we can use it as next move
+				min = Collections.min(visit.entrySet(),
+						(a, b) -> a.getValue().getF().compareTo(b.getValue().getF()));
+			} else {
+
+				// get smallest node from not visited ones so we can use it as next move
+				min = Collections.min(visit.entrySet(),
+						(a, b) -> a.getValue().getG().compareTo(b.getValue().getG()));
+			}
 		} else {
-			min = Collections.min(visit.entrySet(),
-					(a, b) -> a.getValue().getG().compareTo(b.getValue().getG()));
+			return null;
 		}
 
 		if (DEBUG) System.out.println(min.getKey());
@@ -183,9 +189,6 @@ public class MazeSolver {
 		try {
 			MazeNode proposedNode = new MazeNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
 					destinations);
-
-			// System.out.println(testPoint);
-			// System.out.println(proposedNode);
 
 			// will replace if it's not found already or when it found a entry, but
 			// new node has better value. i.e. always put new/replace entry unless it
@@ -253,9 +256,10 @@ public class MazeSolver {
 	public void setDestinations(LinkedList<Point> destinations) {
 		this.destinations = destinations;
 	}
-	
+
 	/**
-	 * @param destinationVisible the destinationVisible to set
+	 * @param destinationVisible
+	 *          the destinationVisible to set
 	 */
 	public void setDestinationVisible(boolean destinationVisible) {
 		this.destinationVisible = destinationVisible;
