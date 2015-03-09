@@ -31,6 +31,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
+import eu.antonkrug.MazeSolverAStar.Aproach;
 import utils.Pair;
 
 public class GraphicalInterface implements ActionListener {
@@ -185,7 +186,7 @@ public class GraphicalInterface implements ActionListener {
 			buttonEnable(GuiButton.LOAD);
 			buttonEnable(GuiButton.GENERATE);
 			buttonEnable(GuiButton.FLUSH);
-
+			buttonEnable(GuiButton.SAVE);
 		} else {
 			// disable everything just keep couple buttons
 			buttonDisableAll();
@@ -249,7 +250,7 @@ public class GraphicalInterface implements ActionListener {
 		maze = new Maze();
 
 		try {
-			maze.setWidth((short) (62));
+			maze.setWidth((short) (60));
 			maze.setHeight((short) (150));
 			// maze.setWidth((short)(562));
 			// maze.setHeight((short)(550));
@@ -468,11 +469,9 @@ public class GraphicalInterface implements ActionListener {
 			buttonClearToggle(GuiButton.ANIMATE);
 		}
 
-		solver = new MazeSolver(maze);
-		solver.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
 		try {
-
-			solver.addStartingPositions(maze.getAllBlock(Maze.Block.START));
+			solver = new MazeSolverAStar(maze,Aproach.JDK_HASHMAP);
+			
 			drawMaze();
 			statusBarLabel.setText("Maze loaded");
 

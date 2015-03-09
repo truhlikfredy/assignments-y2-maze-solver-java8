@@ -15,7 +15,7 @@ package eu.antonkrug;
  */
 
 import java.awt.Point;
-import java.util.LinkedList;
+import java.util.List;
 
 public class MazeNode {
 
@@ -45,7 +45,7 @@ public class MazeNode {
 	 * @param destination
 	 */
 	public MazeNode(Point parent, int previousCost, int currentX, int currentY,
-			LinkedList<Point> destinations) throws Exception {
+			List<Point> destinations) throws Exception {
 
 		if (destinations.size() == 0)
 			throw new Exception("Before creating Nodes you have to set at least one destination!");
@@ -63,7 +63,7 @@ public class MazeNode {
 	 * @param current
 	 * @param destination
 	 */
-	public MazeNode(Point parent, int previousCost, Point current, LinkedList<Point> destinations)
+	public MazeNode(Point parent, int previousCost, Point current, List<Point> destinations)
 			throws Exception {
 
 		if (destinations.size() == 0)
@@ -136,7 +136,7 @@ public class MazeNode {
 	 * @param currentY
 	 * @param destination
 	 */
-	public void setH(int currentX, int currentY, LinkedList<Point> destinations) {
+	public void setH(int currentX, int currentY, List<Point> destinations) {
 
 		short smallest = Short.MAX_VALUE;
 

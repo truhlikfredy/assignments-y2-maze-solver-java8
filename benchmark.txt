@@ -1,0 +1,8 @@
+System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
+Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
+Memory:	1841823744 - Available: 118909104
+Count:	1000 times repeated benchmark
+---------------------------------------
+A* JDK_CONCURENT_HASHMAP:	15206 ms
+A* JDK_HASHMAP:	4627 ms
+A* FASTUTIL_HASHMAP:	6458 ms
