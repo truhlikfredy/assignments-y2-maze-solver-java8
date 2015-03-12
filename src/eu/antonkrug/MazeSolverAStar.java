@@ -1,15 +1,13 @@
 package eu.antonkrug;
 
 /**
- * Single threaded implementation of A* using hash maps as main datastructure 
- * to hold open and closed lists
- * 
+ * Single threaded, multithread and fastutil implementation of A* using 
+ * hash maps as main datastructure to hold open and closed lists.
  * 
  * @author Anton Krug
  * @date 2015/02/22
  * @version 1.3
  * @requires Java 8!
- * 
  */
 
 /* Copyright (C) Anton Krug - All Rights Reserved
@@ -29,12 +27,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+//import net.openhft.koloboke.collect.map.hash.HashObjObjMaps;
+
+//import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class MazeSolverAStar implements MazeSolver {
 
 	public enum Aproach {
-		JDK_HASHMAP, JDK_CONCURENT_HASHMAP, FASTUTIL_HASHMAP;
+		JDK_HASHMAP, JDK_CONCURENT_HASHMAP, 
+		// KOLOBOKE, 
+		//FASTUTIL_HASHMAP
+		;
 	}
 
 	public static final boolean		DEBUG	= false;
@@ -47,7 +50,7 @@ public class MazeSolverAStar implements MazeSolver {
 	private Point									origin;
 	private Long									timeStart;
 	private Long									timeStop;
-	private Map<Point, MazeNode>	visit;
+	private Map<Point, AStartNode>	visit;
 	private Map<Point, Point>			visitedAlready;
 	private Aproach								implementationAproach;
 
@@ -86,13 +89,15 @@ public class MazeSolverAStar implements MazeSolver {
 				this.visitedAlready = new HashMap<>();
 				break;
 
-			case FASTUTIL_HASHMAP:
-				// this.visit = new Object2ObjectOpenHashMap<>(1000,0.5f);
-				// this.visitedAlready = new Object2ObjectOpenHashMap<>(1000,0.5f);
+//			case KOLOBOKE:
+//			  this.visit=HashObjObjMaps.getDefaultFactory().withNullKeyAllowed(false).<Point, MazeNode>newMutableMap();
+//				this.visitedAlready = new HashMap<>();
+//				break;
 
-				this.visit = new Object2ObjectOpenHashMap<>();
-				this.visitedAlready = new Object2ObjectOpenHashMap<>();
-				break;
+//			case FASTUTIL_HASHMAP:
+//				this.visit = new Object2ObjectOpenHashMap<>();
+//				this.visitedAlready = new Object2ObjectOpenHashMap<>();
+//				break;
 
 			default:
 				throw new Exception("Not valid aproach selected");
@@ -147,7 +152,7 @@ public class MazeSolverAStar implements MazeSolver {
 	 *           If there is no destination present it will throw exception
 	 */
 	public void addStartPosition(Point origin) throws Exception {
-		visit.put(origin, new MazeNode(null, 0, origin, destinations));
+		visit.put(origin, new AStartNode(null, 0, origin, destinations));
 		this.origin = origin;
 	}
 
@@ -197,6 +202,25 @@ public class MazeSolverAStar implements MazeSolver {
 		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
 		return path;
 	}
+	
+	public List<Point> backTracePathParty() {
+		Point currentStep = this.currentStep;
+		for (Point direction: allDirections) {
+			Point checkPoint = new Point(currentStep);
+			checkPoint.translate(direction.x, direction.y);
+			if (visitedAlready.containsKey(checkPoint)) {
+				currentStep=checkPoint;
+			}
+		}
+		LinkedList<Point> path = new LinkedList<>();
+
+		while (currentStep != null) {
+			if (DEBUG) System.out.println(currentStep);
+			path.add(currentStep);
+			currentStep = visitedAlready.get(currentStep);
+		}
+		return path;
+	}
 
 	/**
 	 * Evaluates given position with all cardinal directions and then returns the
@@ -223,7 +247,7 @@ public class MazeSolverAStar implements MazeSolver {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
-		Entry<Point, MazeNode> min = null;
+		Entry<Point, AStartNode> min = null;
 
 		// Check if we just didn't deleted the very last point in the visit list
 		if (visit.size() > 0) {
@@ -269,7 +293,7 @@ public class MazeSolverAStar implements MazeSolver {
 		if (!maze.canWalkTo(testPoint)) return;
 
 		try {
-			MazeNode proposedNode = new MazeNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
+			AStartNode proposedNode = new AStartNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
 					destinations);
 
 			// will replace if it's not found already or when it found a entry, but
@@ -307,7 +331,7 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the visit
 	 */
-	public Map<Point, MazeNode> getVisit() {
+	public Map<Point, AStartNode> getVisit() {
 		return visit;
 	}
 

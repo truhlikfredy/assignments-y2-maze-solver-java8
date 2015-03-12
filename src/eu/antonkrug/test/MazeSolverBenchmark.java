@@ -4,8 +4,8 @@ package eu.antonkrug.test;
  * @author Anton Krug
  * 
  * Warning this will solve a maze 1000 times, it can take some time,
- * On old core 2 duo 2.4Ghz cpu running JDK 8 on Debain Wheezy it takes around
- * 25 seconds to finish all benchmarks. 
+ * On old core 2 duo 2.4Ghz cpu running JDK 8 on Debain Wheezy it can take 
+ * around 20s to finish all benchmarks. 
  */
 
 import java.util.Properties;
@@ -71,10 +71,15 @@ public class MazeSolverBenchmark {
 		aStarAproaches(Aproach.JDK_HASHMAP);
 	}
 
+//	@Test
+//	public void koloboke() throws Exception {
+//		aStarAproaches(Aproach.KOLOBOKE);
+//	}
 
-	@Test
-	public void fastutil() throws Exception {
-		aStarAproaches(Aproach.FASTUTIL_HASHMAP);
-	}
+
+//	@Test
+//	public void fastutil() throws Exception {
+//		aStarAproaches(Aproach.FASTUTIL_HASHMAP);
+//	}
 
 }

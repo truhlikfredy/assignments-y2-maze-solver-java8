@@ -133,7 +133,11 @@ public class GraphicalInterface implements ActionListener {
 	public GraphicalInterface() {
 		animationTimer = new Timer(100, actionEvent -> this.stepChecks());
 
-		makeFrame();
+		try {
+			makeFrame();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -164,14 +168,16 @@ public class GraphicalInterface implements ActionListener {
 	/**
 	 * Add a button to the button panel.
 	 */
-	private void addButton(Container panel, boolean toggle, GuiButton buttonText,
+	private void addButton(Container panel, boolean toggle, GuiButton buttonText, String iconName,
 			Runnable actionPerformed) {
 		AbstractButton button;
+		
+		Icon icon = new ImageIcon("./img/icon_"+iconName+".png");
 
 		if (toggle) {
-			button = new JToggleButton(buttonText.toString());
+			button = new JToggleButton(buttonText.toString(),icon);
 		} else {
-			button = new JButton(buttonText.toString());
+			button = new JButton(buttonText.toString(),icon);
 		}
 
 		button.addActionListener(this);
@@ -551,10 +557,10 @@ public class GraphicalInterface implements ActionListener {
 	/**
 	 * Create GUI parts
 	 */
-	private void makeFrame() {
+	private void makeFrame() throws Exception {
 		// creates window with minimum resolution
 		frame = new JFrame("Maze solver");
-		frame.setMinimumSize(new Dimension(640, 400));
+		frame.setMinimumSize(new Dimension(740, 500));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// create the status bar on the bottom of the frame
@@ -576,11 +582,15 @@ public class GraphicalInterface implements ActionListener {
 		mazePanel.setLayout(new BorderLayout());
 
 		// create empty maze image and wrap it in desired objects
-		BufferedImage noMazeBuf = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage noMazeBuf = new BufferedImage(480, 310, BufferedImage.TYPE_INT_ARGB);
 		Graphics noMazeBufGraphics;
 		noMazeBufGraphics = noMazeBuf.getGraphics();
-		noMazeBufGraphics.setColor(Color.red);
-		noMazeBufGraphics.drawString("No maze", 100, 100);
+		
+		BufferedImage wall = ImageIO.read(new File("./img/noMaze.jpg"));
+  	noMazeBufGraphics.drawImage(wall, 0, 0, null);
+					
+//		noMazeBufGraphics.setColor(Color.red);
+//		noMazeBufGraphics.drawString("No maze", 100, 100);
 		mazeImage = new ImageIcon(noMazeBuf);
 
 		// make the maze scrollable and resizes by content window
@@ -592,15 +602,15 @@ public class GraphicalInterface implements ActionListener {
 
 		JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
 
-		addButton(buttonPanel, false, GuiButton.LOAD, this::loadMaze);
-		addButton(buttonPanel, false, GuiButton.GENERATE, this::generateMaze);
-		addButton(buttonPanel, false, GuiButton.SAVE, this::saveMaze);
-		addButton(buttonPanel, false, GuiButton.SOLVE, this::solve);
-		addButton(buttonPanel, false, GuiButton.FLUSH, this::flushSolver);
-		addButton(buttonPanel, false, GuiButton.STEP, this::stepChecks);
-		addButton(buttonPanel, true, GuiButton.DESTINATION_IGNORE, this::destinationIgnoreToggle);
-		addButton(buttonPanel, true, GuiButton.ANIMATE, this::animate);
-		addButton(buttonPanel, false, GuiButton.EXIT, this::exit);
+		addButton(buttonPanel, false, GuiButton.LOAD,"open", this::loadMaze);
+		addButton(buttonPanel, false, GuiButton.GENERATE,"generate", this::generateMaze);
+		addButton(buttonPanel, false, GuiButton.SAVE,"save", this::saveMaze);
+		addButton(buttonPanel, false, GuiButton.SOLVE,"solve2", this::solve);
+		addButton(buttonPanel, false, GuiButton.FLUSH,"clean", this::flushSolver);
+		addButton(buttonPanel, false, GuiButton.STEP,"solve", this::stepChecks);
+		addButton(buttonPanel, true, GuiButton.DESTINATION_IGNORE,"target", this::destinationIgnoreToggle);
+		addButton(buttonPanel, true, GuiButton.ANIMATE,"clock", this::animate);
+		addButton(buttonPanel, false, GuiButton.EXIT,"exit", this::exit);
 
 		// disable all, just leave some buttons enabled
 		buttonDisableAll();
@@ -669,6 +679,11 @@ public class GraphicalInterface implements ActionListener {
 				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
 				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
 			});
+			
+			for (Point point : solver.backTracePathParty()) {
+				drawBlock(mazeImageGFX, point, Color.GREEN);
+			}
+
 
 			// higlight next planed block
 			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);

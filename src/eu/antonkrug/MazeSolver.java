@@ -10,12 +10,6 @@ package eu.antonkrug;
  * 
  */
 
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * Written by Anton Krug <anton.krug@gmail.com>, February 2015
- */
-
 import java.awt.Point;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +58,13 @@ public interface MazeSolver {
 	 * @return
 	 */
 	public List<Point> backTracePath();
+	
+	/**
+	 * Returns current final path by partly solved search
+	 * 
+	 * @return
+	 */
+	public List<Point> backTracePathParty();
 
 	/**
 	 * Gets the current step position inside the solver
@@ -84,7 +85,7 @@ public interface MazeSolver {
 	 * 
 	 * @return the visit
 	 */
-	public Map<Point, MazeNode> getVisit();
+	public Map<Point, AStartNode> getVisit();
 
 	/**
 	 * Returns closed list

@@ -112,6 +112,10 @@ public class Maze {
 		return false;
 	}
 
+	public Block getBlock(Point point) {
+		return maze[point.x][point.y];
+	}
+	
 	public LinkedList<Point> getAllBlock(Block block) {
 		LinkedList<Point> list = new LinkedList<>();
 
