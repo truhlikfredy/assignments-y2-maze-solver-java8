@@ -33,26 +33,19 @@ import java.util.Map.Entry;
 
 public class MazeSolverAStar implements MazeSolver {
 
-	public enum Aproach {
-		JDK_HASHMAP, JDK_CONCURENT_HASHMAP, 
-		// KOLOBOKE, 
-		//FASTUTIL_HASHMAP
-		;
-	}
-
 	public static final boolean		DEBUG	= false;
 	private List<Point>						allDirections;
 	private Point									currentStep;
 	private List<Point>						destinations;
 	private boolean								destinationVisible;
 	private boolean								doNotSolveAgain;
+	private Aproach								implementationAproach;
 	private Maze									maze;
 	private Point									origin;
 	private Long									timeStart;
 	private Long									timeStop;
 	private Map<Point, AStartNode>	visit;
 	private Map<Point, Point>			visitedAlready;
-	private Aproach								implementationAproach;
 
 	/**
 	 * Constructor to initialise fields.
@@ -116,6 +109,18 @@ public class MazeSolverAStar implements MazeSolver {
 			this.destinations.add(destination);
 		}
 	}
+	
+	/**
+	 * Will add both starting and final destination points from the maze is given
+	 * to this solver
+	 * 
+	 * @throws Exception
+	 *           If there is no destination present it will throw exception
+	 */
+	public void addStartingAndDestionationPositions() throws Exception {
+		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
+		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
+	}
 
 	/**
 	 * Will add one or more starting positions for the maze
@@ -129,18 +134,6 @@ public class MazeSolverAStar implements MazeSolver {
 		for (Point point : starts) {
 			this.addStartPosition(point);
 		}
-	}
-
-	/**
-	 * Will add both starting and final destination points from the maze is given
-	 * to this solver
-	 * 
-	 * @throws Exception
-	 *           If there is no destination present it will throw exception
-	 */
-	public void addStartingAndDestionationPositions() throws Exception {
-		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
 	}
 
 	/**
@@ -202,7 +195,7 @@ public class MazeSolverAStar implements MazeSolver {
 		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
 		return path;
 	}
-	
+
 	public List<Point> backTracePathParty() {
 		Point currentStep = this.currentStep;
 		for (Point direction: allDirections) {
@@ -221,7 +214,7 @@ public class MazeSolverAStar implements MazeSolver {
 		}
 		return path;
 	}
-
+	
 	/**
 	 * Evaluates given position with all cardinal directions and then returns the
 	 * best next step.
@@ -306,6 +299,14 @@ public class MazeSolverAStar implements MazeSolver {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Will return Approach of this implementation
+	 * @return
+	 */
+	public Aproach getAproach() {
+		return implementationAproach;
 	}
 
 	/**

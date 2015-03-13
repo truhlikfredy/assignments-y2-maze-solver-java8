@@ -16,8 +16,8 @@ import org.junit.Test;
 
 import eu.antonkrug.Maze;
 import eu.antonkrug.MazeSolver;
+import eu.antonkrug.MazeSolver.Aproach;
 import eu.antonkrug.MazeSolverAStar;
-import eu.antonkrug.MazeSolverAStar.Aproach;
 
 public class MazeSolverBenchmark {
 	private static final int	REPEAT_COUNT	= 1000;

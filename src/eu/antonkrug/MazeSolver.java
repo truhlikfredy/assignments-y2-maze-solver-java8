@@ -15,6 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface MazeSolver {
+	
+	public enum Aproach {
+		BFS, DFS,
+		JDK_CONCURENT_HASHMAP, JDK_HASHMAP, 
+		// KOLOBOKE, 
+		//FASTUTIL_HASHMAP
+		;
+	}
+	
 
 	public static final boolean	DEBUG	= false;
 
@@ -26,15 +35,6 @@ public interface MazeSolver {
 	public void addDestinationPosition(Point destination);
 
 	/**
-	 * Will add one or more starting positions for the maze
-	 * 
-	 * @param starts
-	 *          List of starting points
-	 * @throws Exception If there is no destination present it will throw exception
-	 */
-	public void addStartingPositions(List<Point> starts) throws Exception;
-
-	/**
 	 * Will add both starting and final destination points from the maze is given
 	 * to this solver
 	 * 
@@ -42,6 +42,15 @@ public interface MazeSolver {
 	 *           If there is no destination present it will throw exception
 	 */
 	public void addStartingAndDestionationPositions() throws Exception;
+
+	/**
+	 * Will add one or more starting positions for the maze
+	 * 
+	 * @param starts
+	 *          List of starting points
+	 * @throws Exception If there is no destination present it will throw exception
+	 */
+	public void addStartingPositions(List<Point> starts) throws Exception;
 
 	/**
 	 * Will add starting position into maze, a maze can contain multiple starting
@@ -65,6 +74,12 @@ public interface MazeSolver {
 	 * @return
 	 */
 	public List<Point> backTracePathParty();
+	
+	/**
+	 * Will return Approach of this implementation
+	 * @return
+	 */
+	public Aproach getAproach();	
 
 	/**
 	 * Gets the current step position inside the solver
