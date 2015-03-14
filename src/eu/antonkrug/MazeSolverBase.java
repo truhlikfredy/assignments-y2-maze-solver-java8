@@ -7,16 +7,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+/**
+ * Base containing some defualt methods which all implementations have mostly in
+ * common (if some differences are needed, still they can be overwritten) hash
+ * maps as main datastructure to hold open and closed lists.
+ * 
+ * @author Anton Krug
+ * @date 2015/03/01
+ * @version 1.1
+ * @requires Java 8!
+ */
+/*
+ * Copyright (C) Anton Krug - All Rights Reserved Unauthorized copying of this
+ * file, via any medium is strictly prohibited Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
+
 public abstract class MazeSolverBase implements MazeSolver {
 
 	public static final boolean	DEBUG	= false;
-	protected List<Point>					allDirections;
-	protected Point								currentStep;
-	protected List<Point>					destinations;
-	protected boolean							destinationVisible;
-	protected boolean							doNotSolveAgain;
-	protected Aproach							implementationAproach;
-	protected Maze								maze;
+	protected List<Point>				allDirections;
+	protected Point							currentStep;
+	protected List<Point>				destinations;
+	protected boolean						destinationVisible;
+	protected boolean						doNotSolveAgain;
+	protected Aproach						implementationAproach;
+	protected Maze							maze;
 	protected Point							origin;
 	private Long								timeStart;
 	private Long								timeStop;
@@ -38,6 +54,20 @@ public abstract class MazeSolverBase implements MazeSolver {
 
 		this.implementationAproach = implementationAproach;
 
+	}
+
+	/**
+	 * Simplifying some frequently used operation, if this would be C++ we could
+	 * overload the operator and have peace, but java must be java.
+	 * 
+	 * @return Will return point which will be first point shifted by second point
+	 *         (or vice versa, still same result)
+	 */
+	// TODO okontroluj ci sa vsade pouziva
+	protected Point addPoints(Point first, Point second) {
+		Point ret = new Point(first);
+		ret.translate(second.x, second.y);
+		return ret;
 	}
 
 	/**
@@ -70,8 +100,8 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 * 
 	 * @param starts
 	 *          List of starting points
-	 * @exception If
-	 *              there is no destination present it will throw exception
+	 * @throws Exception
+	 *              If there is no destination present it will throw exception
 	 */
 	@Override
 	public void addStartingPositions(List<Point> starts) throws Exception {
@@ -80,7 +110,6 @@ public abstract class MazeSolverBase implements MazeSolver {
 		}
 	}
 
-	
 	/**
 	 * Returns measured time between the solver was started, till it found
 	 * solution
@@ -96,9 +125,9 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 * Move a position from open list to closed list
 	 * 
 	 * @param index
-	 */	
+	 */
 	abstract protected void markNodeAsVisited(Point index);
-	
+
 	/**
 	 * If solver is finished, do final checks and cleanup
 	 * 
@@ -118,7 +147,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 
 		return 0;
 	}
-	
+
 	/**
 	 * Return flag if the alrgorithm is allowed to see the destination
 	 * 
@@ -138,7 +167,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	@Override
 	public boolean isDoNotSolveAgain() {
 		return doNotSolveAgain;
-	}	
+	}
 
 	/**
 	 * Called before solver can do each step
@@ -156,7 +185,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 
 		return 0;
 	}
-	
+
 	/**
 	 * Set current step to null
 	 * 
@@ -198,7 +227,6 @@ public abstract class MazeSolverBase implements MazeSolver {
 		currentStep = doOneStep(currentStep);
 	}
 
-
 	/**
 	 * By default retun for both alternatives null, so then if any implementation
 	 * will override any of them then that one will be called by Gui (gui detects
@@ -209,18 +237,18 @@ public abstract class MazeSolverBase implements MazeSolver {
 		// by default do not support stream
 		return null;
 	}
-	
+
 	/**
 	 * By default retun for both alternatives null, so then if any implementation
 	 * will override any of them then that one will be called by Gui (gui detects
 	 * which one is the working one by checking for null)
 	 */
 	@Override
-	public Map<Point,Point> getVisitedAlready() {
+	public Map<Point, Point> getVisitedAlready() {
 		// by default do not support map
 		return null;
 	}
-	
+
 	/**
 	 * Condition which will be checked in each step
 	 * 
@@ -230,10 +258,10 @@ public abstract class MazeSolverBase implements MazeSolver {
 	public boolean solveStepCondition() {
 		return !destinations.contains(currentStep) && getVisitSize() > 0;
 	}
-	
-	
+
 	/**
 	 * Will return Approach of this implementation
+	 * 
 	 * @return
 	 */
 	@Override
@@ -260,8 +288,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	public List<Point> getDestinations() {
 		return destinations;
 	}
-	
-	
+
 	/**
 	 * Will attempt to find path from start to finish
 	 * 
@@ -285,13 +312,13 @@ public abstract class MazeSolverBase implements MazeSolver {
 
 		return iteration;
 	}
-	
+
 	@Override
 	abstract public void addStartPosition(Point origin) throws Exception;
-	
+
 	@Override
-  abstract public List<Point> backTracePath();
-	
+	abstract public List<Point> backTracePath();
+
 	@Override
 	abstract public List<Point> backTracePathParty();
 

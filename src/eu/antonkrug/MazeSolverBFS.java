@@ -16,7 +16,6 @@ package eu.antonkrug;
  */
 
 import java.awt.Point;
-import java.util.Arrays;
 import java.util.stream.Stream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,21 +25,13 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Stack;
 
-public class MazeSolverBFS implements MazeSolver {
+public class MazeSolverBFS extends MazeSolverBase {
 
-	public static final boolean	DEBUG	= false;
-	private List<Point>					allDirections;
-//	private Stack<Point>				currentPath;
-	private Point								currentStep;
-	private List<Point>					destinations;
-	private boolean							doNotSolveAgain;
-	private Maze								maze;
-	private Point								origin;
-	private Long								timeStart;
-	private Long								timeStop;
-	private Queue<Point>				visit;
-	private Stack<Point>				visitedAlready;
-	private Map<Point, Point>		roots;
+	private Queue<Point>			visit;
+	private Stack<Point>			visitedAlready;
+	
+	//not needed for algorithm, but it makes GUI more pretty
+	private Map<Point, Point>	parents;
 
 	/**
 	 * Constructor to initialise fields.
@@ -49,67 +40,24 @@ public class MazeSolverBFS implements MazeSolver {
 	 *          Reqiress to be give already loaded maze
 	 */
 	public MazeSolverBFS(Maze maze) throws Exception {
+		super(maze, Aproach.BFS_STACK);
 
-		this.doNotSolveAgain = false;
-		this.maze = maze;
-		this.currentStep = null;
+		// not used, but if in future this implementation would be asked if it can
+		// see the destination then it would return correct value
+		this.destinationVisible = false;
 
-		this.timeStart = System.nanoTime();
-		this.timeStop = this.timeStart;
-
-		this.destinations = new LinkedList<>();
-
-		// all cardinal direction for up,down,left and right
-		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
-				new Point(0, -1));
-
+		// as FIFO queue linked list is used
 		this.visit = new LinkedList<>();
-//		this.currentPath = new Stack<>();
+
 		this.visitedAlready = new Stack<>();
-		this.roots = new HashMap<>();
+
+		// not needed for the search itself, but gui wants to display higlighted
+		// which path is currently investigated pointing from the current step to
+		// the starting point, to which map of parents is needed. so we can look up
+		// which point has parent to which direction
+		this.parents = new HashMap<>();
 
 		this.addStartingAndDestionationPositions();
-	}
-
-	/**
-	 * Will add one or more destinations to maze
-	 * 
-	 * @param destination
-	 */
-	@Override
-	public void addDestinationPosition(Point destination) {
-		if (!destinations.contains(destination)) {
-			this.destinations.add(destination);
-		}
-	}
-
-	/**
-	 * Will add both starting and final destination points from the maze is given
-	 * to this solver
-	 * 
-	 * @throws Exception
-	 *           If there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingAndDestionationPositions() throws Exception {
-		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
-	}
-
-	/**
-	 * Will add one or more starting positions for the maze
-	 * 
-	 * @param starts
-	 *          List of starting points
-	 * @exception If
-	 *              there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingPositions(List<Point> starts) throws Exception {
-		for (Point point : starts) {
-			this.addStartPosition(point);
-		}
-//		currentPath.push(origin);
 	}
 
 	/**
@@ -122,7 +70,7 @@ public class MazeSolverBFS implements MazeSolver {
 	 */
 	@Override
 	public void addStartPosition(Point origin) throws Exception {
-//		currentPath.push(origin);
+		// currentPath.push(origin);
 		visit.add(origin);
 		this.origin = origin;
 	}
@@ -151,8 +99,8 @@ public class MazeSolverBFS implements MazeSolver {
 
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
-		
-		this.currentStep=destination.get();
+
+		this.currentStep = destination.get();
 
 		return backTracePathParty();
 	}
@@ -164,37 +112,29 @@ public class MazeSolverBFS implements MazeSolver {
 	 */
 	@Override
 	public List<Point> backTracePathParty() {
-		LinkedList<Point> path= new LinkedList<>();
-		
-		Point nextMove=null;
+		LinkedList<Point> path = new LinkedList<>();
+
+		Point nextMove = null;
 
 		for (Point direction : allDirections) {
 
-			Point testPoint =  addPoints(currentStep, direction);
-			
-			if (roots.containsKey(testPoint)) nextMove=testPoint;
+			Point testPoint = addPoints(currentStep, direction);
+
+			if (parents.containsKey(testPoint)) nextMove = testPoint;
 		}
-		
 
 		@SuppressWarnings("unused")
-		
-		int iteration=0;
+		int iteration = 0;
 		while (nextMove != null) {
 			if (DEBUG) System.out.println(nextMove);
 			path.add(nextMove);
-			nextMove = roots.get(nextMove);
+			nextMove = parents.get(nextMove);
 			iteration++;
 		}
 
-		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");			
-		
+		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
+
 		return path;
-	}
-	
-	protected Point addPoints(Point first,Point second) {
-		Point ret = new Point(first);
-		ret.translate(second.x, second.y);
-		return ret;
 	}
 
 	/**
@@ -204,59 +144,30 @@ public class MazeSolverBFS implements MazeSolver {
 	 * @param currentPosition
 	 * @return
 	 */
-	private Point doOneStep(Point currentPosition) {
+	@Override
+	protected Point doOneStep(Point currentPosition) {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
-		
-		Point nextMove=null;
 
+		Point nextMove = null;
 
 		// test all directions if i can move that way and I wasn't there before
 		for (Point direction : allDirections) {
 
-			Point testPoint =  addPoints(currentPosition, direction);
-			
-			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint) && !visit.contains(testPoint)) {
+			Point testPoint = addPoints(currentPosition, direction);
+
+			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)
+					&& !visit.contains(testPoint)) {
 				visit.add(testPoint);
-				roots.put(testPoint, currentPosition);
+				parents.put(testPoint, currentPosition);
 			}
 		}
-		
-//		currentPath.push(nextMove);
-		nextMove=visit.peek();
+
+		// currentPath.push(nextMove);
+		nextMove = visit.peek();
 
 		if (DEBUG) System.out.println(nextMove);
 		return nextMove;
-	}
-
-	/**
-	 * Will return Approach of this implementation
-	 * 
-	 * @return
-	 */
-	@Override
-	public Aproach getAproach() {
-		return Aproach.BFS_STACK;
-	}
-
-	/**
-	 * Gets the current step position inside the solver
-	 * 
-	 * @return the currentStep
-	 */
-	@Override
-	public Point getCurrentStep() {
-		return currentStep;
-	}
-
-	/**
-	 * Returns all given destinations
-	 * 
-	 * @return the destinations
-	 */
-	@Override
-	public List<Point> getDestinations() {
-		return destinations;
 	}
 
 	/**
@@ -270,18 +181,9 @@ public class MazeSolverBFS implements MazeSolver {
 	}
 
 	/**
-	 * Returns null so alternative can be called
-	 * 
-	 * @return null
-	 */
-	@Override
-	public Map<Point, Point> getVisitedAlready() {
-		return null;
-	}
-
-	/**
 	 * If it's unconviet to return closed list as map, you can return it as stream
-	 * with this method.
+	 * with this method. And becuase getVisitedAlready was not overiden the GUI
+	 * will use this method instead
 	 * 
 	 * @return
 	 */
@@ -311,158 +213,18 @@ public class MazeSolverBFS implements MazeSolver {
 	}
 
 	/**
-	 * Return flag if the alrgorithm is allowed to see the destination
-	 * 
-	 * @return the destinationVisible
-	 */
-	@Override
-	public boolean isDestinationVisible() {
-		return false;
-	}
-
-	/**
-	 * Flag if algorithm is solved (with solution or not) and locked for any new
-	 * solving attempt.
-	 * 
-	 * @return the doNotSolveAgain
-	 */
-	@Override
-	public boolean isDoNotSolveAgain() {
-		return doNotSolveAgain;
-	}
-
-	/**
 	 * Move a position from open list to closed list
 	 * 
 	 * @param index
 	 */
-	private void markNodeAsVisited(Point index) {
+	@Override
+	protected void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
-			// add it to visited list and then removed it from visit list
-		if (visit.size()>0) {
+		// add it to visited list and then removed it from visit list
+		if (visit.size() > 0) {
 			visitedAlready.push(index);
 			visit.remove(index);
 		}
 	}
 
-	/**
-	 * Set all destinations to given list.
-	 * 
-	 * @param destinations
-	 */
-	@Override
-	public void setDestinations(List<Point> destinations) {
-		this.destinations = destinations;
-	}
-
-	/**
-	 * Flag if algorithm is allowed to see destination
-	 * 
-	 * @param destinationVisible
-	 *          the destinationVisible to set
-	 */
-	@Override
-	public void setDestinationVisible(boolean destinationVisible) {
-		// destination visibility ignored for this implementation
-	}
-
-	/**
-	 * Will attempt to find path from start to finish
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solvePath() {
-
-		int iteration = 0;
-
-		if (solveStepInit() < 0) return -1;
-
-		while (solveStepCondition()) {
-			solveStepOneIteration();
-			iteration++;
-		}
-
-		if (solveStepFinish() < 0) return -1;
-
-		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
-
-		return iteration;
-	}
-
-	/**
-	 * Condition which will be checked in each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && visit.size() > 0;
-	}
-
-	/**
-	 * Set current step to null
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepDidntStarted() {
-		return currentStep == null;
-	}
-
-	/**
-	 * If solver is finished, do final checks and cleanup
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepFinish() {
-		this.timeStop = System.nanoTime();
-
-		doNotSolveAgain = true;
-
-		if (!destinations.contains(currentStep)) return -1;
-
-		// last step, when destination and current step are the same, we will flag
-		// which destionation we reached
-		markNodeAsVisited(currentStep);
-
-		return 0;
-	}
-
-	/**
-	 * Called before solver can do each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepInit() {
-		if (origin == null || doNotSolveAgain) {
-			doNotSolveAgain = true;
-			return -1;
-		}
-		this.timeStart = System.nanoTime();
-		currentStep = origin;
-
-		return 0;
-	}
-
-	/**
-	 * If solveStepCondition() returns true you can do one step iteration
-	 */
-	@Override
-	public void solveStepOneIteration() {
-		currentStep = doOneStep(currentStep);
-	}
-
-	/**
-	 * Returns measured time between the solver was started, till it found
-	 * solution
-	 * 
-	 * @return
-	 */
-	@Override
-	public long timeTaken() {
-		return (timeStop - timeStart) / 1000000;
-	}
 }
