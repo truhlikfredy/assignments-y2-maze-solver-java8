@@ -1,7 +1,7 @@
 package eu.antonkrug;
 
 /**
- * Depth first search using stacks 
+ * Breadth first search using FIFO queue
  * 
  * @author Anton Krug
  * @date 2015/03/10
@@ -22,13 +22,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Stack;
 
-public class MazeSolverDFS implements MazeSolver {
+public class MazeSolverBFS implements MazeSolver {
 
 	public static final boolean	DEBUG	= false;
 	private List<Point>					allDirections;
-	private Stack<Point>				currentPath;
+//	private Stack<Point>				currentPath;
 	private Point								currentStep;
 	private List<Point>					destinations;
 	private boolean							doNotSolveAgain;
@@ -36,8 +37,9 @@ public class MazeSolverDFS implements MazeSolver {
 	private Point								origin;
 	private Long								timeStart;
 	private Long								timeStop;
-	private Stack<Point>				visit;
+	private Queue<Point>				visit;
 	private Stack<Point>				visitedAlready;
+	private Map<Point, Point>		roots;
 
 	/**
 	 * Constructor to initialise fields.
@@ -45,7 +47,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverDFS(Maze maze) throws Exception {
+	public MazeSolverBFS(Maze maze) throws Exception {
 
 		this.doNotSolveAgain = false;
 		this.maze = maze;
@@ -60,8 +62,8 @@ public class MazeSolverDFS implements MazeSolver {
 		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
 				new Point(0, -1));
 
-		this.visit = new Stack<>();
-		this.currentPath = new Stack<>();
+		this.visit = new LinkedList<>();
+//		this.currentPath = new Stack<>();
 		this.visitedAlready = new Stack<>();
 
 		this.addStartingAndDestionationPositions();
@@ -105,7 +107,7 @@ public class MazeSolverDFS implements MazeSolver {
 		for (Point point : starts) {
 			this.addStartPosition(point);
 		}
-		currentPath.push(origin);
+//		currentPath.push(origin);
 	}
 
 	/**
@@ -118,8 +120,8 @@ public class MazeSolverDFS implements MazeSolver {
 	 */
 	@Override
 	public void addStartPosition(Point origin) throws Exception {
-		currentPath.push(origin);
-		visit.push(origin);
+//		currentPath.push(origin);
+		visit.add(origin);
 		this.origin = origin;
 	}
 
@@ -148,7 +150,8 @@ public class MazeSolverDFS implements MazeSolver {
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
 
-		LinkedList<Point> path = new LinkedList<>(currentPath);
+//		LinkedList<Point> path = new LinkedList<>(currentPath);
+		LinkedList<Point> path = new LinkedList<>();
 
 		return path;
 	}
@@ -160,7 +163,8 @@ public class MazeSolverDFS implements MazeSolver {
 	 */
 	@Override
 	public List<Point> backTracePathParty() {
-		return new LinkedList<>(currentPath);
+//		return new LinkedList<>(currentPath);
+		return new LinkedList<>();
 	}
 
 	/**
@@ -173,8 +177,9 @@ public class MazeSolverDFS implements MazeSolver {
 	private Point doOneStep(Point currentPosition) {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
+		
+		Point nextMove=null;
 
-		Point nextMove = null;
 
 		// test all directions if i can move that way and I wasn't there before
 		for (Point direction : allDirections) {
@@ -182,37 +187,13 @@ public class MazeSolverDFS implements MazeSolver {
 			Point testPoint = new Point(currentPosition);
 			testPoint.translate(direction.x, direction.y);
 
-			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)) {
-				nextMove = testPoint;
-				// do not add duplicates
-				if (!visit.contains(testPoint)) visit.push(testPoint);
+			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint) && !visit.contains(testPoint)) {
+				visit.add(testPoint);
 			}
 		}
-		// TODO This method picked just first possible point, even when it's
-		// changing direction. Interesting would be to pick point which continues in
-		// the previous direction and if that not possible then any point. This
-		// would change behaviour in open fields.
-
-		// if dead end backtrack
-		if (nextMove == null) {
-
-			if (currentPath.size() > 1) {
-				// but do not return this step as curent step, return the next step
-				// back as next step because we are revertsing now
-				currentPath.pop();
-				nextMove = currentPath.peek();
-
-			} else if (currentPath.size() > 2) {
-				// there is not much left, back track slowly
-				nextMove = currentPath.pop();
-
-			} else {
-				return null;
-			}
-		} else {
-			// if something was found (no deadend) display is as current path
-			currentPath.push(nextMove);
-		}
+		
+//		currentPath.push(nextMove);
+		nextMove=visit.peek();
 
 		if (DEBUG) System.out.println(nextMove);
 		return nextMove;
@@ -327,8 +308,8 @@ public class MazeSolverDFS implements MazeSolver {
 	 */
 	private void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
-		if (visit.contains(index)) {
 			// add it to visited list and then removed it from visit list
+		if (visit.size()>0) {
 			visitedAlready.push(index);
 			visit.remove(index);
 		}
@@ -386,7 +367,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 */
 	@Override
 	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && currentPath.size() > 0;
+		return !destinations.contains(currentStep) && visit.size() > 0;
 	}
 
 	/**

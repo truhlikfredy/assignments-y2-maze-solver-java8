@@ -245,6 +245,10 @@ public class Gui implements ActionListener {
 
 		try {
 			switch (implementationToUse) {
+				case BFS_STACK:
+					solver = new MazeSolverBFS(maze);
+					break;
+				
 				case DFS_STACK:
 					solver = new MazeSolverDFS(maze);
 					break;
