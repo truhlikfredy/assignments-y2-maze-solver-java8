@@ -247,7 +247,7 @@ public class GraphicalInterface implements ActionListener {
 		if (actions.containsKey(name.toString())) {
 			actions.get(name.toString()).first.setSelected(selected);
 		}
-//		destinationIgnoreToggle();
+		// destinationIgnoreToggle();
 	}
 
 	private boolean buttonIsToggled(GuiButton name) {
@@ -271,7 +271,7 @@ public class GraphicalInterface implements ActionListener {
 		if (actions.containsKey(name.toString())) {
 			actions.get(name.toString()).first.setEnabled(false);
 		}
-//		destinationIgnoreToggle();
+		// destinationIgnoreToggle();
 	}
 
 	private void buttonDisableAll() {
@@ -503,14 +503,24 @@ public class GraphicalInterface implements ActionListener {
 		}
 
 		// draw the blocks from the open and closed list (visit and visited)
-		solver.getVisit().entrySet()
-				.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
 
-		solver.getVisitedAlready().entrySet().forEach(node -> {
-			drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
-			drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
-		});
+		if (solver.getVisitedAlready() == null) {
 
+			// simpler alternative will have no direction arrows
+			solver.getVisitedAlreadyAlternative().forEach(
+					point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
+
+		} else {
+
+			// using map so we can draw directions
+			solver.getVisitedAlready().entrySet().forEach(node -> {
+				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
+				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
+			});
+		}
+
+		solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
+		
 		// draw the final path
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
@@ -519,7 +529,7 @@ public class GraphicalInterface implements ActionListener {
 
 		drawMazeIcons(false);
 		statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
-				solver.timeTaken(), solver.getVisitedAlready().size()));
+				solver.timeTaken(), solver.getVisitedAlreadySize()));
 
 		// when solution is found disable some buttons
 		buttonDisable(GuiButton.SOLVE);
@@ -546,12 +556,16 @@ public class GraphicalInterface implements ActionListener {
 
 		try {
 			switch (implementationToUse) {
-				case JDK_HASHMAP:
-					solver = new MazeSolverAStar(maze, Aproach.JDK_HASHMAP);					
+				case DFS:
+					solver = new MazeSolverDFS(maze);
 					break;
 					
+				case JDK_HASHMAP:
+					solver = new MazeSolverAStar(maze, Aproach.JDK_HASHMAP);
+					break;
+
 				case JDK_CONCURENT_HASHMAP:
-					solver = new MazeSolverAStar(maze, Aproach.JDK_CONCURENT_HASHMAP);					
+					solver = new MazeSolverAStar(maze, Aproach.JDK_CONCURENT_HASHMAP);
 					break;
 
 				default:
@@ -581,7 +595,7 @@ public class GraphicalInterface implements ActionListener {
 		maze = new Maze();
 
 		try {
-			maze.setWidth((short) (60));
+			maze.setWidth((short) (55));
 			maze.setHeight((short) (150));
 			// maze.setWidth((short)(562));
 			// maze.setHeight((short)(550));
@@ -730,7 +744,7 @@ public class GraphicalInterface implements ActionListener {
 		addButtonToPanel(buttonPanel, false, GuiButton.STEP, "solve", this::stepChecks);
 		addButtonToPanel(buttonPanel, true, GuiButton.DESTINATION_IGNORE, "target",
 				this::destinationIgnoreToggle);
-		
+
 		addButtonToPanel(buttonPanel, true, GuiButton.ANIMATE, "clock", this::animate);
 		addButtonToPanel(buttonPanel, false, GuiButton.EXIT, "exit", this::exit);
 
@@ -837,13 +851,25 @@ public class GraphicalInterface implements ActionListener {
 			solver.solveStepOneIteration();
 
 			// draw the block from the open and closed list (visit and visited)
-			solver.getVisit().entrySet()
-					.forEach(node -> drawBlock(mazeImageGFX, node.getKey(), Color.CYAN));
 
-			solver.getVisitedAlready().entrySet().forEach(node -> {
-				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
-				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
-			});
+			if (solver.getVisitedAlready() == null) {
+
+				// non map alternative
+				solver.getVisitedAlreadyAlternative().forEach(
+						point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
+
+			} else {
+
+				// map aprroach (can draw arrows on the blocks)
+				solver.getVisitedAlready().entrySet().forEach(node -> {
+					drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
+					drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
+				});
+
+			}
+			
+			solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
+			
 
 			for (Point point : solver.backTracePathParty()) {
 				drawBlock(mazeImageGFX, point, Color.GREEN);
@@ -855,8 +881,8 @@ public class GraphicalInterface implements ActionListener {
 			// draw the start / finish icons over the blocks
 			drawMazeIcons(false);
 
-			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s", solver
-					.getVisitedAlready().size(), solver.getVisit().size(), solver.getCurrentStep()));
+			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s",
+					solver.getVisitedAlreadySize(), solver.getVisitSize(), solver.getCurrentStep()));
 
 		} else {
 			if (solver.solveStepFinish() < 0) {

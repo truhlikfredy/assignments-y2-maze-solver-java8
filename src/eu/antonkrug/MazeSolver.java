@@ -13,17 +13,16 @@ package eu.antonkrug;
 import java.awt.Point;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public interface MazeSolver {
-	
+
 	public enum Aproach {
-		BFS, DFS,
-		JDK_CONCURENT_HASHMAP, JDK_HASHMAP, 
-		// KOLOBOKE, 
-		//FASTUTIL_HASHMAP
+		BFS, DFS, JDK_CONCURENT_HASHMAP, JDK_HASHMAP,
+		// KOLOBOKE,
+		// FASTUTIL_HASHMAP
 		;
 	}
-	
 
 	public static final boolean	DEBUG	= false;
 
@@ -48,7 +47,8 @@ public interface MazeSolver {
 	 * 
 	 * @param starts
 	 *          List of starting points
-	 * @throws Exception If there is no destination present it will throw exception
+	 * @throws Exception
+	 *           If there is no destination present it will throw exception
 	 */
 	public void addStartingPositions(List<Point> starts) throws Exception;
 
@@ -57,7 +57,7 @@ public interface MazeSolver {
 	 * positions. And position which will gain the shortest path will choosen.
 	 * 
 	 * @param origin
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void addStartPosition(Point origin) throws Exception;
 
@@ -67,19 +67,20 @@ public interface MazeSolver {
 	 * @return
 	 */
 	public List<Point> backTracePath();
-	
+
 	/**
 	 * Returns current final path by partly solved search
 	 * 
 	 * @return
 	 */
 	public List<Point> backTracePathParty();
-	
+
 	/**
 	 * Will return Approach of this implementation
+	 * 
 	 * @return
 	 */
-	public Aproach getAproach();	
+	public Aproach getAproach();
 
 	/**
 	 * Gets the current step position inside the solver
@@ -100,14 +101,38 @@ public interface MazeSolver {
 	 * 
 	 * @return the visit
 	 */
-	public Map<Point, AStartNode> getVisit();
+	// public Map<Point, AStartNode> getVisit();
+	public Stream<Point> getVisit();
 
 	/**
-	 * Returns closed list
+	 * Returns open list size
+	 * 
+	 * @return the visit size
+	 */
+	public int getVisitSize();
+
+	/**
+	 * Returns closed list, if you can' return map, then return null and GUI will
+	 * call alternative method
 	 * 
 	 * @return the visitedAlready
 	 */
 	public Map<Point, Point> getVisitedAlready();
+
+	/**
+	 * Returns size of the closed list
+	 * 
+	 * @return
+	 */
+	public int getVisitedAlreadySize();
+
+	/**
+	 * If it's unconviet to return closed list as map, you can return it as stream
+	 * with this method.
+	 * 
+	 * @return
+	 */
+	public Stream<Point> getVisitedAlreadyAlternative();
 
 	/**
 	 * Return flag if the alrgorithm is allowed to see the destination

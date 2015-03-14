@@ -1,12 +1,11 @@
 package eu.antonkrug;
 
 /**
- * Single threaded, multithread and fastutil implementation of A* using 
- * hash maps as main datastructure to hold open and closed lists.
+ * Depth first search using stacks 
  * 
  * @author Anton Krug
- * @date 2015/02/22
- * @version 1.3
+ * @date 2015/03/10
+ * @version 1
  * @requires Java 8!
  */
 
@@ -18,35 +17,32 @@ package eu.antonkrug;
 
 import java.awt.Point;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 //import net.openhft.koloboke.collect.map.hash.HashObjObjMaps;
 
 //import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-public class MazeSolverAStar implements MazeSolver {
+public class MazeSolverDFS implements MazeSolver {
 
-	public static final boolean		DEBUG	= false;
-	private List<Point>						allDirections;
-	private Point									currentStep;
-	private List<Point>						destinations;
-	private boolean								destinationVisible;
-	private boolean								doNotSolveAgain;
-	private Aproach								implementationAproach;
-	private Maze									maze;
-	private Point									origin;
-	private Long									timeStart;
-	private Long									timeStop;
-	private Map<Point, AStartNode>	visit;
-	private Map<Point, Point>			visitedAlready;
+	public static final boolean	DEBUG	= false;
+	private List<Point>					allDirections;
+	private Stack<Point>				currentPath;
+	private Point								currentStep;
+	private List<Point>					destinations;
+	private boolean							doNotSolveAgain;
+	private Maze								maze;
+	private Point								origin;
+	private Long								timeStart;
+	private Long								timeStop;
+	private Stack<Point>				visit;
+	private Stack<Point>				visitedAlready;
 
 	/**
 	 * Constructor to initialise fields.
@@ -54,9 +50,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverAStar(Maze maze, Aproach implementationAproach) throws Exception {
+	public MazeSolverDFS(Maze maze) throws Exception {
 
-		this.destinationVisible = true;
 		this.doNotSolveAgain = false;
 		this.maze = maze;
 		this.currentStep = null;
@@ -70,32 +65,9 @@ public class MazeSolverAStar implements MazeSolver {
 		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
 				new Point(0, -1));
 
-		this.implementationAproach = implementationAproach;
-
-		switch (implementationAproach) {
-			case JDK_HASHMAP:
-				this.visit = new HashMap<>();
-				this.visitedAlready = new HashMap<>();
-				break;
-
-			case JDK_CONCURENT_HASHMAP:
-				this.visit = new ConcurrentHashMap<>();
-				this.visitedAlready = new HashMap<>();
-				break;
-
-//			case KOLOBOKE:
-//			  this.visit=HashObjObjMaps.getDefaultFactory().withNullKeyAllowed(false).<Point, MazeNode>newMutableMap();
-//				this.visitedAlready = new HashMap<>();
-//				break;
-
-//			case FASTUTIL_HASHMAP:
-//				this.visit = new Object2ObjectOpenHashMap<>();
-//				this.visitedAlready = new Object2ObjectOpenHashMap<>();
-//				break;
-
-			default:
-				throw new Exception("Not valid aproach selected");
-		}
+		this.visit = new Stack<>();
+		this.currentPath = new Stack<>();
+		this.visitedAlready = new Stack<>();
 
 		this.addStartingAndDestionationPositions();
 	}
@@ -105,13 +77,12 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @param destination
 	 */
-	@Override
 	public void addDestinationPosition(Point destination) {
 		if (!destinations.contains(destination)) {
 			this.destinations.add(destination);
 		}
 	}
-	
+
 	/**
 	 * Will add both starting and final destination points from the maze is given
 	 * to this solver
@@ -119,7 +90,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @throws Exception
 	 *           If there is no destination present it will throw exception
 	 */
-	@Override
 	public void addStartingAndDestionationPositions() throws Exception {
 		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
 		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
@@ -133,11 +103,11 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @exception If
 	 *              there is no destination present it will throw exception
 	 */
-	@Override
 	public void addStartingPositions(List<Point> starts) throws Exception {
 		for (Point point : starts) {
 			this.addStartPosition(point);
 		}
+		currentPath.push(origin);
 	}
 
 	/**
@@ -148,9 +118,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @throws Exception
 	 *           If there is no destination present it will throw exception
 	 */
-	@Override
 	public void addStartPosition(Point origin) throws Exception {
-		visit.put(origin, new AStartNode(null, 0, origin, destinations));
+		visit.push(origin);
 		this.origin = origin;
 	}
 
@@ -159,7 +128,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public List<Point> backTracePath() {
 		if (DEBUG) {
 			System.out.println("**********");
@@ -173,32 +141,14 @@ public class MazeSolverAStar implements MazeSolver {
 		// try to find between destination points a point which was visited.
 		// ie: find out if we "visited destination" aka "found destination"
 
-		Optional<Point> destination;
-		switch (implementationAproach) {
-			case JDK_CONCURENT_HASHMAP:
-				destination = destinations.parallelStream().filter(visitedAlready::containsKey).findFirst();
-				break;
-
-			default:
-				destination = destinations.stream().filter(visitedAlready::containsKey).findFirst();
-				break;
-		}
+		Optional<Point> destination = destinations.stream().filter(visitedAlready::contains)
+				.findFirst();
 
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
 
-		LinkedList<Point> path = new LinkedList<>();
+		LinkedList<Point> path = new LinkedList<>(currentPath);
 
-		Point currentStep = destination.get();
-
-		while (currentStep != null) {
-			if (DEBUG) System.out.println(currentStep);
-			path.add(currentStep);
-			currentStep = visitedAlready.get(currentStep);
-			iteration++;
-		}
-
-		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
 		return path;
 	}
 
@@ -207,26 +157,10 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public List<Point> backTracePathParty() {
-		Point currentStep = this.currentStep;
-		for (Point direction: allDirections) {
-			Point checkPoint = new Point(currentStep);
-			checkPoint.translate(direction.x, direction.y);
-			if (visitedAlready.containsKey(checkPoint)) {
-				currentStep=checkPoint;
-			}
-		}
-		LinkedList<Point> path = new LinkedList<>();
-
-		while (currentStep != null) {
-			if (DEBUG) System.out.println(currentStep);
-			path.add(currentStep);
-			currentStep = visitedAlready.get(currentStep);
-		}
-		return path;
+		return new LinkedList<>(currentPath);
 	}
-	
+
 	/**
 	 * Evaluates given position with all cardinal directions and then returns the
 	 * best next step.
@@ -237,89 +171,64 @@ public class MazeSolverAStar implements MazeSolver {
 	private Point doOneStep(Point currentPosition) {
 
 		// test each carduninal directions in multiple threads at once
-
-		switch (implementationAproach) {
-			case JDK_CONCURENT_HASHMAP:
-				allDirections.parallelStream().forEach(
-						direction -> evaluatePoint(currentPosition, direction));
-				break;
-
-			default:
-				allDirections.stream().forEach(direction -> evaluatePoint(currentPosition, direction));
-				break;
-		}
+		// allDirections.stream().forEach(direction ->
+		// evaluatePoint(currentPosition, direction));
 
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
-		Entry<Point, AStartNode> min = null;
+		Point nextMove = null;
 
 		// Check if we just didn't deleted the very last point in the visit list
-		if (visit.size() > 0) {
 
-			// Depending if I'm allowed to see destination or not. The heurestics (H
-			// value) is knowledge of the destination and F=G+H so getting G value
-			// instead of F will ignore the heurestic part and will behave like it
-			// doesn't know the destination
-			if (destinationVisible) {
 
-				// get smallest node from not visited ones so we can use it as next move
-				min = Collections.min(visit.entrySet(),
-						(a, b) -> a.getValue().getF().compareTo(b.getValue().getF()));
-			} else {
+			// test all directions if i can move that way and I wasn't there before
+			for (Point direction : allDirections) {
 
-				// get smallest node from not visited ones so we can use it as next move
-				min = Collections.min(visit.entrySet(),
-						(a, b) -> a.getValue().getG().compareTo(b.getValue().getG()));
+				Point testPoint = new Point(currentPosition);
+				testPoint.translate(direction.x, direction.y);
+
+				if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)
+						&& !currentPath.contains(testPoint)) {
+					
+					nextMove=testPoint;
+
+					// do not add duplicates
+					if (!visit.contains(testPoint)) visit.push(testPoint);
+				}
 			}
-		} else {
-			return null;
-		}
 
-		if (DEBUG) System.out.println(min.getKey());
-		return min.getKey();
-	}
+		 while (nextMove==null) {
+			// if dead end backtrack
+			if (currentPath.size() > 0) {
+				if (nextMove==null) {
+					visitedAlready.push(currentPath.pop());
+					currentPosition=currentPath.peek();
+				}
+			} else {
+				return null;
+			}
 
-	/**
-	 * Checks given cardinal direction and calculates or required fields for given
-	 * node, it will check if it should be put into open list or not.
-	 * 
-	 * @param currentPoint
-	 * @param direction
-	 */
-	private void evaluatePoint(Point currentPoint, Point direction) {
-		Point testPoint = new Point(currentPoint);
-		testPoint.translate(direction.x, direction.y);
+			// test all directions in open list while backtracking
+			for (Point direction : allDirections) {
+				Point testPoint = new Point(currentPosition);
+				testPoint.translate(direction.x, direction.y);
+				if (visit.contains(testPoint))			nextMove=testPoint;
+			}
+			
+		} 
 
-		// if node is visited already do not continue
-		if (visitedAlready.containsKey(testPoint)) return;
-
-		// if you can't walk on that block then do not continue
-		if (!maze.canWalkTo(testPoint)) return;
-
-		try {
-			AStartNode proposedNode = new AStartNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
-					destinations);
-
-			// will replace if it's not found already or when it found a entry, but
-			// new node has better value. i.e. always put new/replace entry unless it
-			// has already best one
-			if (!visit.containsKey(testPoint) || visit.get(testPoint).getF() > proposedNode.getF())
-				visit.put(testPoint, proposedNode);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		if (DEBUG) System.out.println(nextMove);
+		return nextMove;
 	}
 
 	/**
 	 * Will return Approach of this implementation
+	 * 
 	 * @return
 	 */
-	@Override
 	public Aproach getAproach() {
-		return implementationAproach;
+		return Aproach.DFS;
 	}
 
 	/**
@@ -327,7 +236,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the currentStep
 	 */
-	@Override
 	public Point getCurrentStep() {
 		return currentStep;
 	}
@@ -337,7 +245,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the destinations
 	 */
-	@Override
 	public List<Point> getDestinations() {
 		return destinations;
 	}
@@ -347,30 +254,48 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the visit
 	 */
-	@Override
 	public Stream<Point> getVisit() {
-		return visit.keySet().stream();
+		return visit.stream();
 	}
-	
-	/**
-	 * Returns open list size
-	 * 
-	 * @return the visit size
-	 */
-	@Override	
-	public int getVisitSize() {
-		return visit.size();
-	}
-	
 
 	/**
-	 * Returns closed list
+	 * Returns null so alternative can be called
 	 * 
-	 * @return the visitedAlready
+	 * @return null
+	 */
+	public Map<Point, Point> getVisitedAlready() {
+		return null;
+	}
+
+	/**
+	 * If it's unconviet to return closed list as map, you can return it as stream
+	 * with this method.
+	 * 
+	 * @return
 	 */
 	@Override
-	public Map<Point, Point> getVisitedAlready() {
-		return visitedAlready;
+	public Stream<Point> getVisitedAlreadyAlternative() {
+		return visitedAlready.stream();
+	}
+
+	/**
+	 * Returns size of the closed list
+	 * 
+	 * @return
+	 */
+	@Override
+	public int getVisitedAlreadySize() {
+		return visitedAlready.size();
+	}
+
+	/**
+	 * Returns size of the open list
+	 * 
+	 * @return
+	 */
+	@Override
+	public int getVisitSize() {
+		return visit.size();
 	}
 
 	/**
@@ -378,9 +303,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the destinationVisible
 	 */
-	@Override
 	public boolean isDestinationVisible() {
-		return destinationVisible;
+		return false;
 	}
 
 	/**
@@ -389,7 +313,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return the doNotSolveAgain
 	 */
-	@Override
 	public boolean isDoNotSolveAgain() {
 		return doNotSolveAgain;
 	}
@@ -401,10 +324,10 @@ public class MazeSolverAStar implements MazeSolver {
 	 */
 	private void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
-		if (visit.containsKey(index)) {
+		if (visit.contains(index)) {
 			// add it to visited list and then removed it from visit list
-			visitedAlready.put(index, visit.get(index).getParent());
-			visit.remove(index);
+ 			currentPath.push(index);
+ 			visit.remove(index);
 		}
 	}
 
@@ -413,7 +336,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @param destinations
 	 */
-	@Override
 	public void setDestinations(List<Point> destinations) {
 		this.destinations = destinations;
 	}
@@ -424,9 +346,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @param destinationVisible
 	 *          the destinationVisible to set
 	 */
-	@Override
 	public void setDestinationVisible(boolean destinationVisible) {
-		this.destinationVisible = destinationVisible;
+		// destination visibility ignored for this implementation
 	}
 
 	/**
@@ -434,7 +355,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public int solvePath() {
 
 		int iteration = 0;
@@ -458,9 +378,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && visit.size() > 0;
+		return !destinations.contains(currentStep) && currentPath.size() > 0;
 	}
 
 	/**
@@ -468,7 +387,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public boolean solveStepDidntStarted() {
 		return currentStep == null;
 	}
@@ -478,7 +396,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public int solveStepFinish() {
 		this.timeStop = System.nanoTime();
 
@@ -498,7 +415,6 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public int solveStepInit() {
 		if (origin == null || doNotSolveAgain) {
 			doNotSolveAgain = true;
@@ -513,7 +429,6 @@ public class MazeSolverAStar implements MazeSolver {
 	/**
 	 * If solveStepCondition() returns true you can do one step iteration
 	 */
-	@Override
 	public void solveStepOneIteration() {
 		currentStep = doOneStep(currentStep);
 	}
@@ -524,20 +439,7 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @return
 	 */
-	@Override
 	public long timeTaken() {
 		return (timeStop - timeStart) / 1000000;
 	}
-
-	@Override
-	public Stream<Point> getVisitedAlreadyAlternative() {
-		// we can return map so we don't need alternative
-		return null;
-	}
-
-	@Override
-	public int getVisitedAlreadySize() {
-		return visitedAlready.size();
-	}
-
 }
