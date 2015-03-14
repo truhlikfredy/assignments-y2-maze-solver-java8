@@ -18,6 +18,7 @@ package eu.antonkrug;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,7 @@ public class MazeSolverBFS implements MazeSolver {
 		this.visit = new LinkedList<>();
 //		this.currentPath = new Stack<>();
 		this.visitedAlready = new Stack<>();
+		this.roots = new HashMap<>();
 
 		this.addStartingAndDestionationPositions();
 	}
@@ -149,11 +151,10 @@ public class MazeSolverBFS implements MazeSolver {
 
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
+		
+		this.currentStep=destination.get();
 
-//		LinkedList<Point> path = new LinkedList<>(currentPath);
-		LinkedList<Point> path = new LinkedList<>();
-
-		return path;
+		return backTracePathParty();
 	}
 
 	/**
@@ -163,8 +164,37 @@ public class MazeSolverBFS implements MazeSolver {
 	 */
 	@Override
 	public List<Point> backTracePathParty() {
-//		return new LinkedList<>(currentPath);
-		return new LinkedList<>();
+		LinkedList<Point> path= new LinkedList<>();
+		
+		Point nextMove=null;
+
+		for (Point direction : allDirections) {
+
+			Point testPoint =  addPoints(currentStep, direction);
+			
+			if (roots.containsKey(testPoint)) nextMove=testPoint;
+		}
+		
+
+		@SuppressWarnings("unused")
+		
+		int iteration=0;
+		while (nextMove != null) {
+			if (DEBUG) System.out.println(nextMove);
+			path.add(nextMove);
+			nextMove = roots.get(nextMove);
+			iteration++;
+		}
+
+		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");			
+		
+		return path;
+	}
+	
+	protected Point addPoints(Point first,Point second) {
+		Point ret = new Point(first);
+		ret.translate(second.x, second.y);
+		return ret;
 	}
 
 	/**
@@ -184,11 +214,11 @@ public class MazeSolverBFS implements MazeSolver {
 		// test all directions if i can move that way and I wasn't there before
 		for (Point direction : allDirections) {
 
-			Point testPoint = new Point(currentPosition);
-			testPoint.translate(direction.x, direction.y);
-
+			Point testPoint =  addPoints(currentPosition, direction);
+			
 			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint) && !visit.contains(testPoint)) {
 				visit.add(testPoint);
+				roots.put(testPoint, currentPosition);
 			}
 		}
 		
@@ -206,7 +236,7 @@ public class MazeSolverBFS implements MazeSolver {
 	 */
 	@Override
 	public Aproach getAproach() {
-		return Aproach.DFS_STACK;
+		return Aproach.BFS_STACK;
 	}
 
 	/**
