@@ -18,6 +18,7 @@ import eu.antonkrug.Maze;
 import eu.antonkrug.MazeSolver;
 import eu.antonkrug.MazeSolver.Aproach;
 import eu.antonkrug.MazeSolverAStar;
+import eu.antonkrug.MazeSolverDFS;
 
 public class MazeSolverBenchmark {
 	private static final int	REPEAT_COUNT	= 1000;
@@ -53,13 +54,29 @@ public class MazeSolverBenchmark {
 		totalTime = 0;
 		System.out.print("A* " + implementationAproach + ":\t");
 		for (int count = 0; count < REPEAT_COUNT; count++) {
-			MazeSolver solver = new MazeSolverAStar(maze, implementationAproach);
-		  solver.solvePath();
+			MazeSolver solver;
+			
+			switch (implementationAproach) {
+				
+				case DFS_STACK:
+					solver = new MazeSolverDFS(maze);
+					break;
+					
+				default:
+					solver = new MazeSolverAStar(maze, implementationAproach);
+					break;
+			}
+			solver.solvePath();
 			totalTime += solver.timeTaken();
 		}
 		System.out.println(totalTime + " ms");
 	}
 
+	
+	@Test
+	public void DFS() throws Exception {
+		aStarAproaches(Aproach.DFS_STACK);
+	}
 	
 	@Test
 	public void concurent() throws Exception {

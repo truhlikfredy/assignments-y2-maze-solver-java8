@@ -171,11 +171,6 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @return
 	 */
 	private Point doOneStep(Point currentPosition) {
-
-		// test each carduninal directions in multiple threads at once
-		// allDirections.stream().forEach(direction ->
-		// evaluatePoint(currentPosition, direction));
-
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
