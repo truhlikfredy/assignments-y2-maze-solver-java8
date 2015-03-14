@@ -52,7 +52,7 @@ public class MazeSolverBenchmark {
 
 	private void aStarAproaches(Aproach implementationAproach) throws Exception {
 		totalTime = 0;
-		System.out.print("A* " + implementationAproach + ":\t");
+		System.out.print(implementationAproach + ":\t");
 		for (int count = 0; count < REPEAT_COUNT; count++) {
 			MazeSolver solver;
 			

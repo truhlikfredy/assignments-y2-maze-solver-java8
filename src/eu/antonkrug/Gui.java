@@ -38,7 +38,7 @@ import utils.Pair;
  * The main class which will start up GUI and handle all action eventss
  */
 
-public class GraphicalInterface implements ActionListener {
+public class Gui implements ActionListener {
 
 	/**
 	 * Texts for buttons
@@ -167,7 +167,7 @@ public class GraphicalInterface implements ActionListener {
 	/**
 	 * Constructor which will create frame, but will not make it public
 	 */
-	public GraphicalInterface() {
+	public Gui() {
 		animationTimer = new Timer(100, actionEvent -> this.actionStepChecks());
 		implementationToUse = Aproach.ASTAR_HASHMAP;
 
@@ -184,7 +184,7 @@ public class GraphicalInterface implements ActionListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GraphicalInterface app = new GraphicalInterface();
+		Gui app = new Gui();
 		app.run();
 	}
 
@@ -218,7 +218,7 @@ public class GraphicalInterface implements ActionListener {
 	private void actionDestinationIgnoreToggle() {
 		if (solver != null) {
 			solver.setDestinationVisible(!solver.isDestinationVisible());
-			System.out.println(solver.isDestinationVisible());
+//			System.out.println(solver.isDestinationVisible());
 		}
 	}
 
@@ -262,7 +262,7 @@ public class GraphicalInterface implements ActionListener {
 			}
 
 			drawMaze();
-			statusBarLabel.setText("Maze loaded");
+			statusBarLabel.setText("Maze loaded and solver implementation now used: "+solver.getAproach());
 
 			// when flushed or loaded allow /disable some buttons
 			// buttonEnable(GuiButton.SAVE);
@@ -288,7 +288,8 @@ public class GraphicalInterface implements ActionListener {
 
 		try {
 			maze.setWidth((short) (55));
-			maze.setHeight((short) (150));
+//			maze.setHeight((short) (150));
+			maze.setHeight((short) (37));
 
 			maze.initialize();
 			maze.fill();
@@ -359,7 +360,7 @@ public class GraphicalInterface implements ActionListener {
 		}
 
 		statusBarLabel.setText(String.format(
-				"In next solver initialization a %s implementation will be used.", implementationToUse));
+				"In NEXT solver initialization a %s implementation will be used (press flush solution)", implementationToUse));
 
 		implementationDetect();
 	}
@@ -402,7 +403,7 @@ public class GraphicalInterface implements ActionListener {
 
 		if (fileName != null) {
 			try {
-				maze.save(fileName);
+				maze.save(fileName+".maze");
 			} catch (Exception e) {
 				setStatusBarException(e);
 			}
@@ -731,6 +732,9 @@ public class GraphicalInterface implements ActionListener {
 		buttonDisable(GuiButton.DESTINATION_IGNORE);
 	}
 
+	/**
+	 * Will change selected buttons depending on the implementation is selected
+	 */
 	private void implementationDetect() {
 		// do not continue if it's not ready
 		if (implementationPanel == null) return;
@@ -834,10 +838,10 @@ public class GraphicalInterface implements ActionListener {
 
 		implementationPanel = new JPanel(new GridLayout(1, 4));
 
-		addButtonToPanel(implementationPanel, true, GuiButton.BFS, "stack_top",
+		addButtonToPanel(implementationPanel, true, GuiButton.BFS, "stack_bottom",
 				this::actionImplementationSelect);
 
-		addButtonToPanel(implementationPanel, true, GuiButton.DFS, "stack_bottom",
+		addButtonToPanel(implementationPanel, true, GuiButton.DFS, "stack_top",
 				this::actionImplementationSelect);
 
 		addButtonToPanel(implementationPanel, true, GuiButton.ASTAR, "hash",
