@@ -101,7 +101,6 @@ public interface MazeSolver {
 	 * 
 	 * @return the visit
 	 */
-	// public Map<Point, AStartNode> getVisit();
 	public Stream<Point> getVisit();
 
 	/**

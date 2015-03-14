@@ -23,11 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.Map.Entry;
 
-//import net.openhft.koloboke.collect.map.hash.HashObjObjMaps;
-
-//import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class MazeSolverDFS implements MazeSolver {
 
@@ -77,6 +73,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @param destination
 	 */
+	@Override
 	public void addDestinationPosition(Point destination) {
 		if (!destinations.contains(destination)) {
 			this.destinations.add(destination);
@@ -90,6 +87,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @throws Exception
 	 *           If there is no destination present it will throw exception
 	 */
+	@Override
 	public void addStartingAndDestionationPositions() throws Exception {
 		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
 		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
@@ -103,6 +101,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @exception If
 	 *              there is no destination present it will throw exception
 	 */
+	@Override
 	public void addStartingPositions(List<Point> starts) throws Exception {
 		for (Point point : starts) {
 			this.addStartPosition(point);
@@ -118,6 +117,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @throws Exception
 	 *           If there is no destination present it will throw exception
 	 */
+	@Override
 	public void addStartPosition(Point origin) throws Exception {
 		visit.push(origin);
 		this.origin = origin;
@@ -128,6 +128,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public List<Point> backTracePath() {
 		if (DEBUG) {
 			System.out.println("**********");
@@ -157,6 +158,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public List<Point> backTracePathParty() {
 		return new LinkedList<>(currentPath);
 	}
@@ -179,44 +181,36 @@ public class MazeSolverDFS implements MazeSolver {
 
 		Point nextMove = null;
 
-		// Check if we just didn't deleted the very last point in the visit list
+		// test all directions if i can move that way and I wasn't there before
+		for (Point direction : allDirections) {
 
+			Point testPoint = new Point(currentPosition);
+			testPoint.translate(direction.x, direction.y);
 
-			// test all directions if i can move that way and I wasn't there before
-			for (Point direction : allDirections) {
-
-				Point testPoint = new Point(currentPosition);
-				testPoint.translate(direction.x, direction.y);
-
-				if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)
-						&& !currentPath.contains(testPoint)) {
-					
-					nextMove=testPoint;
-
-					// do not add duplicates
-					if (!visit.contains(testPoint)) visit.push(testPoint);
-				}
+			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)) {
+				nextMove = testPoint;
+				// do not add duplicates
+				if (!visit.contains(testPoint)) visit.push(testPoint);
 			}
+		}
 
-		 while (nextMove==null) {
-			// if dead end backtrack
+		// if dead end backtrack
+		if (nextMove == null) {
 			if (currentPath.size() > 0) {
-				if (nextMove==null) {
-					visitedAlready.push(currentPath.pop());
-					currentPosition=currentPath.peek();
+				if (nextMove == null) {
+					// but do not return this step as curent step, return the next step
+					// back as next step because we are revertsing now
+					currentPath.pop();
+					nextMove = currentPath.peek();
 				}
+
 			} else {
 				return null;
 			}
-
-			// test all directions in open list while backtracking
-			for (Point direction : allDirections) {
-				Point testPoint = new Point(currentPosition);
-				testPoint.translate(direction.x, direction.y);
-				if (visit.contains(testPoint))			nextMove=testPoint;
-			}
-			
-		} 
+		} else {
+			//if something was found (no deadend) display is as current path
+			currentPath.push(nextMove);
+		}
 
 		if (DEBUG) System.out.println(nextMove);
 		return nextMove;
@@ -227,6 +221,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public Aproach getAproach() {
 		return Aproach.DFS;
 	}
@@ -236,6 +231,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return the currentStep
 	 */
+	@Override
 	public Point getCurrentStep() {
 		return currentStep;
 	}
@@ -245,6 +241,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return the destinations
 	 */
+	@Override
 	public List<Point> getDestinations() {
 		return destinations;
 	}
@@ -254,6 +251,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return the visit
 	 */
+	@Override
 	public Stream<Point> getVisit() {
 		return visit.stream();
 	}
@@ -263,6 +261,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return null
 	 */
+	@Override
 	public Map<Point, Point> getVisitedAlready() {
 		return null;
 	}
@@ -303,6 +302,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return the destinationVisible
 	 */
+	@Override
 	public boolean isDestinationVisible() {
 		return false;
 	}
@@ -313,6 +313,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return the doNotSolveAgain
 	 */
+	@Override
 	public boolean isDoNotSolveAgain() {
 		return doNotSolveAgain;
 	}
@@ -326,8 +327,8 @@ public class MazeSolverDFS implements MazeSolver {
 		// check if it's not removed from visited list already
 		if (visit.contains(index)) {
 			// add it to visited list and then removed it from visit list
- 			currentPath.push(index);
- 			visit.remove(index);
+			visitedAlready.push(index);
+			visit.remove(index);
 		}
 	}
 
@@ -336,6 +337,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @param destinations
 	 */
+	@Override
 	public void setDestinations(List<Point> destinations) {
 		this.destinations = destinations;
 	}
@@ -346,6 +348,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @param destinationVisible
 	 *          the destinationVisible to set
 	 */
+	@Override
 	public void setDestinationVisible(boolean destinationVisible) {
 		// destination visibility ignored for this implementation
 	}
@@ -355,6 +358,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public int solvePath() {
 
 		int iteration = 0;
@@ -378,6 +382,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean solveStepCondition() {
 		return !destinations.contains(currentStep) && currentPath.size() > 0;
 	}
@@ -387,6 +392,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean solveStepDidntStarted() {
 		return currentStep == null;
 	}
@@ -396,6 +402,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public int solveStepFinish() {
 		this.timeStop = System.nanoTime();
 
@@ -415,6 +422,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public int solveStepInit() {
 		if (origin == null || doNotSolveAgain) {
 			doNotSolveAgain = true;
@@ -429,6 +437,7 @@ public class MazeSolverDFS implements MazeSolver {
 	/**
 	 * If solveStepCondition() returns true you can do one step iteration
 	 */
+	@Override
 	public void solveStepOneIteration() {
 		currentStep = doOneStep(currentStep);
 	}
@@ -439,6 +448,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @return
 	 */
+	@Override
 	public long timeTaken() {
 		return (timeStop - timeStart) / 1000000;
 	}
