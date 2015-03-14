@@ -17,7 +17,6 @@ package eu.antonkrug;
  */
 
 import java.awt.Point;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
@@ -32,19 +31,8 @@ import java.util.Map.Entry;
 
 //import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-public class MazeSolverAStar implements MazeSolver {
+public class MazeSolverAStar extends MazeSolverBase {
 
-	public static final boolean		DEBUG	= false;
-	private List<Point>						allDirections;
-	private Point									currentStep;
-	private List<Point>						destinations;
-	private boolean								destinationVisible;
-	private boolean								doNotSolveAgain;
-	private Aproach								implementationAproach;
-	private Maze									maze;
-	private Point									origin;
-	private Long									timeStart;
-	private Long									timeStop;
 	private Map<Point, AStartNode>	visit;
 	private Map<Point, Point>			visitedAlready;
 
@@ -56,21 +44,7 @@ public class MazeSolverAStar implements MazeSolver {
 	 */
 	public MazeSolverAStar(Maze maze, Aproach implementationAproach) throws Exception {
 
-		this.destinationVisible = true;
-		this.doNotSolveAgain = false;
-		this.maze = maze;
-		this.currentStep = null;
-
-		this.timeStart = System.nanoTime();
-		this.timeStop = this.timeStart;
-
-		this.destinations = new LinkedList<>();
-
-		// all cardinal direction for up,down,left and right
-		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
-				new Point(0, -1));
-
-		this.implementationAproach = implementationAproach;
+    super(maze, implementationAproach);
 
 		switch (implementationAproach) {
 			case ASTAR_HASHMAP:
@@ -100,45 +74,6 @@ public class MazeSolverAStar implements MazeSolver {
 		this.addStartingAndDestionationPositions();
 	}
 
-	/**
-	 * Will add one or more destinations to maze
-	 * 
-	 * @param destination
-	 */
-	@Override
-	public void addDestinationPosition(Point destination) {
-		if (!destinations.contains(destination)) {
-			this.destinations.add(destination);
-		}
-	}
-	
-	/**
-	 * Will add both starting and final destination points from the maze is given
-	 * to this solver
-	 * 
-	 * @throws Exception
-	 *           If there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingAndDestionationPositions() throws Exception {
-		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
-	}
-
-	/**
-	 * Will add one or more starting positions for the maze
-	 * 
-	 * @param starts
-	 *          List of starting points
-	 * @exception If
-	 *              there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingPositions(List<Point> starts) throws Exception {
-		for (Point point : starts) {
-			this.addStartPosition(point);
-		}
-	}
 
 	/**
 	 * Will add starting position into maze, a maze can contain multiple starting
@@ -234,7 +169,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * @param currentPosition
 	 * @return
 	 */
-	private Point doOneStep(Point currentPosition) {
+	@Override
+	protected Point doOneStep(Point currentPosition) {
 
 		// test each carduninal directions in multiple threads at once
 
@@ -313,34 +249,6 @@ public class MazeSolverAStar implements MazeSolver {
 
 	}
 
-	/**
-	 * Will return Approach of this implementation
-	 * @return
-	 */
-	@Override
-	public Aproach getAproach() {
-		return implementationAproach;
-	}
-
-	/**
-	 * Gets the current step position inside the solver
-	 * 
-	 * @return the currentStep
-	 */
-	@Override
-	public Point getCurrentStep() {
-		return currentStep;
-	}
-
-	/**
-	 * Returns all given destinations
-	 * 
-	 * @return the destinations
-	 */
-	@Override
-	public List<Point> getDestinations() {
-		return destinations;
-	}
 
 	/**
 	 * Returns open list
@@ -373,25 +281,9 @@ public class MazeSolverAStar implements MazeSolver {
 		return visitedAlready;
 	}
 
-	/**
-	 * Return flag if the alrgorithm is allowed to see the destination
-	 * 
-	 * @return the destinationVisible
-	 */
 	@Override
-	public boolean isDestinationVisible() {
-		return destinationVisible;
-	}
-
-	/**
-	 * Flag if algorithm is solved (with solution or not) and locked for any new
-	 * solving attempt.
-	 * 
-	 * @return the doNotSolveAgain
-	 */
-	@Override
-	public boolean isDoNotSolveAgain() {
-		return doNotSolveAgain;
+	public int getVisitedAlreadySize() {
+		return visitedAlready.size();
 	}
 
 	/**
@@ -399,7 +291,8 @@ public class MazeSolverAStar implements MazeSolver {
 	 * 
 	 * @param index
 	 */
-	private void markNodeAsVisited(Point index) {
+	@Override
+	protected void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
 		if (visit.containsKey(index)) {
 			// add it to visited list and then removed it from visit list
@@ -408,136 +301,8 @@ public class MazeSolverAStar implements MazeSolver {
 		}
 	}
 
-	/**
-	 * Set all destinations to given list.
-	 * 
-	 * @param destinations
-	 */
-	@Override
-	public void setDestinations(List<Point> destinations) {
-		this.destinations = destinations;
-	}
 
-	/**
-	 * Flag if algorithm is allowed to see destination
-	 * 
-	 * @param destinationVisible
-	 *          the destinationVisible to set
-	 */
-	@Override
-	public void setDestinationVisible(boolean destinationVisible) {
-		this.destinationVisible = destinationVisible;
-	}
 
-	/**
-	 * Will attempt to find path from start to finish
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solvePath() {
 
-		int iteration = 0;
-
-		if (solveStepInit() < 0) return -1;
-
-		while (solveStepCondition()) {
-			solveStepOneIteration();
-			iteration++;
-		}
-
-		if (solveStepFinish() < 0) return -1;
-
-		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
-
-		return iteration;
-	}
-
-	/**
-	 * Condition which will be checked in each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && visit.size() > 0;
-	}
-
-	/**
-	 * Set current step to null
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepDidntStarted() {
-		return currentStep == null;
-	}
-
-	/**
-	 * If solver is finished, do final checks and cleanup
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepFinish() {
-		this.timeStop = System.nanoTime();
-
-		doNotSolveAgain = true;
-
-		if (!destinations.contains(currentStep)) return -1;
-
-		// last step, when destination and current step are the same, we will flag
-		// which destionation we reached
-		markNodeAsVisited(currentStep);
-
-		return 0;
-	}
-
-	/**
-	 * Called before solver can do each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepInit() {
-		if (origin == null || doNotSolveAgain) {
-			doNotSolveAgain = true;
-			return -1;
-		}
-		this.timeStart = System.nanoTime();
-		currentStep = origin;
-
-		return 0;
-	}
-
-	/**
-	 * If solveStepCondition() returns true you can do one step iteration
-	 */
-	@Override
-	public void solveStepOneIteration() {
-		currentStep = doOneStep(currentStep);
-	}
-
-	/**
-	 * Returns measured time between the solver was started, till it found
-	 * solution
-	 * 
-	 * @return
-	 */
-	@Override
-	public long timeTaken() {
-		return (timeStop - timeStart) / 1000000;
-	}
-
-	@Override
-	public Stream<Point> getVisitedAlreadyAlternative() {
-		// we can return map so we don't need alternative
-		return null;
-	}
-
-	@Override
-	public int getVisitedAlreadySize() {
-		return visitedAlready.size();
-	}
 
 }
