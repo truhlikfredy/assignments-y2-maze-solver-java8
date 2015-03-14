@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public interface MazeSolver {
 
 	public enum Aproach {
-		BFS, DFS, JDK_CONCURENT_HASHMAP, JDK_HASHMAP,
+		BFS_STACK, DFS_STACK, ASTAR_CONCURENT_HASHMAP, ASTAR_HASHMAP,
 		// KOLOBOKE,
 		// FASTUTIL_HASHMAP
 		;

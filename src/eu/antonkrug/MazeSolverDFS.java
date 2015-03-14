@@ -223,7 +223,7 @@ public class MazeSolverDFS implements MazeSolver {
 	 */
 	@Override
 	public Aproach getAproach() {
-		return Aproach.DFS;
+		return Aproach.DFS_STACK;
 	}
 
 	/**

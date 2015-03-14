@@ -73,12 +73,12 @@ public class MazeSolverAStar implements MazeSolver {
 		this.implementationAproach = implementationAproach;
 
 		switch (implementationAproach) {
-			case JDK_HASHMAP:
+			case ASTAR_HASHMAP:
 				this.visit = new HashMap<>();
 				this.visitedAlready = new HashMap<>();
 				break;
 
-			case JDK_CONCURENT_HASHMAP:
+			case ASTAR_CONCURENT_HASHMAP:
 				this.visit = new ConcurrentHashMap<>();
 				this.visitedAlready = new HashMap<>();
 				break;
@@ -175,7 +175,7 @@ public class MazeSolverAStar implements MazeSolver {
 
 		Optional<Point> destination;
 		switch (implementationAproach) {
-			case JDK_CONCURENT_HASHMAP:
+			case ASTAR_CONCURENT_HASHMAP:
 				destination = destinations.parallelStream().filter(visitedAlready::containsKey).findFirst();
 				break;
 
@@ -239,7 +239,7 @@ public class MazeSolverAStar implements MazeSolver {
 		// test each carduninal directions in multiple threads at once
 
 		switch (implementationAproach) {
-			case JDK_CONCURENT_HASHMAP:
+			case ASTAR_CONCURENT_HASHMAP:
 				allDirections.parallelStream().forEach(
 						direction -> evaluatePoint(currentPosition, direction));
 				break;

@@ -63,12 +63,12 @@ public class MazeSolverBenchmark {
 	
 	@Test
 	public void concurent() throws Exception {
-		aStarAproaches(Aproach.JDK_CONCURENT_HASHMAP);
+		aStarAproaches(Aproach.ASTAR_CONCURENT_HASHMAP);
 	}
 
 	@Test
 	public void hashMap() throws Exception {
-		aStarAproaches(Aproach.JDK_HASHMAP);
+		aStarAproaches(Aproach.ASTAR_HASHMAP);
 	}
 
 //	@Test

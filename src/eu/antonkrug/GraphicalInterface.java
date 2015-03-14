@@ -40,41 +40,44 @@ import utils.Pair;
 
 public class GraphicalInterface implements ActionListener {
 
+	/**
+	 * Texts for buttons
+	 */
 	public enum GuiButton {
-		BFS {
-			@Override
-			public String toString() {
-				return "1";
-			}
-		},
-		DFS {
-			@Override
-			public String toString() {
-				return "2";
-			}
-		},
-		HASH {
-			@Override
-			public String toString() {
-				return "3";
-			}
-		},
-		CONCURENT {
-			@Override
-			public String toString() {
-				return "4";
-			}
-		},
 		ANIMATE {
 			@Override
 			public String toString() {
 				return "Toggle animation";
 			}
 		},
+		ASTAR {
+			@Override
+			public String toString() {
+				return "3";
+			}
+		},
+		ASTART_CONCURENT {
+			@Override
+			public String toString() {
+				return "4";
+			}
+		},
+		BFS {
+			@Override
+			public String toString() {
+				return "1";
+			}
+		},
 		DESTINATION_IGNORE {
 			@Override
 			public String toString() {
 				return "Ignore Heurestics";
+			}
+		},
+		DFS {
+			@Override
+			public String toString() {
+				return "2";
 			}
 		},
 		EXIT {
@@ -142,30 +145,31 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	// gui fields
-	private static final int														BLOCK_HEIGHT					= 16;
 	private static final int														BLOCK_WIDTH						= 16;
-	private static final int														BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
+	private static final int														BLOCK_HEIGHT					= 16;
 	private static final int														BLOCK_SPACING_WIDTH		= BLOCK_WIDTH + 1;
+	private static final int														BLOCK_SPACING_HEIGHT	= BLOCK_HEIGHT + 1;
 	private Map<String, Pair<AbstractButton, Runnable>>	actions;
 	private Timer																				animationTimer;
 	private JFrame																			frame;
+	private JPanel																			implementationPanel;
 	private JLabel																			statusBarLabel;
 
 	// maze related fields
 	private MazeSolver																	solver;
 	private Aproach																			implementationToUse;
+	
 	private Maze																				maze;
+	private JPanel																			mazePanel;
 	private ImageIcon																		mazeImage;
 	private Graphics																		mazeImageGFX;
-	private JPanel																			mazePanel;
-	private JPanel																			implementationPanel;
 
 	/**
 	 * Constructor which will create frame, but will not make it public
 	 */
 	public GraphicalInterface() {
-		animationTimer = new Timer(100, actionEvent -> this.stepChecks());
-		implementationToUse = Aproach.JDK_HASHMAP;
+		animationTimer = new Timer(100, actionEvent -> this.actionStepChecks());
+		implementationToUse = Aproach.ASTAR_HASHMAP;
 
 		try {
 			makeFrame();
@@ -185,35 +189,9 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	/**
-	 * An interface action has been performed. Find out what it was and handle it.
+	 * Animate button action
 	 */
-	public void actionPerformed(ActionEvent event) {
-		String action = event.getActionCommand();
-		if (actions.containsKey(action)) actions.get(action).second.run();
-	}
-
-	/**
-	 * Add a button to the button panel.
-	 */
-	private void addButtonToPanel(Container panel, boolean toggle, GuiButton buttonText,
-			String iconName, Runnable actionPerformed) {
-		AbstractButton button;
-
-		Icon icon = new ImageIcon("./img/icon_" + iconName + ".png");
-
-		if (toggle) {
-			button = new JToggleButton(buttonText.toString(), icon);
-		} else {
-			button = new JButton(buttonText.toString(), icon);
-		}
-
-		button.addActionListener(this);
-		panel.add(button);
-
-		actions.put(buttonText.toString(), new Pair<AbstractButton, Runnable>(button, actionPerformed));
-	}
-
-	private void animate() {
+	private void actionAnimate() {
 		if (animationTimer.isRunning()) {
 			animationTimer.stop();
 			buttonEnable(GuiButton.LOAD);
@@ -235,84 +213,148 @@ public class GraphicalInterface implements ActionListener {
 	}
 
 	/**
-	 * Just Helper method which can be used for button when there is not action
-	 * implemented yet
+	 * Ignore heurestics button action
 	 */
-	@SuppressWarnings("unused")
-	private void buttonActionNoImplemented() {
-		statusBarLabel.setText("This button action is not implemented yet");
-	}
-
-	private void buttonToggle(GuiButton name, boolean selected) {
-		if (actions.containsKey(name.toString())) {
-			actions.get(name.toString()).first.setSelected(selected);
-		}
-		// destinationIgnoreToggle();
-	}
-
-	private boolean buttonIsToggled(GuiButton name) {
-		if (actions.containsKey(name.toString())) {
-			return actions.get(name.toString()).first.isSelected();
-		}
-		return false;
-	}
-
-	// private void destinationConsider() {
-	// solver.setDestinationVisible(true);
-	//
-	// //swap buttons
-	// if (actions.containsKey(GuiButton.DESTINATION_CONSIDER.toString())) {
-	// actions.get(GuiButton.DESTINATION_CONSIDER.toString()).first.setText(GuiButton.DESTINATION_IGNORE.toString());
-	// }
-	//
-	// }
-
-	private void buttonDisable(GuiButton name) {
-		if (actions.containsKey(name.toString())) {
-			actions.get(name.toString()).first.setEnabled(false);
-		}
-		// destinationIgnoreToggle();
-	}
-
-	private void buttonDisableAll() {
-		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
-		implementationDetect();
-	}
-
-	private void buttonEnable(GuiButton name) {
-		if (actions.containsKey(name.toString())) {
-			actions.get(name.toString()).first.setEnabled(true);
+	private void actionDestinationIgnoreToggle() {
+		if (solver != null) {
+			solver.setDestinationVisible(!solver.isDestinationVisible());
+			System.out.println(solver.isDestinationVisible());
 		}
 	}
 
-	private boolean buttonIsEnabled(GuiButton name) {
-		if (actions.containsKey(name.toString())) {
-			return actions.get(name.toString()).first.isEnabled();
-		}
-		return false;
+	/**
+	 * Will quit the GUI 
+	 */
+	private void actionExit() {
+		// frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+		frame.setVisible(false);
+		frame.dispose();
 	}
 
-	private void implementationSelect() {
+	/**
+	 * Will initialize new fresh solver
+	 */
+	private void actionFlushSolver() {
+
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+			buttonEnable(GuiButton.LOAD);
+			buttonEnable(GuiButton.GENERATE);
+			buttonToggle(GuiButton.ANIMATE, false);
+		}
+
+		try {
+			switch (implementationToUse) {
+				case DFS_STACK:
+					solver = new MazeSolverDFS(maze);
+					break;
+
+				case ASTAR_HASHMAP:
+					solver = new MazeSolverAStar(maze, Aproach.ASTAR_HASHMAP);
+					break;
+
+				case ASTAR_CONCURENT_HASHMAP:
+					solver = new MazeSolverAStar(maze, Aproach.ASTAR_CONCURENT_HASHMAP);
+					break;
+
+				default:
+					throw new Exception("Not implemented aproach for solver selected");
+			}
+
+			drawMaze();
+			statusBarLabel.setText("Maze loaded");
+
+			// when flushed or loaded allow /disable some buttons
+			// buttonEnable(GuiButton.SAVE);
+			buttonEnable(GuiButton.SOLVE);
+			buttonEnable(GuiButton.STEP);
+			buttonEnable(GuiButton.ANIMATE);
+
+			buttonEnable(GuiButton.DESTINATION_IGNORE);
+			buttonToggle(GuiButton.DESTINATION_IGNORE, false);
+
+			buttonDisable(GuiButton.FLUSH);
+
+		} catch (Exception lackingNodesException) {
+			setStatusBarException(lackingNodesException);
+		}
+	}
+
+	/**
+	 * Will generate new fresh maze
+	 */
+	private void actionGenerateMaze() {
+		maze = new Maze();
+
+		try {
+			maze.setWidth((short) (55));
+			maze.setHeight((short) (150));
+
+			maze.initialize();
+			maze.fill();
+			maze.generate();
+
+			Random rand = new Random();
+
+			// add some random points, hopefuly will create a loop or few
+			// how many depends on the maze size
+			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 20;
+			for (int count = 0; count < walkablePoints; count++) {
+				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),
+						rand.nextInt(maze.getHeight())));
+			}
+
+			// make border around maze as fail safe
+			maze.border();
+
+			Point startPoint;
+			Point endPoint;
+			int minimumDistance = (maze.getWidth() + maze.getHeight()) / 3;
+
+			// add start & finish somewhere randomly, but bit far away from each other
+			do {
+				startPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
+				endPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
+			} while (!maze.canWalkTo(startPoint) || !maze.canWalkTo(endPoint)
+					|| startPoint.distance(endPoint) < minimumDistance);
+
+			maze.addStart(startPoint);
+			maze.addFinish(endPoint);
+
+			buttonEnable(GuiButton.SAVE);
+			// prepare solver & refresh screen
+			actionFlushSolver();
+
+		} catch (Exception e) {
+			setStatusBarException(e);
+		}
+	}
+
+	/**
+	 * Action for all implementation select buttons
+	 */
+	private void actionImplementationSelect() {
 
 		if (buttonIsToggled(GuiButton.BFS) && buttonIsEnabled(GuiButton.BFS)) {
 
 			buttonDisable(GuiButton.BFS);
-			implementationToUse = Aproach.BFS;
+			implementationToUse = Aproach.BFS_STACK;
 
 		} else if (buttonIsToggled(GuiButton.DFS) && buttonIsEnabled(GuiButton.DFS)) {
 
 			buttonDisable(GuiButton.DFS);
-			implementationToUse = Aproach.DFS;
+			implementationToUse = Aproach.DFS_STACK;
 
-		} else if (buttonIsToggled(GuiButton.HASH) && buttonIsEnabled(GuiButton.HASH)) {
+		} else if (buttonIsToggled(GuiButton.ASTAR) && buttonIsEnabled(GuiButton.ASTAR)) {
 
-			buttonDisable(GuiButton.HASH);
-			implementationToUse = Aproach.JDK_HASHMAP;
+			buttonDisable(GuiButton.ASTAR);
+			implementationToUse = Aproach.ASTAR_HASHMAP;
 
-		} else if (buttonIsToggled(GuiButton.CONCURENT) && buttonIsEnabled(GuiButton.CONCURENT)) {
+		} else if (buttonIsToggled(GuiButton.ASTART_CONCURENT)
+				&& buttonIsEnabled(GuiButton.ASTART_CONCURENT)) {
 
-			buttonDisable(GuiButton.CONCURENT);
-			implementationToUse = Aproach.JDK_CONCURENT_HASHMAP;
+			buttonDisable(GuiButton.ASTART_CONCURENT);
+			implementationToUse = Aproach.ASTAR_CONCURENT_HASHMAP;
 
 		}
 
@@ -322,62 +364,205 @@ public class GraphicalInterface implements ActionListener {
 		implementationDetect();
 	}
 
-	private void implementationDetect() {
-		// do not continue if it's not ready
-		if (implementationPanel == null) return;
+	/**
+	 * Gui file chooser and loader dialog
+	 * 
+	 */
+	private void actionLoadMaze() {
+		maze = new Maze();
 
-		// enable all
-		for (int i = 0; i < 4; i++) {
-			implementationPanel.getComponent(i).setEnabled(true);
-		}
-		buttonToggle(GuiButton.BFS, false);
-		buttonToggle(GuiButton.DFS, false);
-		buttonToggle(GuiButton.HASH, false);
-		buttonToggle(GuiButton.CONCURENT, false);
+		String fileName = openSaveDialog(false);
 
-		// detect which implementation is set to be used and show it as selected
-		switch (implementationToUse) {
+		if (fileName != null) {
+			try {
 
-			case BFS:
-				buttonToggle(GuiButton.BFS, true);
-				buttonDisable(GuiButton.BFS);
-				break;
+				maze.load(fileName);
+				actionFlushSolver();
 
-			case DFS:
-				buttonToggle(GuiButton.DFS, true);
-				buttonDisable(GuiButton.DFS);
-				break;
-
-			case JDK_HASHMAP:
-				buttonToggle(GuiButton.HASH, true);
-				buttonDisable(GuiButton.HASH);
-				break;
-
-			case JDK_CONCURENT_HASHMAP:
-				buttonToggle(GuiButton.CONCURENT, true);
-				buttonDisable(GuiButton.CONCURENT);
-				break;
-
-			default:
-				break;
+			} catch (Exception loadException) {
+				setStatusBarException(loadException);
+			}
 		}
 	}
 
-	private void destinationIgnoreToggle() {
-		if (solver != null) {
-			solver.setDestinationVisible(!solver.isDestinationVisible());
-			System.out.println(solver.isDestinationVisible());
+	/**
+	 * An interface action has been performed. Find out what it was and handle it.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		String action = event.getActionCommand();
+		if (actions.containsKey(action)) actions.get(action).second.run();
+	}
+
+	/**
+	 * Save button action
+	 */
+	public void actionSaveMaze() {
+		String fileName = openSaveDialog(true);
+
+		if (fileName != null) {
+			try {
+				maze.save(fileName);
+			} catch (Exception e) {
+				setStatusBarException(e);
+			}
 		}
 	}
 
+	/**
+	 * Solve button action
+	 */
+	private void actionSolve() {
+		if (solver.solvePath() > 0) {
+
+			drawSolvedPath();
+
+		} else {
+			// when solution is not found disable some buttons
+			buttonDisable(GuiButton.SOLVE);
+			buttonDisable(GuiButton.STEP);
+			buttonDisable(GuiButton.ANIMATE);
+			buttonEnable(GuiButton.FLUSH);
+
+			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
+		}
+	}
+
+	/**
+	 * Do one step with all safe checks
+	 */
+	private void actionStepChecks() {
+		if (!solver.isDoNotSolveAgain()) {
+			stepExecute();
+		} else {
+			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
+			buttonDisable(GuiButton.STEP);
+		}
+	}
+
+	/**
+	 * Add a button to the button panel.
+	 * 
+	 * @param panel
+	 * @param toggle
+	 * @param buttonText
+	 * @param iconName
+	 * @param actionPerformed
+	 */
+	private void addButtonToPanel(Container panel, boolean toggle, GuiButton buttonText,
+			String iconName, Runnable actionPerformed) {
+		AbstractButton button;
+
+		Icon icon = new ImageIcon("./img/icon_" + iconName + ".png");
+
+		if (toggle) {
+			button = new JToggleButton(buttonText.toString(), icon);
+		} else {
+			button = new JButton(buttonText.toString(), icon);
+		}
+
+		button.addActionListener(this);
+		panel.add(button);
+
+		actions.put(buttonText.toString(), new Pair<AbstractButton, Runnable>(button, actionPerformed));
+	}
+
+	/**
+	 * Just Helper method which can be used for button when there is not action
+	 * implemented yet
+	 */
+	@SuppressWarnings("unused")
+	private void buttonActionNoImplemented() {
+		statusBarLabel.setText("This button action is not implemented yet");
+	}
+
+	/**
+	 * Disable desired button
+	 * 
+	 * @param name
+	 */
+	private void buttonDisable(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			actions.get(name.toString()).first.setEnabled(false);
+		}
+	}
+
+	/**
+	 * Disable all buttons
+	 */
+	private void buttonDisableAll() {
+		actions.entrySet().forEach(s -> s.getValue().first.setEnabled(false));
+		implementationDetect();
+	}
+
+	/**
+	 * Enable given button
+	 * 
+	 * @param name
+	 */
+	private void buttonEnable(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			actions.get(name.toString()).first.setEnabled(true);
+		}
+	}
+
+	/**
+	 * Probe if button is disabled or enableds
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private boolean buttonIsEnabled(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			return actions.get(name.toString()).first.isEnabled();
+		}
+		return false;
+	}
+
+	/**
+	 * Probe if button is toggled
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private boolean buttonIsToggled(GuiButton name) {
+		if (actions.containsKey(name.toString())) {
+			return actions.get(name.toString()).first.isSelected();
+		}
+		return false;
+	}
+
+	/**
+	 * Will change the toggle state of toggle buttons
+	 * 
+	 * @param name
+	 * @param selected
+	 */
+	private void buttonToggle(GuiButton name, boolean selected) {
+		if (actions.containsKey(name.toString())) {
+			actions.get(name.toString()).first.setSelected(selected);
+		}
+	}
+
+	/**
+	 * Will draw simple arrow inside block. Useful to see where parent of given
+	 * node is
+	 * 
+	 * @param gfx
+	 * @param at
+	 * @param to
+	 * @param color
+	 */
 	private void drawArrow(Graphics gfx, Point at, Point to, Color color) {
 		if (at != null && to != null) {
 			int difX = to.x - at.x;
 			int difY = to.y - at.y;
 
+			//calculate middle of AT point
 			int pixMiddleX = at.x * BLOCK_SPACING_WIDTH + BLOCK_WIDTH / 2;
 			int pixMiddleY = at.y * BLOCK_SPACING_HEIGHT + BLOCK_HEIGHT / 2;
 
+			//daw line torwards TO point
 			int pixEndX = pixMiddleX + difX * BLOCK_WIDTH / 2;
 			int pixEndY = pixMiddleY + difY * BLOCK_HEIGHT / 2;
 
@@ -411,6 +596,9 @@ public class GraphicalInterface implements ActionListener {
 				BLOCK_HEIGHT);
 	}
 
+	/**
+	 * Draw whole maze graphics
+	 */
 	private void drawMaze() {
 		BufferedImage noMazeBuf = new BufferedImage(maze.getWidth() * BLOCK_SPACING_WIDTH,
 				maze.getHeight() * BLOCK_SPACING_HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -447,22 +635,12 @@ public class GraphicalInterface implements ActionListener {
 
 	}
 
+	/**
+	 * Draw both start and finish icons
+	 * @param blankBlock
+	 */
 	private void drawMazeIcons(boolean blankBlock) {
 		try {
-			// get icons ready
-
-			// // draw all start icons
-			// maze.getAllBlock(Maze.Block.START).stream().forEach(point -> {
-			// if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-			// drawBlock(mazeImageGFX, point, iconStart);
-			// });
-			//
-			// // draw all finish icons
-			// solver.getDestinations().stream().forEach(point -> {
-			// if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-			// drawBlock(mazeImageGFX, point, iconFinish);
-			// });
-
 			drawMazeIconsStart(blankBlock);
 			drawMazeIconsFinish(blankBlock);
 
@@ -473,6 +651,12 @@ public class GraphicalInterface implements ActionListener {
 		}
 	}
 
+	/**
+	 * Draw finish icons
+	 * 
+	 * @param blankBlock
+	 * @throws IOException
+	 */
 	private void drawMazeIconsFinish(boolean blankBlock) throws IOException {
 		BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
 
@@ -483,6 +667,12 @@ public class GraphicalInterface implements ActionListener {
 		}
 	}
 
+	/**
+	 * Draw start icon
+	 * 
+	 * @param blankBlock
+	 * @throws IOException
+	 */
 	private void drawMazeIconsStart(boolean blankBlock) throws IOException {
 		BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
 
@@ -493,6 +683,9 @@ public class GraphicalInterface implements ActionListener {
 		}
 	}
 
+	/**
+	 * Draw higlighted the solved path
+	 */
 	private void drawSolvedPath() {
 
 		if (animationTimer.isRunning()) {
@@ -520,11 +713,10 @@ public class GraphicalInterface implements ActionListener {
 		}
 
 		solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
-		
+
 		// draw the final path
 		for (Point point : solver.backTracePath()) {
 			drawBlock(mazeImageGFX, point, Color.GREEN);
-			// TODO draw arrows here as well (not sure if it will look nice :/ )
 		}
 
 		drawMazeIcons(false);
@@ -539,128 +731,44 @@ public class GraphicalInterface implements ActionListener {
 		buttonDisable(GuiButton.DESTINATION_IGNORE);
 	}
 
-	private void exit() {
-		// frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-		frame.setVisible(false);
-		frame.dispose();
-	}
+	private void implementationDetect() {
+		// do not continue if it's not ready
+		if (implementationPanel == null) return;
 
-	private void flushSolver() {
-
-		if (animationTimer.isRunning()) {
-			animationTimer.stop();
-			buttonEnable(GuiButton.LOAD);
-			buttonEnable(GuiButton.GENERATE);
-			buttonToggle(GuiButton.ANIMATE, false);
+		// enable all
+		for (int i = 0; i < 4; i++) {
+			implementationPanel.getComponent(i).setEnabled(true);
 		}
+		buttonToggle(GuiButton.BFS, false);
+		buttonToggle(GuiButton.DFS, false);
+		buttonToggle(GuiButton.ASTAR, false);
+		buttonToggle(GuiButton.ASTART_CONCURENT, false);
 
-		try {
-			switch (implementationToUse) {
-				case DFS:
-					solver = new MazeSolverDFS(maze);
-					break;
-					
-				case JDK_HASHMAP:
-					solver = new MazeSolverAStar(maze, Aproach.JDK_HASHMAP);
-					break;
+		// detect which implementation is set to be used and show it as selected
+		switch (implementationToUse) {
 
-				case JDK_CONCURENT_HASHMAP:
-					solver = new MazeSolverAStar(maze, Aproach.JDK_CONCURENT_HASHMAP);
-					break;
+			case BFS_STACK:
+				buttonToggle(GuiButton.BFS, true);
+				buttonDisable(GuiButton.BFS);
+				break;
 
-				default:
-					throw new Exception("Not implemented aproach for solver selected");
-			}
+			case DFS_STACK:
+				buttonToggle(GuiButton.DFS, true);
+				buttonDisable(GuiButton.DFS);
+				break;
 
-			drawMaze();
-			statusBarLabel.setText("Maze loaded");
+			case ASTAR_HASHMAP:
+				buttonToggle(GuiButton.ASTAR, true);
+				buttonDisable(GuiButton.ASTAR);
+				break;
 
-			// when flushed or loaded allow /disable some buttons
-			// buttonEnable(GuiButton.SAVE);
-			buttonEnable(GuiButton.SOLVE);
-			buttonEnable(GuiButton.STEP);
-			buttonEnable(GuiButton.ANIMATE);
+			case ASTAR_CONCURENT_HASHMAP:
+				buttonToggle(GuiButton.ASTART_CONCURENT, true);
+				buttonDisable(GuiButton.ASTART_CONCURENT);
+				break;
 
-			buttonEnable(GuiButton.DESTINATION_IGNORE);
-			buttonToggle(GuiButton.DESTINATION_IGNORE, false);
-
-			buttonDisable(GuiButton.FLUSH);
-
-		} catch (Exception lackingNodesException) {
-			setStatusBarException(lackingNodesException);
-		}
-	}
-
-	private void generateMaze() {
-		maze = new Maze();
-
-		try {
-			maze.setWidth((short) (55));
-			maze.setHeight((short) (150));
-			// maze.setWidth((short)(562));
-			// maze.setHeight((short)(550));
-
-			maze.initialize();
-			maze.fill();
-			maze.generate();
-
-			Random rand = new Random();
-
-			// add some random points, hopefuly will create a loop or few
-			// how many depends on the maze size
-			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 20;
-			for (int count = 0; count < walkablePoints; count++) {
-				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),
-						rand.nextInt(maze.getHeight())));
-			}
-
-			// make border around maze as fail safe
-			maze.border();
-
-			Point startPoint;
-			Point endPoint;
-			int minimumDistance = (maze.getWidth() + maze.getHeight()) / 3;
-
-			// add start & finish somewhere randomly, but bit far away from each other
-			do {
-				startPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
-				endPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
-			} while (!maze.canWalkTo(startPoint) || !maze.canWalkTo(endPoint)
-					|| startPoint.distance(endPoint) < minimumDistance);
-
-			maze.addStart(startPoint);
-			maze.addFinish(endPoint);
-
-			buttonEnable(GuiButton.SAVE);
-			// prepare solver & refresh screen
-			flushSolver();
-
-		} catch (Exception e) {
-			setStatusBarException(e);
-		}
-	}
-
-	/**
-	 * Gui file chooser and loader dialog
-	 * 
-	 */
-	private void loadMaze() {
-		maze = new Maze();
-
-		String fileName = openSaveDialog(false);
-
-		if (fileName != null) {
-			try {
-
-				// maze.load("mazes/tiny.maze");
-				// maze.load("mazes/another.maze");
-				// maze.load("mazes/test.maze");
-				maze.load(fileName);
-				flushSolver();
-
-			} catch (Exception loadException) {
-				setStatusBarException(loadException);
-			}
+			default:
+				break;
 		}
 	}
 
@@ -720,33 +828,34 @@ public class GraphicalInterface implements ActionListener {
 
 		JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
 
-		addButtonToPanel(buttonPanel, false, GuiButton.LOAD, "open", this::loadMaze);
-		addButtonToPanel(buttonPanel, false, GuiButton.GENERATE, "generate", this::generateMaze);
-		addButtonToPanel(buttonPanel, false, GuiButton.SAVE, "save", this::saveMaze);
+		addButtonToPanel(buttonPanel, false, GuiButton.LOAD, "open", this::actionLoadMaze);
+		addButtonToPanel(buttonPanel, false, GuiButton.GENERATE, "generate", this::actionGenerateMaze);
+		addButtonToPanel(buttonPanel, false, GuiButton.SAVE, "save", this::actionSaveMaze);
 
 		implementationPanel = new JPanel(new GridLayout(1, 4));
 
 		addButtonToPanel(implementationPanel, true, GuiButton.BFS, "stack_top",
-				this::implementationSelect);
+				this::actionImplementationSelect);
 
 		addButtonToPanel(implementationPanel, true, GuiButton.DFS, "stack_bottom",
-				this::implementationSelect);
+				this::actionImplementationSelect);
 
-		addButtonToPanel(implementationPanel, true, GuiButton.HASH, "hash", this::implementationSelect);
+		addButtonToPanel(implementationPanel, true, GuiButton.ASTAR, "hash",
+				this::actionImplementationSelect);
 
-		addButtonToPanel(implementationPanel, true, GuiButton.CONCURENT, "multi",
-				this::implementationSelect);
+		addButtonToPanel(implementationPanel, true, GuiButton.ASTART_CONCURENT, "multi",
+				this::actionImplementationSelect);
 
 		buttonPanel.add(implementationPanel);
 
-		addButtonToPanel(buttonPanel, false, GuiButton.SOLVE, "solve2", this::solve);
-		addButtonToPanel(buttonPanel, false, GuiButton.FLUSH, "clean", this::flushSolver);
-		addButtonToPanel(buttonPanel, false, GuiButton.STEP, "solve", this::stepChecks);
+		addButtonToPanel(buttonPanel, false, GuiButton.SOLVE, "solve2", this::actionSolve);
+		addButtonToPanel(buttonPanel, false, GuiButton.FLUSH, "clean", this::actionFlushSolver);
+		addButtonToPanel(buttonPanel, false, GuiButton.STEP, "solve", this::actionStepChecks);
 		addButtonToPanel(buttonPanel, true, GuiButton.DESTINATION_IGNORE, "target",
-				this::destinationIgnoreToggle);
+				this::actionDestinationIgnoreToggle);
 
-		addButtonToPanel(buttonPanel, true, GuiButton.ANIMATE, "clock", this::animate);
-		addButtonToPanel(buttonPanel, false, GuiButton.EXIT, "exit", this::exit);
+		addButtonToPanel(buttonPanel, true, GuiButton.ANIMATE, "clock", this::actionAnimate);
+		addButtonToPanel(buttonPanel, false, GuiButton.EXIT, "exit", this::actionExit);
 
 		// disable all, just leave some buttons enabled
 		buttonDisableAll();
@@ -758,6 +867,12 @@ public class GraphicalInterface implements ActionListener {
 		parent.add(buttonPanel, BorderLayout.WEST);
 	}
 
+	/**
+	 * Will generate open / save dialog and return selected filename
+	 * 
+	 * @param saveDialog
+	 * @return
+	 */
 	private String openSaveDialog(boolean saveDialog) {
 		// Choose maze file filter
 		FileFilter ff = new FileFilter() {
@@ -798,47 +913,13 @@ public class GraphicalInterface implements ActionListener {
 		frame.setVisible(true);
 	}
 
-	public void saveMaze() {
-		String fileName = openSaveDialog(true);
-
-		if (fileName != null) {
-			try {
-				maze.save(fileName);
-			} catch (Exception e) {
-				setStatusBarException(e);
-			}
-		}
-	}
-
 	private void setStatusBarException(Exception exception) {
 		statusBarLabel.setText(exception.toString());
 	}
 
-	private void solve() {
-		if (solver.solvePath() > 0) {
-
-			drawSolvedPath();
-
-		} else {
-			// when solution is not found disable some buttons
-			buttonDisable(GuiButton.SOLVE);
-			buttonDisable(GuiButton.STEP);
-			buttonDisable(GuiButton.ANIMATE);
-			buttonEnable(GuiButton.FLUSH);
-
-			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
-		}
-	}
-
-	private void stepChecks() {
-		if (!solver.isDoNotSolveAgain()) {
-			stepExecute();
-		} else {
-			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
-			buttonDisable(GuiButton.STEP);
-		}
-	}
-
+	/**
+	 * Execunte 1 step inside the solving algorithm
+	 */
 	private void stepExecute() {
 		if (!animationTimer.isRunning()) {
 			buttonEnable(GuiButton.FLUSH);
@@ -867,9 +948,8 @@ public class GraphicalInterface implements ActionListener {
 				});
 
 			}
-			
+
 			solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
-			
 
 			for (Point point : solver.backTracePathParty()) {
 				drawBlock(mazeImageGFX, point, Color.GREEN);
@@ -889,12 +969,14 @@ public class GraphicalInterface implements ActionListener {
 				statusBarLabel.setText("No solution found");
 			} else {
 				drawSolvedPath();
-				// statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
-				// solver.timeTaken(),solver.getVisitedAlready().size()));
 			}
 		}
 	}
 
+	/**
+	 * Will remove all Jpane and replace it with new one contain new image
+	 * @param buffer
+	 */
 	private void swapMazePanel(BufferedImage buffer) {
 		mazeImage = new ImageIcon(buffer);
 
