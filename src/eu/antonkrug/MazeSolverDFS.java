@@ -24,18 +24,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 
-public class MazeSolverDFS implements MazeSolver {
+public class MazeSolverDFS extends MazeSolverBase {
 
-	public static final boolean	DEBUG	= false;
-	private List<Point>					allDirections;
 	private Stack<Point>				currentPath;
-	private Point								currentStep;
-	private List<Point>					destinations;
-	private boolean							doNotSolveAgain;
-	private Maze								maze;
-	private Point								origin;
-	private Long								timeStart;
-	private Long								timeStop;
 	private Stack<Point>				visit;
 	private Stack<Point>				visitedAlready;
 
@@ -46,50 +37,13 @@ public class MazeSolverDFS implements MazeSolver {
 	 *          Reqiress to be give already loaded maze
 	 */
 	public MazeSolverDFS(Maze maze) throws Exception {
-
-		this.doNotSolveAgain = false;
-		this.maze = maze;
-		this.currentStep = null;
-
-		this.timeStart = System.nanoTime();
-		this.timeStop = this.timeStart;
-
-		this.destinations = new LinkedList<>();
-
-		// all cardinal direction for up,down,left and right
-		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
-				new Point(0, -1));
+		super(maze, Aproach.DFS_STACK);
 
 		this.visit = new Stack<>();
 		this.currentPath = new Stack<>();
 		this.visitedAlready = new Stack<>();
 
 		this.addStartingAndDestionationPositions();
-	}
-
-	/**
-	 * Will add one or more destinations to maze
-	 * 
-	 * @param destination
-	 */
-	@Override
-	public void addDestinationPosition(Point destination) {
-		if (!destinations.contains(destination)) {
-			this.destinations.add(destination);
-		}
-	}
-
-	/**
-	 * Will add both starting and final destination points from the maze is given
-	 * to this solver
-	 * 
-	 * @throws Exception
-	 *           If there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingAndDestionationPositions() throws Exception {
-		this.setDestinations(maze.getAllBlock(Maze.Block.FINISH));
-		this.addStartingPositions(maze.getAllBlock(Maze.Block.START));
 	}
 
 	/**
@@ -105,7 +59,7 @@ public class MazeSolverDFS implements MazeSolver {
 		for (Point point : starts) {
 			this.addStartPosition(point);
 		}
-		currentPath.push(origin);
+//		currentPath.push(origin);
 	}
 
 	/**
@@ -170,7 +124,8 @@ public class MazeSolverDFS implements MazeSolver {
 	 * @param currentPosition
 	 * @return
 	 */
-	private Point doOneStep(Point currentPosition) {
+	@Override
+	protected Point doOneStep(Point currentPosition) {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
@@ -325,7 +280,8 @@ public class MazeSolverDFS implements MazeSolver {
 	 * 
 	 * @param index
 	 */
-	private void markNodeAsVisited(Point index) {
+	@Override
+	protected void markNodeAsVisited(Point index) {
 		// check if it's not removed from visited list already
 		if (visit.contains(index)) {
 			// add it to visited list and then removed it from visit list
@@ -399,59 +355,4 @@ public class MazeSolverDFS implements MazeSolver {
 		return currentStep == null;
 	}
 
-	/**
-	 * If solver is finished, do final checks and cleanup
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepFinish() {
-		this.timeStop = System.nanoTime();
-
-		doNotSolveAgain = true;
-
-		if (!destinations.contains(currentStep)) return -1;
-
-		// last step, when destination and current step are the same, we will flag
-		// which destionation we reached
-		markNodeAsVisited(currentStep);
-
-		return 0;
-	}
-
-	/**
-	 * Called before solver can do each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solveStepInit() {
-		if (origin == null || doNotSolveAgain) {
-			doNotSolveAgain = true;
-			return -1;
-		}
-		this.timeStart = System.nanoTime();
-		currentStep = origin;
-
-		return 0;
-	}
-
-	/**
-	 * If solveStepCondition() returns true you can do one step iteration
-	 */
-	@Override
-	public void solveStepOneIteration() {
-		currentStep = doOneStep(currentStep);
-	}
-
-	/**
-	 * Returns measured time between the solver was started, till it found
-	 * solution
-	 * 
-	 * @return
-	 */
-	@Override
-	public long timeTaken() {
-		return (timeStop - timeStart) / 1000000;
-	}
 }
