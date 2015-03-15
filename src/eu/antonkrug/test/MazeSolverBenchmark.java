@@ -11,9 +11,15 @@ package eu.antonkrug.test;
  * around 120s (2 minutes) to finish all benchmarks.
  * 
  *  Benchmark 1 - medium maze (1 start,1 destination)
+ *  
  *  Benchmark 2 - smaller (1 start + 1 closed start, 1 destination + 1 closed destination)
+ *  
  *  Benchmark 3 - tiny (2 reachable starts, 2 rechable destinations)
+ *  
  *  Benchmark 4 - medium maze (1 start, 1 destination, but no solution)
+ *  
+ *  Benchmark 5 - medium maze (1 start, 1 destination, but lot's of empty space
+ *                and 2 different solutions)
  *  
  *  Results:
  *  
@@ -127,6 +133,8 @@ public class MazeSolverBenchmark {
 		aStarAproaches(Aproach.DFS_STACK);
 		loadMaze("4");
 		aStarAproaches(Aproach.DFS_STACK);
+		loadMaze("5");
+		aStarAproaches(Aproach.DFS_STACK);
 	}
 
 	@Test
@@ -137,6 +145,8 @@ public class MazeSolverBenchmark {
 		loadMaze("3");
 		aStarAproaches(Aproach.ASTAR_CONCURENT_HASHMAP);
 		loadMaze("4");
+		aStarAproaches(Aproach.ASTAR_CONCURENT_HASHMAP);
+		loadMaze("5");
 		aStarAproaches(Aproach.ASTAR_CONCURENT_HASHMAP);
 	}
 
@@ -149,6 +159,8 @@ public class MazeSolverBenchmark {
 		aStarAproaches(Aproach.ASTAR_HASHMAP);
 		loadMaze("4");
 		aStarAproaches(Aproach.ASTAR_HASHMAP);
+		loadMaze("5");
+		aStarAproaches(Aproach.ASTAR_HASHMAP);
 	}
 
 	@Test
@@ -159,6 +171,8 @@ public class MazeSolverBenchmark {
 		loadMaze("3");
 		aStarAproaches(Aproach.BFS_STACK);
 		loadMaze("4");
+		aStarAproaches(Aproach.BFS_STACK);
+		loadMaze("5");
 		aStarAproaches(Aproach.BFS_STACK);
 	}
 

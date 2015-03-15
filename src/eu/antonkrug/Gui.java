@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -168,7 +169,7 @@ public class Gui implements ActionListener {
 	 * Constructor which will create frame, but will not make it public
 	 */
 	public Gui() {
-		animationTimer = new Timer(100, actionEvent -> this.actionStepChecks());
+		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
 		implementationToUse = Aproach.ASTAR_HASHMAP;
 
 		try {
@@ -305,7 +306,7 @@ public class Gui implements ActionListener {
 			// add some random walkable point instead of walls in hope to create loops
 			// or alternative paths, how many depends on the maze size:
 			// for maze 55x37 it will create 6 points
-			
+
 			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 15;
 
 			while (walkablePoints >= 0) {
@@ -371,7 +372,7 @@ public class Gui implements ActionListener {
 		}
 
 		statusBarLabel.setText(String.format(
-				"In NEXT solver initialization a %s implementation will be used (press flush solution)",
+				"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution)",
 				implementationToUse));
 
 		implementationDetect();
@@ -709,31 +710,10 @@ public class Gui implements ActionListener {
 			buttonToggle(GuiButton.ANIMATE, false);
 		}
 
-		// draw the blocks from the open and closed list (visit and visited)
+		// draw the blocks from the open and closed list (visit and visited),
+		// current path, and start,end icons
+		drawOpenClosedCurrentLists(solver.backTracePath(), false);
 
-		if (solver.getVisitedAlready() == null) {
-
-			// simpler alternative will have no direction arrows
-			solver.getVisitedAlreadyAlternative().forEach(
-					point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
-
-		} else {
-
-			// using map so we can draw directions
-			solver.getVisitedAlready().entrySet().forEach(node -> {
-				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
-				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
-			});
-		}
-
-		solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
-
-		// draw the final path
-		for (Point point : solver.backTracePath()) {
-			drawBlock(mazeImageGFX, point, Color.GREEN);
-		}
-
-		drawMazeIcons(false);
 		statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
 				solver.timeTaken(), solver.getVisitedAlreadySize()));
 
@@ -795,7 +775,7 @@ public class Gui implements ActionListener {
 	private void makeFrame() throws Exception {
 		// creates window with minimum resolution
 		frame = new JFrame("Maze solver");
-		frame.setMinimumSize(new Dimension(800, 500));
+		frame.setMinimumSize(new Dimension(900, 500));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// create the status bar on the bottom of the frame
@@ -948,35 +928,9 @@ public class Gui implements ActionListener {
 		if (solver.solveStepCondition()) {
 			solver.solveStepOneIteration();
 
-			// draw the block from the open and closed list (visit and visited)
-
-			if (solver.getVisitedAlready() == null) {
-
-				// non map alternative
-				solver.getVisitedAlreadyAlternative().forEach(
-						point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
-
-			} else {
-
-				// map aprroach (can draw arrows on the blocks)
-				solver.getVisitedAlready().entrySet().forEach(node -> {
-					drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
-					drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
-				});
-
-			}
-
-			solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
-
-			for (Point point : solver.backTracePathPartially()) {
-				drawBlock(mazeImageGFX, point, Color.GREEN);
-			}
-
-			// higlight next planed block
-			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
-
-			// draw the start / finish icons over the blocks
-			drawMazeIcons(false);
+			// draw the blocks from the open and closed list (visit and visited),
+			// current path, and start,end icons			
+			drawOpenClosedCurrentLists(solver.backTracePathPartially(), true);
 
 			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s",
 					solver.getVisitedAlreadySize(), solver.getVisitSize(), solver.getCurrentStep()));
@@ -988,6 +942,57 @@ public class Gui implements ActionListener {
 				drawSolvedPath();
 			}
 		}
+	}
+
+	/**
+	 * Draw colored block from all avaiable list to visualise better what is the
+	 * solver doing.
+	 * 
+	 * Open list is list of blocks planed for visiting Closed list is list of
+	 * blocks which were already visited
+	 * 
+	 * Current path is highlighted part between start and current step
+	 * 
+	 */
+	private void drawOpenClosedCurrentLists(List<Point> currentPath, boolean drawCurrentStep) {
+		Map<Point, Point> backtraceCache = null;
+
+		// draw closed list
+		if (solver.getVisitedAlready() == null) {
+
+			// non map alternative
+			solver.getVisitedAlreadyAlternative().forEach(
+					point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
+
+		} else {
+			backtraceCache = solver.getVisitedAlready();
+
+			// map aprroach (can draw arrows on the blocks)
+			backtraceCache.entrySet().forEach(node -> {
+				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
+				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
+			});
+
+		}
+
+		// draw open list
+		solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
+
+		// draw current path
+		for (Point point : currentPath) {
+			drawBlock(mazeImageGFX, point, Color.GREEN);
+
+			// if the data are avaiable then draw arrows on current path as well
+			if (backtraceCache != null) {
+				drawArrow(mazeImageGFX, point, backtraceCache.get(point), Color.BLUE);
+			}
+		}
+
+		// higlight next planed block
+		if (drawCurrentStep) drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
+
+		// draw the start / finish icons over the blocks
+		drawMazeIcons(false);
 	}
 
 	/**
