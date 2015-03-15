@@ -38,28 +38,17 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 */
 	public MazeSolverDFS(Maze maze) throws Exception {
 		super(maze, Aproach.DFS_STACK);
+		
+		// not used, but if in future this implementation would be asked if it can
+		// see the destination then it would return correct value
+		this.destinationVisible = false;
+		
 
 		this.visit = new Stack<>();
 		this.currentPath = new Stack<>();
 		this.visitedAlready = new Stack<>();
 
 		this.addStartingAndDestionationPositions();
-	}
-
-	/**
-	 * Will add one or more starting positions for the maze
-	 * 
-	 * @param starts
-	 *          List of starting points
-	 * @exception If
-	 *              there is no destination present it will throw exception
-	 */
-	@Override
-	public void addStartingPositions(List<Point> starts) throws Exception {
-		for (Point point : starts) {
-			this.addStartPosition(point);
-		}
-//		currentPath.push(origin);
 	}
 
 	/**
@@ -174,36 +163,6 @@ public class MazeSolverDFS extends MazeSolverBase {
 	}
 
 	/**
-	 * Will return Approach of this implementation
-	 * 
-	 * @return
-	 */
-	@Override
-	public Aproach getAproach() {
-		return Aproach.DFS_STACK;
-	}
-
-	/**
-	 * Gets the current step position inside the solver
-	 * 
-	 * @return the currentStep
-	 */
-	@Override
-	public Point getCurrentStep() {
-		return currentStep;
-	}
-
-	/**
-	 * Returns all given destinations
-	 * 
-	 * @return the destinations
-	 */
-	@Override
-	public List<Point> getDestinations() {
-		return destinations;
-	}
-
-	/**
 	 * Returns open list
 	 * 
 	 * @return the visit
@@ -214,18 +173,8 @@ public class MazeSolverDFS extends MazeSolverBase {
 	}
 
 	/**
-	 * Returns null so alternative can be called
-	 * 
-	 * @return null
-	 */
-	@Override
-	public Map<Point, Point> getVisitedAlready() {
-		return null;
-	}
-
-	/**
 	 * If it's unconviet to return closed list as map, you can return it as stream
-	 * with this method.
+	 * with this alternative method.
 	 * 
 	 * @return
 	 */
@@ -255,27 +204,6 @@ public class MazeSolverDFS extends MazeSolverBase {
 	}
 
 	/**
-	 * Return flag if the alrgorithm is allowed to see the destination
-	 * 
-	 * @return the destinationVisible
-	 */
-	@Override
-	public boolean isDestinationVisible() {
-		return false;
-	}
-
-	/**
-	 * Flag if algorithm is solved (with solution or not) and locked for any new
-	 * solving attempt.
-	 * 
-	 * @return the doNotSolveAgain
-	 */
-	@Override
-	public boolean isDoNotSolveAgain() {
-		return doNotSolveAgain;
-	}
-
-	/**
 	 * Move a position from open list to closed list
 	 * 
 	 * @param index
@@ -291,51 +219,6 @@ public class MazeSolverDFS extends MazeSolverBase {
 	}
 
 	/**
-	 * Set all destinations to given list.
-	 * 
-	 * @param destinations
-	 */
-	@Override
-	public void setDestinations(List<Point> destinations) {
-		this.destinations = destinations;
-	}
-
-	/**
-	 * Flag if algorithm is allowed to see destination
-	 * 
-	 * @param destinationVisible
-	 *          the destinationVisible to set
-	 */
-	@Override
-	public void setDestinationVisible(boolean destinationVisible) {
-		// destination visibility ignored for this implementation
-	}
-
-	/**
-	 * Will attempt to find path from start to finish
-	 * 
-	 * @return
-	 */
-	@Override
-	public int solvePath() {
-
-		int iteration = 0;
-
-		if (solveStepInit() < 0) return -1;
-
-		while (solveStepCondition()) {
-			solveStepOneIteration();
-			iteration++;
-		}
-
-		if (solveStepFinish() < 0) return -1;
-
-		if (DEBUG) System.out.println("Took " + iteration + " iterations.");
-
-		return iteration;
-	}
-
-	/**
 	 * Condition which will be checked in each step
 	 * 
 	 * @return
@@ -343,16 +226,6 @@ public class MazeSolverDFS extends MazeSolverBase {
 	@Override
 	public boolean solveStepCondition() {
 		return !destinations.contains(currentStep) && currentPath.size() > 0;
-	}
-
-	/**
-	 * Set current step to null
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepDidntStarted() {
-		return currentStep == null;
 	}
 
 }

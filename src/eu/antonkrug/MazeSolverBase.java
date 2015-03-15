@@ -36,7 +36,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	protected Point							origin;
 	private Long								timeStart;
 	private Long								timeStop;
-	
+
 	/**
 	 * Constructor to initialise fields.
 	 * 
@@ -107,7 +107,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 * @param starts
 	 *          List of starting points
 	 * @throws Exception
-	 *              If there is no destination present it will throw exception
+	 *           If there is no destination present it will throw exception
 	 */
 	@Override
 	public void addStartingPositions(List<Point> starts) throws Exception {
@@ -126,7 +126,6 @@ public abstract class MazeSolverBase implements MazeSolver {
 	public long timeTaken() {
 		return (timeStop - timeStart) / 1000000;
 	}
-
 
 	/**
 	 * If solver is finished, do final checks and cleanup
@@ -290,9 +289,14 @@ public abstract class MazeSolverBase implements MazeSolver {
 	}
 
 	/**
-	 * Will attempt to find path from start to finish
+	 * Will attempt to find path from start to finish, contains more simpler
+	 * methods, each of them can be overider separetly by each implementation, if
+	 * the algorithm needs something different from this default one
 	 * 
-	 * @return
+	 * @return Will return -1 if something failed (initializaiton failed like
+	 *         destination missing in the maze, or no solution found), otherwise
+	 *         it will return number of iterations given algorithm took to fins
+	 *         the location
 	 */
 	@Override
 	public int solvePath() {
@@ -337,5 +341,5 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 * @param index
 	 */
 	abstract protected void markNodeAsVisited(Point index);
-	
+
 }
