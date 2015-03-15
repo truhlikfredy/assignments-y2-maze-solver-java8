@@ -36,7 +36,13 @@ public abstract class MazeSolverBase implements MazeSolver {
 	protected Point							origin;
 	private Long								timeStart;
 	private Long								timeStop;
-
+	
+	/**
+	 * Constructor to initialise fields.
+	 * 
+	 * @param maze
+	 *          Reqiress to be give already loaded maze
+	 */
 	public MazeSolverBase(Maze maze, Aproach implementationAproach) {
 		this.destinationVisible = true;
 		this.doNotSolveAgain = false;
@@ -64,7 +70,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 *         (or vice versa, still same result)
 	 */
 	// TODO okontroluj ci sa vsade pouziva
-	protected Point addPoints(Point first, Point second) {
+	protected Point pointsTranslate(Point first, Point second) {
 		Point ret = new Point(first);
 		ret.translate(second.x, second.y);
 		return ret;
@@ -121,12 +127,6 @@ public abstract class MazeSolverBase implements MazeSolver {
 		return (timeStop - timeStart) / 1000000;
 	}
 
-	/**
-	 * Move a position from open list to closed list
-	 * 
-	 * @param index
-	 */
-	abstract protected void markNodeAsVisited(Point index);
 
 	/**
 	 * If solver is finished, do final checks and cleanup
@@ -331,4 +331,11 @@ public abstract class MazeSolverBase implements MazeSolver {
 	@Override
 	abstract public int getVisitedAlreadySize();
 
+	/**
+	 * Move a position from open list to closed list
+	 * 
+	 * @param index
+	 */
+	abstract protected void markNodeAsVisited(Point index);
+	
 }

@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 public class MazeSolverAStar extends MazeSolverBase {
 
 	private Map<Point, AStartNode>	visit;
-	private Map<Point, Point>			visitedAlready;
+	private Map<Point, Point>				visitedAlready;
 
 	/**
 	 * Constructor to initialise fields.
@@ -44,7 +44,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 */
 	public MazeSolverAStar(Maze maze, Aproach implementationAproach) throws Exception {
 
-    super(maze, implementationAproach);
+		super(maze, implementationAproach);
 
 		switch (implementationAproach) {
 			case ASTAR_HASHMAP:
@@ -57,15 +57,16 @@ public class MazeSolverAStar extends MazeSolverBase {
 				this.visitedAlready = new HashMap<>();
 				break;
 
-//			case KOLOBOKE:
-//			  this.visit=HashObjObjMaps.getDefaultFactory().withNullKeyAllowed(false).<Point, MazeNode>newMutableMap();
-//				this.visitedAlready = new HashMap<>();
-//				break;
+			// case KOLOBOKE:
+			// this.visit=HashObjObjMaps.getDefaultFactory().withNullKeyAllowed(false).<Point,
+			// MazeNode>newMutableMap();
+			// this.visitedAlready = new HashMap<>();
+			// break;
 
-//			case FASTUTIL_HASHMAP:
-//				this.visit = new Object2ObjectOpenHashMap<>();
-//				this.visitedAlready = new Object2ObjectOpenHashMap<>();
-//				break;
+			// case FASTUTIL_HASHMAP:
+			// this.visit = new Object2ObjectOpenHashMap<>();
+			// this.visitedAlready = new Object2ObjectOpenHashMap<>();
+			// break;
 
 			default:
 				throw new Exception("Not valid aproach selected");
@@ -73,7 +74,6 @@ public class MazeSolverAStar extends MazeSolverBase {
 
 		this.addStartingAndDestionationPositions();
 	}
-
 
 	/**
 	 * Will add starting position into maze, a maze can contain multiple starting
@@ -122,18 +122,9 @@ public class MazeSolverAStar extends MazeSolverBase {
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
 
-		LinkedList<Point> path = new LinkedList<>();
+		List<Point> path = backTraceFromPoint(destination.get());
 
-		Point currentStep = destination.get();
-
-		while (currentStep != null) {
-			if (DEBUG) System.out.println(currentStep);
-			path.add(currentStep);
-			currentStep = visitedAlready.get(currentStep);
-			iteration++;
-		}
-
-		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
+		if (DEBUG) System.out.println("Path is " + path.size() + " steps long.");
 		return path;
 	}
 
@@ -145,14 +136,29 @@ public class MazeSolverAStar extends MazeSolverBase {
 	@Override
 	public List<Point> backTracePathParty() {
 		Point currentStep = this.currentStep;
-		for (Point direction: allDirections) {
-			Point checkPoint = new Point(currentStep);
-			checkPoint.translate(direction.x, direction.y);
+		for (Point direction : allDirections) {
+
+			Point checkPoint = pointsTranslate(currentStep, direction);
+
 			if (visitedAlready.containsKey(checkPoint)) {
-				currentStep=checkPoint;
+				currentStep = checkPoint;
 			}
 		}
+		return backTraceFromPoint(currentStep);
+	}
+
+	/**
+	 * Will begin at the destination point and step back till starting point is
+	 * reached
+	 * 
+	 * @param destinationPoint
+	 * @return Path which is betwen start poistion and destinaitonPoint
+	 */
+	private List<Point> backTraceFromPoint(Point destinationPoint) {
+
 		LinkedList<Point> path = new LinkedList<>();
+
+		Point currentStep = destinationPoint;
 
 		while (currentStep != null) {
 			if (DEBUG) System.out.println(currentStep);
@@ -161,7 +167,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 		}
 		return path;
 	}
-	
+
 	/**
 	 * Evaluates given position with all cardinal directions and then returns the
 	 * best next step.
@@ -224,8 +230,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 * @param direction
 	 */
 	private void evaluatePoint(Point currentPoint, Point direction) {
-		Point testPoint = new Point(currentPoint);
-		testPoint.translate(direction.x, direction.y);
+		Point testPoint = pointsTranslate(currentPoint, direction);
 
 		// if node is visited already do not continue
 		if (visitedAlready.containsKey(testPoint)) return;
@@ -234,8 +239,8 @@ public class MazeSolverAStar extends MazeSolverBase {
 		if (!maze.canWalkTo(testPoint)) return;
 
 		try {
-			AStartNode proposedNode = new AStartNode(currentPoint, visit.get(currentPoint).getG(), testPoint,
-					destinations);
+			AStartNode proposedNode = new AStartNode(currentPoint, visit.get(currentPoint).getG(),
+					testPoint, destinations);
 
 			// will replace if it's not found already or when it found a entry, but
 			// new node has better value. i.e. always put new/replace entry unless it
@@ -249,7 +254,6 @@ public class MazeSolverAStar extends MazeSolverBase {
 
 	}
 
-
 	/**
 	 * Returns open list
 	 * 
@@ -259,17 +263,16 @@ public class MazeSolverAStar extends MazeSolverBase {
 	public Stream<Point> getVisit() {
 		return visit.keySet().stream();
 	}
-	
+
 	/**
 	 * Returns open list size
 	 * 
 	 * @return the visit size
 	 */
-	@Override	
+	@Override
 	public int getVisitSize() {
 		return visit.size();
 	}
-	
 
 	/**
 	 * Returns closed list
@@ -300,9 +303,5 @@ public class MazeSolverAStar extends MazeSolverBase {
 			visit.remove(index);
 		}
 	}
-
-
-
-
 
 }
