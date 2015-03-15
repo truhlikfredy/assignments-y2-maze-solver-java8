@@ -12,6 +12,10 @@ import java.util.stream.Stream;
  * common (if some differences are needed, still they can be overwritten) hash
  * maps as main datastructure to hold open and closed lists.
  * 
+ * If something very radical is needed, users have option to just implement
+ * MazeSolver interface from scratch. For GUI, benchmark and JUnit tests to work
+ * this class doesn't have to be used.
+ * 
  * @author Anton Krug
  * @date 2015/03/01
  * @version 1.1

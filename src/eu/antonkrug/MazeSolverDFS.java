@@ -16,11 +16,9 @@ package eu.antonkrug;
  */
 
 import java.awt.Point;
-import java.util.Arrays;
 import java.util.stream.Stream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -216,16 +214,6 @@ public class MazeSolverDFS extends MazeSolverBase {
 			visitedAlready.push(index);
 			visit.remove(index);
 		}
-	}
-
-	/**
-	 * Condition which will be checked in each step
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean solveStepCondition() {
-		return !destinations.contains(currentStep) && currentPath.size() > 0;
 	}
 
 }
