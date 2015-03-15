@@ -959,7 +959,7 @@ public class Gui implements ActionListener {
 
 			solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
 
-			for (Point point : solver.backTracePathParty()) {
+			for (Point point : solver.backTracePathPartially()) {
 				drawBlock(mazeImageGFX, point, Color.GREEN);
 			}
 

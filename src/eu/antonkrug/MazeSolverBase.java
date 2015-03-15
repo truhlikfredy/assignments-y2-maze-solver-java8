@@ -328,7 +328,7 @@ public abstract class MazeSolverBase implements MazeSolver {
 	abstract public List<Point> backTracePath();
 
 	@Override
-	abstract public List<Point> backTracePathParty();
+	abstract public List<Point> backTracePathPartially();
 
 	@Override
 	abstract public Stream<Point> getVisit();

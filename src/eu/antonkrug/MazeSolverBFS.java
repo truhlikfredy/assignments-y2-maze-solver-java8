@@ -102,7 +102,7 @@ public class MazeSolverBFS extends MazeSolverBase {
 
 		this.currentStep = destination.get();
 
-		return backTracePathParty();
+		return backTracePathPartially();
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class MazeSolverBFS extends MazeSolverBase {
 	 * @return
 	 */
 	@Override
-	public List<Point> backTracePathParty() {
+	public List<Point> backTracePathPartially() {
 		LinkedList<Point> path = new LinkedList<>();
 
 		Point nextMove = null;

@@ -134,7 +134,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 * @return
 	 */
 	@Override
-	public List<Point> backTracePathParty() {
+	public List<Point> backTracePathPartially() {
 		Point currentStep = this.currentStep;
 		for (Point direction : allDirections) {
 

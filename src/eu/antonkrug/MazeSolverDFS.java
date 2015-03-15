@@ -100,7 +100,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 * @return
 	 */
 	@Override
-	public List<Point> backTracePathParty() {
+	public List<Point> backTracePathPartially() {
 		return new LinkedList<>(currentPath);
 	}
 

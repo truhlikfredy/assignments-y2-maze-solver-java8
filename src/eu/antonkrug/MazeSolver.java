@@ -69,11 +69,11 @@ public interface MazeSolver {
 	public List<Point> backTracePath();
 
 	/**
-	 * Returns current final path by partly solved search
+	 * Returns current final path by partially solved search
 	 * 
 	 * @return
 	 */
-	public List<Point> backTracePathParty();
+	public List<Point> backTracePathPartially();
 
 	/**
 	 * Will return Approach of this implementation
