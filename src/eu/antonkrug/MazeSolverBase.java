@@ -73,7 +73,6 @@ public abstract class MazeSolverBase implements MazeSolver {
 	 * @return Will return point which will be first point shifted by second point
 	 *         (or vice versa, still same result)
 	 */
-	// TODO okontroluj ci sa vsade pouziva
 	protected Point pointsTranslate(Point first, Point second) {
 		Point ret = new Point(first);
 		ret.translate(second.x, second.y);
@@ -220,6 +219,13 @@ public abstract class MazeSolverBase implements MazeSolver {
 		this.destinationVisible = destinationVisible;
 	}
 
+	/**
+	 * Evaluates given position with all cardinal directions and then returns the
+	 * best next step.
+	 * 
+	 * @param currentPosition
+	 * @return
+	 */
 	abstract protected Point doOneStep(Point currentPosition);
 
 	/**
@@ -321,21 +327,53 @@ public abstract class MazeSolverBase implements MazeSolver {
 		return iteration;
 	}
 
+	/**
+	 * Will add starting position into maze, a maze can contain multiple starting
+	 * positions. And position which will gain the shortest path will choosen.
+	 * 
+	 * @param origin
+	 * @throws Exception
+	 */	
 	@Override
 	abstract public void addStartPosition(Point origin) throws Exception;
 
+	/**
+	 * Returns final solved path
+	 * 
+	 * @return
+	 */	
 	@Override
 	abstract public List<Point> backTracePath();
 
+	/**
+	 * Returns current final path by partially solved search
+	 * 
+	 * @return
+	 */
 	@Override
 	abstract public List<Point> backTracePathPartially();
 
+	/**
+	 * Returns open list
+	 * 
+	 * @return the visit
+	 */
 	@Override
 	abstract public Stream<Point> getVisit();
 
+	/**
+	 * Returns open list size
+	 * 
+	 * @return the visit size
+	 */
 	@Override
 	abstract public int getVisitSize();
 
+	/**
+	 * Returns size of the closed list
+	 * 
+	 * @return
+	 */
 	@Override
 	abstract public int getVisitedAlreadySize();
 

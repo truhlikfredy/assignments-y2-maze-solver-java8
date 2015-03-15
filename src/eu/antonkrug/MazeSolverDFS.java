@@ -120,9 +120,8 @@ public class MazeSolverDFS extends MazeSolverBase {
 
 		// test all directions if i can move that way and I wasn't there before
 		for (Point direction : allDirections) {
-
-			Point testPoint = new Point(currentPosition);
-			testPoint.translate(direction.x, direction.y);
+			
+			Point testPoint = pointsTranslate(currentPosition, direction);
 
 			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)) {
 				nextMove = testPoint;
