@@ -158,7 +158,7 @@ public class Gui implements ActionListener {
 	// maze related fields
 	private MazeSolver																	solver;
 	private Aproach																			implementationToUse;
-	
+
 	private Maze																				maze;
 	private JPanel																			mazePanel;
 	private ImageIcon																		mazeImage;
@@ -218,12 +218,12 @@ public class Gui implements ActionListener {
 	private void actionDestinationIgnoreToggle() {
 		if (solver != null) {
 			solver.setDestinationVisible(!solver.isDestinationVisible());
-//			System.out.println(solver.isDestinationVisible());
+			// System.out.println(solver.isDestinationVisible());
 		}
 	}
 
 	/**
-	 * Will quit the GUI 
+	 * Will quit the GUI
 	 */
 	private void actionExit() {
 		// frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -248,7 +248,7 @@ public class Gui implements ActionListener {
 				case BFS_STACK:
 					solver = new MazeSolverBFS(maze);
 					break;
-				
+
 				case DFS_STACK:
 					solver = new MazeSolverDFS(maze);
 					break;
@@ -266,7 +266,8 @@ public class Gui implements ActionListener {
 			}
 
 			drawMaze();
-			statusBarLabel.setText("Maze loaded and solver implementation now used: "+solver.getAproach());
+			statusBarLabel.setText("Maze loaded and solver implementation now used: "
+					+ solver.getAproach());
 
 			// when flushed or loaded allow /disable some buttons
 			// buttonEnable(GuiButton.SAVE);
@@ -292,7 +293,7 @@ public class Gui implements ActionListener {
 
 		try {
 			maze.setWidth((short) (55));
-//			maze.setHeight((short) (150));
+			// maze.setHeight((short) (150));
 			maze.setHeight((short) (37));
 
 			maze.initialize();
@@ -301,12 +302,18 @@ public class Gui implements ActionListener {
 
 			Random rand = new Random();
 
-			// add some random points, hopefuly will create a loop or few
-			// how many depends on the maze size
-			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 20;
-			for (int count = 0; count < walkablePoints; count++) {
-				maze.addWalkablePath(new Point(rand.nextInt(maze.getWidth()),
-						rand.nextInt(maze.getHeight())));
+			// add some random walkable point instead of walls in hope to create loops
+			// or alternative paths, how many depends on the maze size:
+			// for maze 55x37 it will create 6 points
+			
+			int walkablePoints = (maze.getWidth() + maze.getHeight()) / 15;
+
+			while (walkablePoints >= 0) {
+				Point randomPoint = new Point(rand.nextInt(maze.getWidth()), rand.nextInt(maze.getHeight()));
+				if (!maze.canWalkTo(randomPoint)) {
+					maze.addWalkablePath(randomPoint);
+					walkablePoints--;
+				}
 			}
 
 			// make border around maze as fail safe
@@ -364,7 +371,8 @@ public class Gui implements ActionListener {
 		}
 
 		statusBarLabel.setText(String.format(
-				"In NEXT solver initialization a %s implementation will be used (press flush solution)", implementationToUse));
+				"In NEXT solver initialization a %s implementation will be used (press flush solution)",
+				implementationToUse));
 
 		implementationDetect();
 	}
@@ -407,7 +415,7 @@ public class Gui implements ActionListener {
 
 		if (fileName != null) {
 			try {
-				maze.save(fileName+".maze");
+				maze.save(fileName + ".maze");
 			} catch (Exception e) {
 				setStatusBarException(e);
 			}
@@ -563,11 +571,11 @@ public class Gui implements ActionListener {
 			int difX = to.x - at.x;
 			int difY = to.y - at.y;
 
-			//calculate middle of AT point
+			// calculate middle of AT point
 			int pixMiddleX = at.x * BLOCK_SPACING_WIDTH + BLOCK_WIDTH / 2;
 			int pixMiddleY = at.y * BLOCK_SPACING_HEIGHT + BLOCK_HEIGHT / 2;
 
-			//daw line torwards TO point
+			// daw line torwards TO point
 			int pixEndX = pixMiddleX + difX * BLOCK_WIDTH / 2;
 			int pixEndY = pixMiddleY + difY * BLOCK_HEIGHT / 2;
 
@@ -642,6 +650,7 @@ public class Gui implements ActionListener {
 
 	/**
 	 * Draw both start and finish icons
+	 * 
 	 * @param blankBlock
 	 */
 	private void drawMazeIcons(boolean blankBlock) {
@@ -983,6 +992,7 @@ public class Gui implements ActionListener {
 
 	/**
 	 * Will remove all Jpane and replace it with new one contain new image
+	 * 
 	 * @param buffer
 	 */
 	private void swapMazePanel(BufferedImage buffer) {

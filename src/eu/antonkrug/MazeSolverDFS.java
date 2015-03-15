@@ -92,6 +92,10 @@ public class MazeSolverDFS extends MazeSolverBase {
 		if (!destination.isPresent()) return null;
 
 		LinkedList<Point> path = new LinkedList<>(currentPath);
+		
+		// current path doesn't contain the very last point in the finish, so let's
+		// add it to the list
+		path.push(destination.get());
 
 		return path;
 	}
