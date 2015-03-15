@@ -1,5 +1,10 @@
 package eu.antonkrug;
 
+import java.awt.Point;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 /**
  * This is just abstract interface what each algorithm has to have, so when 
  * multiple aproaches are implementented they can be used by the same GUI
@@ -9,14 +14,11 @@ package eu.antonkrug;
  * @version 1.2
  * 
  */
-
-import java.awt.Point;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 public interface MazeSolver {
 
+	/**
+	 * All implemented aproaches to solve a maze
+	 */
 	public enum Aproach {
 		BFS_STACK, DFS_STACK, ASTAR_CONCURENT_HASHMAP, ASTAR_HASHMAP,
 		// KOLOBOKE,

@@ -1,6 +1,19 @@
 package eu.antonkrug;
 
+import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 /**
+ * Maze loader and generator class, handles file IO as well.
  * 
  * @author Anton Krug
  * @date 2015/02/22
@@ -14,21 +27,11 @@ package eu.antonkrug;
  * Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-
-import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-
 public class Maze {
 
+	/**
+	 * All possible types of blocks a maze can contain
+	 */
 	public enum Block {
 		EMPTY {
 			@Override

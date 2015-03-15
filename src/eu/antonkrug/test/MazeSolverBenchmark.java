@@ -22,31 +22,38 @@ package eu.antonkrug.test;
  *                and 2 different solutions)
  *  
  *  Results:
+ *
  *  
- *  System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
- *  Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
- *  Memory:	1841823744 - Available: 118247312
- *  Count:	1000 times repeated benchmark
- *  ---------------------------------------
- *  Benchmark 1 ASTAR_CONCURENT_HASHMAP:	14552 ms
- *  Benchmark 2 ASTAR_CONCURENT_HASHMAP:	2027 ms
- *  Benchmark 3 ASTAR_CONCURENT_HASHMAP:	5 ms
- *  Benchmark 4 ASTAR_CONCURENT_HASHMAP:	3423 ms
- *  
- *  Benchmark 1 BFS_STACK:	38356 ms
- *  Benchmark 2 BFS_STACK:	2036 ms
- *  Benchmark 3 BFS_STACK:	0 ms
- *  Benchmark 4 BFS_STACK:	10083 ms
- *  
- *  Benchmark 1 DFS_STACK:	38545 ms
- *  Benchmark 2 DFS_STACK:	2059 ms
- *  Benchmark 3 DFS_STACK:	1 ms
- *  Benchmark 4 DFS_STACK:	10099 ms
- *  
- *  Benchmark 1 ASTAR_HASHMAP:	4385 ms
- *  Benchmark 2 ASTAR_HASHMAP:	25 ms
- *  Benchmark 3 ASTAR_HASHMAP:	0 ms
- *  Benchmark 4 ASTAR_HASHMAP:	1026 ms
+//System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
+//Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
+//Memory:	1841823744 - Available: 118897648
+//Count:	1000 times repeated benchmark
+//---------------------------------------
+//
+//Benchmark 1 ASTAR_CONCURENT_HASHMAP:	17096 ms
+//Benchmark 2 ASTAR_CONCURENT_HASHMAP:	2040 ms
+//Benchmark 3 ASTAR_CONCURENT_HASHMAP:	5 ms
+//Benchmark 4 ASTAR_CONCURENT_HASHMAP:	4066 ms
+//Benchmark 5 ASTAR_CONCURENT_HASHMAP:	2853 ms
+//
+//Benchmark 1 BFS_STACK:	39182 ms
+//Benchmark 2 BFS_STACK:	2030 ms
+//Benchmark 3 BFS_STACK:	1 ms
+//Benchmark 4 BFS_STACK:	10283 ms
+//Benchmark 5 BFS_STACK:	1059 ms
+//
+//Benchmark 1 DFS_STACK:	39134 ms
+//Benchmark 2 DFS_STACK:	2031 ms
+//Benchmark 3 DFS_STACK:	0 ms
+//Benchmark 4 DFS_STACK:	10294 ms
+//Benchmark 5 DFS_STACK:	1115 ms
+//
+//Benchmark 1 ASTAR_HASHMAP:	5343 ms
+//Benchmark 2 ASTAR_HASHMAP:	24 ms
+//Benchmark 3 ASTAR_HASHMAP:	0 ms
+//Benchmark 4 ASTAR_HASHMAP:	1041 ms
+//Benchmark 5 ASTAR_HASHMAP:	1010 ms
+ * 
  */
 
 import java.util.Properties;

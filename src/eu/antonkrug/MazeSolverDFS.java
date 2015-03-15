@@ -1,5 +1,12 @@
 package eu.antonkrug;
 
+import java.awt.Point;
+import java.util.stream.Stream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Stack;
+
 /**
  * Depth first search using stacks 
  * 
@@ -14,14 +21,6 @@ package eu.antonkrug;
  * Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-
-import java.awt.Point;
-import java.util.stream.Stream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Stack;
-
 public class MazeSolverDFS extends MazeSolverBase {
 
 	private Stack<Point>	visit;

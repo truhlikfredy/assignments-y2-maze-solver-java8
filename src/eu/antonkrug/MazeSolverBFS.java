@@ -1,5 +1,15 @@
 package eu.antonkrug;
 
+import java.awt.Point;
+import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Stack;
+
 /**
  * Breadth first search using FIFO queue
  * 
@@ -14,17 +24,6 @@ package eu.antonkrug;
  * Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-
-import java.awt.Point;
-import java.util.stream.Stream;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Stack;
-
 public class MazeSolverBFS extends MazeSolverBase {
 
 	private Queue<Point>			visit;

@@ -1,20 +1,5 @@
 package eu.antonkrug;
 
-/**
- * 
- * @author Anton Krug
- * @date 2015/02/22
- * @version 1
- * @requires Java 8!
- * 
- */
-
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * Written by Anton Krug <anton.krug@gmail.com>, February 2015
- */
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,8 +22,19 @@ import utils.Pair;
 
 /**
  * The main class which will start up GUI and handle all action eventss
+ * 
+ * @author Anton Krug
+ * @date 2015/02/22
+ * @version 1
+ * @requires Java 8!
+ * 
  */
 
+/* Copyright (C) Anton Krug - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
 public class Gui implements ActionListener {
 
 	/**

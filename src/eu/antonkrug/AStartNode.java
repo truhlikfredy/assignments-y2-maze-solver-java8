@@ -1,5 +1,8 @@
 package eu.antonkrug;
 
+import java.awt.Point;
+import java.util.List;
+
 /**
  * A node class used inside A* best path searching algoritm
  * 
@@ -13,10 +16,6 @@ package eu.antonkrug;
  * Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-
-import java.awt.Point;
-import java.util.List;
-
 public class AStartNode {
 
 	// distance from start

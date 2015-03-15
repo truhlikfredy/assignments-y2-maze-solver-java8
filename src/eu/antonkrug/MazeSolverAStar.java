@@ -1,21 +1,5 @@
 package eu.antonkrug;
 
-/**
- * Single threaded, multithread, koloboke and fastutil implementation of A* using 
- * hash maps as main datastructure to hold open and closed lists.
- * 
- * @author Anton Krug
- * @date 2015/02/22
- * @version 1.3
- * @requires Java 8!
- */
-
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * Written by Anton Krug <anton.krug@gmail.com>, February 2015
- */
-
 import java.awt.Point;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +15,21 @@ import java.util.Map.Entry;
 
 //import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
+/**
+ * Single threaded, multithread, koloboke and fastutil implementation of A* using 
+ * hash maps as main datastructure to hold open and closed lists.
+ * 
+ * @author Anton Krug
+ * @date 2015/02/22
+ * @version 1.3
+ * @requires Java 8!
+ */
+
+/* Copyright (C) Anton Krug - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Anton Krug <anton.krug@gmail.com>, February 2015
+ */
 public class MazeSolverAStar extends MazeSolverBase {
 
 	private Map<Point, AStartNode>	visit;
