@@ -22,7 +22,6 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -77,7 +76,7 @@ public class Maze {
 
 	}
 
-	//1000 + 1 border + 1 border = 1002
+	// 1000 + 1 border + 1 border = 1002
 	private final static short	MAX_MAZE_HEIGHT	= 1002;
 	private final static short	MAX_MAZE_WIDTH	= 1002;
 
@@ -89,62 +88,43 @@ public class Maze {
 
 	private short								width;
 
+	/**
+	 * Constructor with some very small maze just to have something
+	 */
 	public Maze() {
 		maze = new Block[1][1];
 	}
-	
-	public void addStart(Point point) {
-		maze[point.x][point.y]=Block.START;
-	}
 
-	public void addWalkablePath(Point point) {
-		maze[point.x][point.y]=Block.EMPTY;
-	}
-
+	/**
+	 * Add this point as finish
+	 * 
+	 * @param point
+	 */
 	public void addFinish(Point point) {
-		maze[point.x][point.y]=Block.FINISH;
-	}
-
-	public boolean canWalkTo(Point point) {
-		if (maze[point.x][point.y] == Block.EMPTY) return true;
-		if (maze[point.x][point.y] == Block.START) return true;
-		if (maze[point.x][point.y] == Block.FINISH) return true;
-		return false;
-	}
-
-	public Block getBlock(Point point) {
-		return maze[point.x][point.y];
-	}
-	
-	public LinkedList<Point> getAllBlock(Block block) {
-		LinkedList<Point> list = new LinkedList<>();
-
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
-				if (maze[x][y] == block) list.add(new Point(x, y));
-
-		return list;
+		maze[point.x][point.y] = Block.FINISH;
 	}
 
 	/**
-	 * @return the height
+	 * Add point as starting position
+	 * 
+	 * @param point
 	 */
-	public short getHeight() {
-		return height;
+	public void addStart(Point point) {
+		maze[point.x][point.y] = Block.START;
 	}
 
 	/**
-	 * @return the width
+	 * Add this point as walkable (not abscured by wall)
+	 * 
+	 * @param point
 	 */
-	public short getWidth() {
-		return width;
+	public void addWalkablePath(Point point) {
+		maze[point.x][point.y] = Block.EMPTY;
 	}
 
-	public void initialize() {
-		maze = new Block[width][height];
-		border();
-	}
-	
+	/**
+	 * Create non walkable border around the edge of the maze
+	 */
 	public void border() {
 		for (int x = 0; x < width; x++) {
 			maze[x][0] = Block.WALL;
@@ -153,9 +133,27 @@ public class Maze {
 		for (int y = 0; y < height; y++) {
 			maze[0][y] = Block.WALL;
 			maze[width - 1][y] = Block.WALL;
-		}		
+		}
 	}
 
+	/**
+	 * Check if it's not blocked by wall
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public boolean canWalkTo(Point point) {
+		// this way if some new block types will be implemented it will be safer to
+		// extend
+		if (maze[point.x][point.y] == Block.EMPTY) return true;
+		if (maze[point.x][point.y] == Block.START) return true;
+		if (maze[point.x][point.y] == Block.FINISH) return true;
+		return false;
+	}
+
+	/**
+	 * Fully fill with walls.
+	 */
 	public void fill() {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -164,19 +162,9 @@ public class Maze {
 		}
 	}
 
-	private void generateAddWalls(int x, int y) {
-
-		// make center walkable
-		maze[x][y] = Block.EMPTY;
-
-		// all around add to list
-		for (Point point : allDirections) {
-			if (x > 1 && y > 1 && x < width - 2 && y < height - 2
-					&& maze[x + point.x][y + point.y] == Block.WALL)
-				wallList.add(new Point(x + point.x, y + point.y));
-		}
-	}
-
+	/**
+	 * Will generate low dificulty maze but with many dead ends
+	 */
 	public void generate() {
 		// all cardinal direction for up,down,left and right
 		this.allDirections = Arrays.asList(new Point(-1, 0), new Point(1, 0), new Point(0, 1),
@@ -184,7 +172,7 @@ public class Maze {
 
 		wallList = new ArrayList<>();
 		generateAddWalls(width / 2, height / 2);
-		//generateAddWalls( 3, 3);
+		// generateAddWalls( 3, 3);
 
 		Random rand = new Random();
 
@@ -205,16 +193,91 @@ public class Maze {
 			int deltaX = wall.x - emptyWallX;
 			int deltaY = wall.y - emptyWallY;
 
-
 			if (maze[wall.x + deltaX][wall.y + deltaY] == Block.WALL) {
 				maze[wall.x][wall.y] = Block.EMPTY;
-				generateAddWalls(wall.x+deltaX , wall.y+deltaY );
+				generateAddWalls(wall.x + deltaX, wall.y + deltaY);
 			}
 
 			wallList.remove(wall);
 		}
 	}
 
+	/**
+	 * Will add walls all around this coordinate to the wall list and make center
+	 * walkable
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	private void generateAddWalls(int x, int y) {
+
+		// make center walkable
+		maze[x][y] = Block.EMPTY;
+
+		// all around add to list
+		for (Point point : allDirections) {
+			if (x > 1 && y > 1 && x < width - 2 && y < height - 2
+					&& maze[x + point.x][y + point.y] == Block.WALL)
+				wallList.add(new Point(x + point.x, y + point.y));
+		}
+	}
+
+	/**
+	 * Get whole maze as list
+	 * 
+	 * @param block
+	 * @return
+	 */
+	public LinkedList<Point> getAllBlock(Block block) {
+		LinkedList<Point> list = new LinkedList<>();
+
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				if (maze[x][y] == block) list.add(new Point(x, y));
+
+		return list;
+	}
+
+	/**
+	 * Get block from given position
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public Block getBlock(Point point) {
+		return maze[point.x][point.y];
+	}
+
+	/**
+	 * @return the height
+	 */
+	public short getHeight() {
+		return height;
+	}
+
+	/**
+	 * @return the width
+	 */
+	public short getWidth() {
+		return width;
+	}
+
+	/**
+	 * Create new maze with given width & height (width & height setup by
+	 * different methods)
+	 */
+	public void initialize() {
+		maze = new Block[width][height];
+		border();
+	}
+
+	/**
+	 * Load maze from file
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean load(String fileName) throws Exception {
 		BufferedReader br = null;
 		String line = new String();
@@ -235,28 +298,21 @@ public class Maze {
 		return true;
 	}
 
-	public boolean save(String fileName) throws Exception {
-		PrintWriter printer = new PrintWriter(new File(fileName));
-		printer.write(width+" "+height+"\n");
-		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				printer.write(maze[x][y].getChar());
-			}
-			printer.write("\n");
-		}
-		printer.flush();
-		printer.close();
-		
-		return true;
-	}
-
+	/**
+	 * Parse one line a time
+	 * 
+	 * @param lineNumber
+	 * @param line
+	 */
 	private void loadLineOfMaze(short lineNumber, String line) {
 		for (int x = 0; x < width - 2; x++) {
 			maze[x + 1][lineNumber] = Block.getEnum(line.charAt(x));
 		}
 	}
 
+	/**
+	 * Console debug output of the maze
+	 */
 	public void printDebugMaze() {
 		System.out.println(width);
 		System.out.println(height);
@@ -269,6 +325,34 @@ public class Maze {
 		}
 	}
 
+	/**
+	 * Save maze to a file
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean save(String fileName) throws Exception {
+		PrintWriter printer = new PrintWriter(new File(fileName));
+		printer.write(width + " " + height + "\n");
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				printer.write(maze[x][y].getChar());
+			}
+			printer.write("\n");
+		}
+		printer.flush();
+		printer.close();
+
+		return true;
+	}
+
+	/**
+	 * Set dimensions of the maze
+	 * @param line
+	 * @throws Exception
+	 */
 	private void setDimenstions(String line) throws Exception {
 		Scanner dimensions = new Scanner(line);
 
@@ -279,6 +363,8 @@ public class Maze {
 	}
 
 	/**
+	 * If small enough (defualt 1002) will set height.
+	 * 
 	 * @param height
 	 *          the height to set
 	 */
@@ -292,6 +378,7 @@ public class Maze {
 	}
 
 	/**
+	 * If small enough (defualt 1002) will set width.
 	 * @param width
 	 *          the width to set
 	 */

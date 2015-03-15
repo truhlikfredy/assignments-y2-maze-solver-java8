@@ -1,7 +1,7 @@
 package eu.antonkrug;
 
 /**
- * Single threaded, multithread and fastutil implementation of A* using 
+ * Single threaded, multithread, koloboke and fastutil implementation of A* using 
  * hash maps as main datastructure to hold open and closed lists.
  * 
  * @author Anton Krug
@@ -135,6 +135,8 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 */
 	@Override
 	public List<Point> backTracePathPartially() {
+		
+		//try find traced path near the last position
 		Point currentStep = this.currentStep;
 		for (Point direction : allDirections) {
 
@@ -144,6 +146,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 				currentStep = checkPoint;
 			}
 		}
+		
 		return backTraceFromPoint(currentStep);
 	}
 
@@ -160,6 +163,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 
 		Point currentStep = destinationPoint;
 
+		//traverse the path till start reached
 		while (currentStep != null) {
 			if (DEBUG) System.out.println(currentStep);
 			path.add(currentStep);

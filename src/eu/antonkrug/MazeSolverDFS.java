@@ -24,9 +24,12 @@ import java.util.Stack;
 
 public class MazeSolverDFS extends MazeSolverBase {
 
-	private Stack<Point>				currentPath;
-	private Stack<Point>				visit;
-	private Stack<Point>				visitedAlready;
+	private Stack<Point>	visit;
+	private Stack<Point>	visitedAlready;
+
+	// not required as such for algorithm but without it GUI woudn't be able
+	// display current path which is the algorithm traversing
+	private Stack<Point>	currentPath;
 
 	/**
 	 * Constructor to initialise fields.
@@ -36,11 +39,10 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 */
 	public MazeSolverDFS(Maze maze) throws Exception {
 		super(maze, Aproach.DFS_STACK);
-		
+
 		// not used, but if in future this implementation would be asked if it can
 		// see the destination then it would return correct value
 		this.destinationVisible = false;
-		
 
 		this.visit = new Stack<>();
 		this.currentPath = new Stack<>();
@@ -120,7 +122,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 
 		// test all directions if i can move that way and I wasn't there before
 		for (Point direction : allDirections) {
-			
+
 			Point testPoint = pointsTranslate(currentPosition, direction);
 
 			if (maze.canWalkTo(testPoint) && !visitedAlready.contains(testPoint)) {

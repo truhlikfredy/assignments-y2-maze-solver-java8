@@ -115,7 +115,7 @@ public class MazeSolverBFS extends MazeSolverBase {
 		LinkedList<Point> path = new LinkedList<>();
 
 		Point nextMove = null;
-
+		//try find traced path near the last position
 		for (Point direction : allDirections) {
 
 			Point testPoint = pointsTranslate(currentStep, direction);
@@ -123,6 +123,7 @@ public class MazeSolverBFS extends MazeSolverBase {
 			if (parents.containsKey(testPoint)) nextMove = testPoint;
 		}
 
+		//traverse the path till start reached
 		@SuppressWarnings("unused")
 		int iteration = 0;
 		while (nextMove != null) {
