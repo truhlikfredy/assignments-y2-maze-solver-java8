@@ -29,8 +29,8 @@ public class MazeSolverBFS extends MazeSolverBase {
 
 	private Queue<Point>			visit;
 	private Stack<Point>			visitedAlready;
-	
-	//not needed for algorithm, but it makes GUI more pretty
+
+	// not needed for algorithm, but it makes GUI more pretty
 	private Map<Point, Point>	parents;
 
 	/**
@@ -100,9 +100,9 @@ public class MazeSolverBFS extends MazeSolverBase {
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
 
-		this.currentStep = destination.get();
+		// this.currentStep = destination.get();
 
-		return backTracePathPartially();
+		return backTraceFromPoint(destination.get());
 	}
 
 	/**
@@ -112,10 +112,9 @@ public class MazeSolverBFS extends MazeSolverBase {
 	 */
 	@Override
 	public List<Point> backTracePathPartially() {
-		LinkedList<Point> path = new LinkedList<>();
 
 		Point nextMove = null;
-		//try find traced path near the last position
+		// try find traced path near the last position
 		for (Point direction : allDirections) {
 
 			Point testPoint = pointsTranslate(currentStep, direction);
@@ -123,18 +122,33 @@ public class MazeSolverBFS extends MazeSolverBase {
 			if (parents.containsKey(testPoint)) nextMove = testPoint;
 		}
 
-		//traverse the path till start reached
-		@SuppressWarnings("unused")
-		int iteration = 0;
-		while (nextMove != null) {
-			if (DEBUG) System.out.println(nextMove);
-			path.add(nextMove);
-			nextMove = parents.get(nextMove);
-			iteration++;
+		// traverse the path till start reached
+		List<Point> path = backTraceFromPoint(nextMove);
+
+		if (DEBUG) System.out.println("Path is " + path.size() + " steps long.");
+
+		return path;
+	}
+
+	/**
+	 * Will begin at the destination point and step back till starting point is
+	 * reached
+	 * 
+	 * @param destinationPoint
+	 * @return Path which is betwen start poistion and destinaitonPoint
+	 */
+	private List<Point> backTraceFromPoint(Point destinationPoint) {
+
+		LinkedList<Point> path = new LinkedList<>();
+
+		Point currentStep = destinationPoint;
+
+		// traverse the path till start reached
+		while (currentStep != null) {
+			if (DEBUG) System.out.println(currentStep);
+			path.add(currentStep);
+			currentStep = parents.get(currentStep);
 		}
-
-		if (DEBUG) System.out.println("Path is " + iteration + " steps long.");
-
 		return path;
 	}
 
