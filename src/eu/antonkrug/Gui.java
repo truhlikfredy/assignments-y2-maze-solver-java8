@@ -30,9 +30,9 @@ import utils.Pair;
  * 
  */
 
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
+/*
+ * Copyright (C) Anton Krug - All Rights Reserved Unauthorized copying of this
+ * file, via any medium is strictly prohibited Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
 public class Gui implements ActionListener {
@@ -165,8 +165,9 @@ public class Gui implements ActionListener {
 	 * Constructor which will create frame, but will not make it public
 	 */
 	public Gui() {
-		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
-//		animationTimer = new Timer(5, actionEvent -> this.actionStepChecks());
+//		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
+		animationTimer = new Timer(25, actionEvent -> this.actionStepChecks());
+		// animationTimer = new Timer(5, actionEvent -> this.actionStepChecks());
 		implementationToUse = Aproach.ASTAR_HASHMAP;
 
 		try {
@@ -368,9 +369,11 @@ public class Gui implements ActionListener {
 
 		}
 
-		statusBarLabel.setText(String.format(
-				"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution)",
-				implementationToUse));
+		statusBarLabel
+				.setText(String
+						.format(
+								"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution)",
+								implementationToUse));
 
 		implementationDetect();
 	}
@@ -926,7 +929,7 @@ public class Gui implements ActionListener {
 			solver.solveStepOneIteration();
 
 			// draw the blocks from the open and closed list (visit and visited),
-			// current path, and start,end icons			
+			// current path, and start,end icons
 			drawOpenClosedCurrentLists(solver.backTracePathPartially(), true);
 
 			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s",
@@ -986,7 +989,8 @@ public class Gui implements ActionListener {
 		}
 
 		// higlight next planed block
-		if (drawCurrentStep) drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
+		if (drawCurrentStep && solver.getCurrentStep() != null)
+			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
 
 		// draw the start / finish icons over the blocks
 		drawMazeIcons(false);

@@ -138,12 +138,15 @@ public class MazeSolverDFS extends MazeSolverBase {
 
 			currentPath.pop();
 
-			if (currentPath.size() > 1) {
+			if (currentPath.size() > 0) {
 				// let's backtrack the curennt path
 				nextMove = currentPath.peek();
-			} else if (currentPath.size() > 0) {
+			} else {
 				// there is not much left, back track slowly and take any other path
-				if (visit.size()>0) nextMove=visit.peek();
+				if (visit.size()>0) {
+					nextMove=visit.peek();
+					currentPath.push(nextMove);
+				}
 			} 
 			
 		} else {
@@ -208,6 +211,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 			// add it to visited list and then removed it from visit list
 			visitedAlready.push(index);
 			visit.remove(index);
+//			if (!currentPath.contains(index)) currentPath.push(index);
 		}
 	}
 

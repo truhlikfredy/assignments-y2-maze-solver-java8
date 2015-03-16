@@ -29,7 +29,7 @@ public class MazeSolverTest {
 		maze = new Maze();
 	}
 
-	private void loadMaze(String mazeName)  {
+	private void loadMaze(String mazeName) {
 		File mazeFile = new File(mazeName);
 
 		if (mazeFile.exists()) {
@@ -83,7 +83,7 @@ public class MazeSolverTest {
 	}
 
 	private void validateResults(List<Integer> expected) throws Exception {
-		System.out.println("Maze:"+maze.getFileName()+" : "+ results);
+		System.out.println("Maze:" + maze.getFileName() + " : " + results);
 
 		// if they are the same just contine to let test pass
 		if (!expected.equals(results)) {
@@ -97,7 +97,8 @@ public class MazeSolverTest {
 					index++;
 				}
 				throw new Exception("Wrong result in " + solvers.get(index / resultsDescriptions.size())
-						+ " -> " + resultsDescriptions.get(index % resultsDescriptions.size()));
+						+ " -> " + resultsDescriptions.get(index % resultsDescriptions.size()) + " expected "
+						+ expected.get(index) + " but got " + results.get(index));
 
 			} else {
 				// if they are not same size, then any of them could be broken
@@ -120,7 +121,8 @@ public class MazeSolverTest {
 	public void noSolutionTest() throws Exception {
 		loadMaze("./testMazes/noSolution.maze");
 		solveAll();
-		//we want get -1 as solution, max number of iterated blocks, and 0 blocks in queue for visit
+		// we want get -1 as solution, max number of iterated blocks, and 0 blocks
+		// in queue for visit
 		validateResults(Arrays.asList(-1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0));
 	}
 
@@ -135,17 +137,23 @@ public class MazeSolverTest {
 	public void noStartOrDesitnationTest() throws Exception {
 		loadMaze("./testMazes/noStartOrDestination.maze");
 		solveAll();
-		// want -1 as solution, and all lists 0 (nothing attepted, or even planned to attempt)
+		// want -1 as solution, and all lists 0 (nothing attepted, or even planned
+		// to attempt)
 		validateResults(Arrays.asList(-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0));
 	}
 
-//	very slow
-//	@Test
-//	public void largeTest() throws Exception {
-//		loadMaze("./testMazes/large.maze");
-//		solveAll();
-//	}
-	
-	
+	@Test
+	public void openSpaceTest() throws Exception {
+		loadMaze("./testMazes/openSpace.maze");
+		solveAll();
+		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 734, 385, 561, 115));
+	}
+
+	// very slow
+	// @Test
+	// public void largeTest() throws Exception {
+	// loadMaze("./testMazes/large.maze");
+	// solveAll();
+	// }
 
 }
