@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -114,7 +113,7 @@ public class MazeSolverTest {
 	public void tinyTest() throws Exception {
 		loadMaze("./testMazes/tiny.maze");
 		solveAll();
-		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58, 43, 50, 4));
+		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58, 40, 50, 4));
 	}
 
 	@Test
@@ -129,7 +128,7 @@ public class MazeSolverTest {
 	public void noBorderTest() throws Exception {
 		loadMaze("./testMazes/noBorder.maze");
 		solveAll();
-		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 50, 43, 46, 5));
+		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 50, 40, 46, 5));
 	}
 
 	@Test

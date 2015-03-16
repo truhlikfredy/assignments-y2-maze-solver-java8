@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Stack;
 
 /**
- * Depth first search using stacks 
+ * Depth first search using stacks
  * 
  * @author Anton Krug
  * @date 2015/03/10
@@ -16,9 +16,9 @@ import java.util.Stack;
  * @requires Java 8!
  */
 
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
+/*
+ * Copyright (C) Anton Krug - All Rights Reserved Unauthorized copying of this
+ * file, via any medium is strictly prohibited Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
 public class MazeSolverDFS extends MazeSolverBase {
@@ -60,7 +60,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 */
 	@Override
 	public void addStartPosition(Point origin) throws Exception {
-//		currentPath.push(origin);
+		// currentPath.push(origin);
 		visit.push(origin);
 		this.origin = origin;
 	}
@@ -91,14 +91,14 @@ public class MazeSolverDFS extends MazeSolverBase {
 		if (!destination.isPresent()) return null;
 
 		LinkedList<Point> path = new LinkedList<>(currentPath);
-		
+
 		// current path doesn't contain the very last point in the finish, so let's
 		// add it to the list
-//		path.push(destination.get());
+		// path.push(destination.get());
 
 		return path;
 	}
-	
+
 	/**
 	 * Returns current final path by partly solved search
 	 * 
@@ -148,9 +148,10 @@ public class MazeSolverDFS extends MazeSolverBase {
 				currentPath.pop();
 				nextMove = currentPath.peek();
 
-			} else if (currentPath.size() > 2) {
-				// there is not much left, back track slowly
-				nextMove = currentPath.pop();
+			} else if (currentPath.size() > 0) {
+				// there is not much left, back track slowly and take other path
+				currentPath.pop();
+				if (visit.size()>0) nextMove=visit.peek();
 
 			} else {
 				return null;

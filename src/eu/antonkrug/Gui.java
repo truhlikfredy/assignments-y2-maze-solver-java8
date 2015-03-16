@@ -166,6 +166,7 @@ public class Gui implements ActionListener {
 	 */
 	public Gui() {
 		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
+//		animationTimer = new Timer(5, actionEvent -> this.actionStepChecks());
 		implementationToUse = Aproach.ASTAR_HASHMAP;
 
 		try {
