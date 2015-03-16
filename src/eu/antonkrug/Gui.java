@@ -165,8 +165,8 @@ public class Gui implements ActionListener {
 	 * Constructor which will create frame, but will not make it public
 	 */
 	public Gui() {
-//		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
-		animationTimer = new Timer(25, actionEvent -> this.actionStepChecks());
+		animationTimer = new Timer(75, actionEvent -> this.actionStepChecks());
+//		animationTimer = new Timer(25, actionEvent -> this.actionStepChecks());
 		// animationTimer = new Timer(5, actionEvent -> this.actionStepChecks());
 		implementationToUse = Aproach.ASTAR_HASHMAP;
 
@@ -292,8 +292,9 @@ public class Gui implements ActionListener {
 
 		try {
 			maze.setWidth((short) (55));
-			// maze.setHeight((short) (150));
 			maze.setHeight((short) (37));
+//			maze.setWidth((short) (150));
+//			maze.setHeight((short) (150));
 
 			maze.initialize();
 			maze.fill();
@@ -956,7 +957,7 @@ public class Gui implements ActionListener {
 	 */
 	private void drawOpenClosedCurrentLists(List<Point> currentPath, boolean drawCurrentStep) {
 		Map<Point, Point> backtraceCache = null;
-
+		
 		// draw closed list
 		if (solver.getVisitedAlready() == null) {
 

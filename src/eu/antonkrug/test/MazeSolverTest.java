@@ -2,20 +2,21 @@ package eu.antonkrug.test;
 
 import static org.junit.Assert.*;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.antonkrug.Maze;
-import eu.antonkrug.MazeSolver;
+import eu.antonkrug.*;
 import eu.antonkrug.MazeSolver.Aproach;
-import eu.antonkrug.MazeSolverAStar;
-import eu.antonkrug.MazeSolverBFS;
-import eu.antonkrug.MazeSolverDFS;
 
 public class MazeSolverTest {
 	private Maze					maze;
@@ -61,25 +62,84 @@ public class MazeSolverTest {
 		resultsDescriptions.add("Size of opened (visit) list");
 	}
 
+	private void drawMaze(BufferedImage img, int offsetX) {
+		for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
+			img.setRGB(offsetX + point.x, point.y, Color.WHITE.getRGB());
+		}
+	}
+
+	private void drawOpenClosedCurrentLists(BufferedImage img, int offsetX) {
+		int close = Color.LIGHT_GRAY.getRGB();
+		int open = Color.RED.getRGB();
+		int current = Color.GREEN.getRGB();
+
+		// draw closed list
+		if (solver.getVisitedAlready() == null) {
+
+			// non map alternative
+			solver.getVisitedAlreadyAlternative().forEach(
+					point -> img.setRGB(offsetX + point.x, point.y, close));
+
+		} else {
+
+			// map aprroach
+			solver.getVisitedAlready().entrySet()
+					.forEach(n -> img.setRGB(offsetX + n.getKey().x, n.getKey().y, close));
+
+		}
+
+		// draw open list
+		solver.getVisit().forEach(point -> img.setRGB(offsetX + point.x, point.y, open));
+
+		// draw current path
+		List<Point> currentPath = solver.backTracePath();
+
+		if (currentPath != null) {
+			for (Point point : currentPath)
+				img.setRGB(offsetX + point.x, point.y, current);
+		}
+
+	}
+
 	private void solveAll() throws Exception {
 		solvers = new ArrayList<>();
 		results = new ArrayList<>();
 
+		int aproaches = 4;
+		int width = maze.getWidth();
+		int height = maze.getHeight();
+
+		BufferedImage img = new BufferedImage(width * aproaches, height, BufferedImage.TYPE_INT_RGB);
+
 		solvers.add(Aproach.ASTAR_HASHMAP);
 		solver = new MazeSolverAStar(maze, Aproach.ASTAR_HASHMAP);
 		storeResults();
+		drawMaze(img, width * 0);
+		drawOpenClosedCurrentLists(img, width * 0);
 
 		solvers.add(Aproach.ASTAR_CONCURENT_HASHMAP);
 		solver = new MazeSolverAStar(maze, Aproach.ASTAR_CONCURENT_HASHMAP);
 		storeResults();
+		drawMaze(img, width * 1);
+		drawOpenClosedCurrentLists(img, width * 1);
 
 		solvers.add(Aproach.BFS_STACK);
 		solver = new MazeSolverBFS(maze);
 		storeResults();
+		drawMaze(img, width * 2);
+		drawOpenClosedCurrentLists(img, width * 2);
 
 		solvers.add(Aproach.DFS_STACK);
 		solver = new MazeSolverDFS(maze);
 		storeResults();
+		drawMaze(img, width * 3);
+		drawOpenClosedCurrentLists(img, width * 3);
+
+		File outputfile = new File(maze.getFileName().replaceAll("\\.maze$", ".png"));
+		// System.out.println(outputfile);
+
+		ImageIO.write(img, "png", outputfile);
+
 	}
 
 	private void validateResults(List<Integer> expected) throws Exception {
@@ -146,7 +206,39 @@ public class MazeSolverTest {
 	public void openSpaceTest() throws Exception {
 		loadMaze("./testMazes/openSpace.maze");
 		solveAll();
-		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 734, 385, 561, 115));
+		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 734, 385,
+				561, 115));
+	}
+
+	@Test
+	public void smallSizeHardTest() throws Exception {
+		loadMaze("./testMazes/hard55x37.maze");
+		solveAll();
+		validateResults(Arrays.asList(949, 235, 950, 3, 949, 235, 950, 3, 962, 235, 963, 1, 1228, 239,
+				735, 28));
+	}
+
+	@Test
+	public void mediumSizeHardTest() throws Exception {
+		loadMaze("./testMazes/hard62x150.maze");
+		solveAll();
+		validateResults(Arrays.asList(4376, 580, 4377, 8, 4376, 580, 4377, 8, 4498, 580, 4499, 4, 4493,
+				599, 2547, 113));
+	}
+
+	@Test
+	public void smallSimpleTest() throws Exception {
+		loadMaze("./testMazes/smallSimple.maze");
+		solveAll();
+		validateResults(Arrays.asList(365, 75, 366, 35, 365, 75, 366, 35, 760, 75, 761, 14, 1722, 78,
+				901, 8));
+	}
+
+	@Test
+	public void mediumSimpleTest() throws Exception {
+		loadMaze("./testMazes/mediumSimple.maze");
+		solveAll();
+		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109, 3518, 340, 1930, 89));
 	}
 
 	// very slow
