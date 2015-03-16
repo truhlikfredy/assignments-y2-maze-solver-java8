@@ -90,13 +90,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 		// if we didn't found destination do not continue
 		if (!destination.isPresent()) return null;
 
-		LinkedList<Point> path = new LinkedList<>(currentPath);
-
-		// current path doesn't contain the very last point in the finish, so let's
-		// add it to the list
-		// path.push(destination.get());
-
-		return path;
+		return backTracePathPartially();
 	}
 
 	/**
@@ -142,20 +136,16 @@ public class MazeSolverDFS extends MazeSolverBase {
 		// if dead end backtrack
 		if (nextMove == null) {
 
+			currentPath.pop();
+
 			if (currentPath.size() > 1) {
-				// but do not return this step as curent step, return the next step
-				// back as next step because we are revertsing now
-				currentPath.pop();
+				// let's backtrack the curennt path
 				nextMove = currentPath.peek();
-
 			} else if (currentPath.size() > 0) {
-				// there is not much left, back track slowly and take other path
-				currentPath.pop();
+				// there is not much left, back track slowly and take any other path
 				if (visit.size()>0) nextMove=visit.peek();
-
-			} else {
-				return null;
-			}
+			} 
+			
 		} else {
 			// if something was found (no deadend) display is as current path
 			currentPath.push(nextMove);
