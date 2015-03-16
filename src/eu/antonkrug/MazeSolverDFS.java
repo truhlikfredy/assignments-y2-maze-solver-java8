@@ -60,7 +60,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 */
 	@Override
 	public void addStartPosition(Point origin) throws Exception {
-		currentPath.push(origin);
+//		currentPath.push(origin);
 		visit.push(origin);
 		this.origin = origin;
 	}
@@ -94,11 +94,11 @@ public class MazeSolverDFS extends MazeSolverBase {
 		
 		// current path doesn't contain the very last point in the finish, so let's
 		// add it to the list
-		path.push(destination.get());
+//		path.push(destination.get());
 
 		return path;
 	}
-
+	
 	/**
 	 * Returns current final path by partly solved search
 	 * 
