@@ -88,6 +88,7 @@ public class Maze {
 	private short								height;
 	private Block[][]						maze;
 	private ArrayList<Point>		wallList;
+	private String              fileName;
 
 	private short								width;
 
@@ -96,6 +97,15 @@ public class Maze {
 	 */
 	public Maze() {
 		maze = new Block[1][1];
+		fileName="";
+	}
+	
+	/**
+	 * Gets name of the loaded file
+	 * @return
+	 */
+	public String getFileName() {
+		return fileName;
 	}
 
 	/**
@@ -298,6 +308,7 @@ public class Maze {
 
 		br.close();
 
+		this.fileName=fileName;
 		return true;
 	}
 
