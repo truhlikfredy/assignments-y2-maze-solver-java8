@@ -2,6 +2,7 @@ package eu.antonkrug;
 
 import java.awt.Point;
 import java.util.stream.Stream;
+import java.util.AbstractList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Stack;
+
+import utils.Agenda;
+import utils.AgendaStack;
 
 /**
  * Breadth first search using FIFO queue
@@ -27,7 +31,7 @@ import java.util.Stack;
 public class MazeSolverBFS extends MazeSolverBase {
 
 	private Queue<Point>			visit;
-	private Stack<Point>			visitedAlready;
+	private Agenda<Point>			visitedAlready;
 
 	// not needed for algorithm, but it makes GUI more pretty
 	private Map<Point, Point>	parents;
@@ -47,8 +51,11 @@ public class MazeSolverBFS extends MazeSolverBase {
 
 		// as FIFO queue linked list is used
 		this.visit = new LinkedList<>();
+		
+//		AbstractList<Point> aa  = new Stack<>();
 
-		this.visitedAlready = new Stack<>();
+//		this.visitedAlready = new Stack<>();
+		this.visitedAlready = new AgendaStack<>(); 
 
 		// not needed for the search itself, but gui wants to display higlighted
 		// which path is currently investigated pointing from the current step to

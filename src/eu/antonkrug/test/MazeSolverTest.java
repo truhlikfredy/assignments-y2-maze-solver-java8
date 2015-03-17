@@ -62,14 +62,14 @@ public class MazeSolverTest {
 		resultsDescriptions.add("Size of opened (visit) list");
 	}
 
-	private void drawMaze(BufferedImage img, int offsetX) {
+	private void drawMaze(BufferedImage img, int offsetX, int offsetY) {
 		for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
-			img.setRGB(offsetX + point.x, point.y, Color.WHITE.getRGB());
+			img.setRGB(offsetX + point.x, offsetY + point.y, Color.WHITE.getRGB());
 		}
 	}
 
-	private void drawOpenClosedCurrentLists(BufferedImage img, int offsetX) {
-		int close = Color.LIGHT_GRAY.getRGB();
+	private void drawOpenClosedCurrentLists(BufferedImage img, int offsetX, int offsetY) {
+		int close = Color.GRAY.getRGB();
 		int open = Color.RED.getRGB();
 		int current = Color.GREEN.getRGB();
 
@@ -78,25 +78,25 @@ public class MazeSolverTest {
 
 			// non map alternative
 			solver.getVisitedAlreadyAlternative().forEach(
-					point -> img.setRGB(offsetX + point.x, point.y, close));
+					point -> img.setRGB(offsetX + point.x, offsetY + point.y, close));
 
 		} else {
 
 			// map aprroach
 			solver.getVisitedAlready().entrySet()
-					.forEach(n -> img.setRGB(offsetX + n.getKey().x, n.getKey().y, close));
+					.forEach(n -> img.setRGB(offsetX + n.getKey().x, offsetY + n.getKey().y, close));
 
 		}
 
 		// draw open list
-		solver.getVisit().forEach(point -> img.setRGB(offsetX + point.x, point.y, open));
+		solver.getVisit().forEach(point -> img.setRGB(offsetX + point.x, offsetY + point.y, open));
 
 		// draw current path
 		List<Point> currentPath = solver.backTracePath();
 
 		if (currentPath != null) {
 			for (Point point : currentPath)
-				img.setRGB(offsetX + point.x, point.y, current);
+				img.setRGB(offsetX + point.x, offsetY + point.y, current);
 		}
 
 	}
@@ -105,35 +105,36 @@ public class MazeSolverTest {
 		solvers = new ArrayList<>();
 		results = new ArrayList<>();
 
-		int aproaches = 4;
+		int aproachesTypes = 3;
 		int width = maze.getWidth();
 		int height = maze.getHeight();
 
-		BufferedImage img = new BufferedImage(width * aproaches, height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(width * aproachesTypes, height * 2,
+				BufferedImage.TYPE_INT_RGB);
 
 		solvers.add(Aproach.ASTAR_HASHMAP);
 		solver = new MazeSolverAStar(maze, Aproach.ASTAR_HASHMAP);
 		storeResults();
-		drawMaze(img, width * 0);
-		drawOpenClosedCurrentLists(img, width * 0);
+		drawMaze(img, width * 0, height * 0);
+		drawOpenClosedCurrentLists(img, width * 0, height * 0);
 
 		solvers.add(Aproach.ASTAR_CONCURENT_HASHMAP);
 		solver = new MazeSolverAStar(maze, Aproach.ASTAR_CONCURENT_HASHMAP);
 		storeResults();
-		drawMaze(img, width * 1);
-		drawOpenClosedCurrentLists(img, width * 1);
+		drawMaze(img, width * 0, height * 1);
+		drawOpenClosedCurrentLists(img, width * 0, height * 1);
 
 		solvers.add(Aproach.BFS_STACK);
 		solver = new MazeSolverBFS(maze);
 		storeResults();
-		drawMaze(img, width * 2);
-		drawOpenClosedCurrentLists(img, width * 2);
+		drawMaze(img, width * 1, height * 0);
+		drawOpenClosedCurrentLists(img, width * 1, height * 0);
 
 		solvers.add(Aproach.DFS_STACK);
 		solver = new MazeSolverDFS(maze);
 		storeResults();
-		drawMaze(img, width * 3);
-		drawOpenClosedCurrentLists(img, width * 3);
+		drawMaze(img, width * 2, height * 0);
+		drawOpenClosedCurrentLists(img, width * 2, height * 0);
 
 		File outputfile = new File(maze.getFileName().replaceAll("\\.maze$", ".png"));
 		// System.out.println(outputfile);
@@ -143,7 +144,7 @@ public class MazeSolverTest {
 	}
 
 	private void validateResults(List<Integer> expected) throws Exception {
-		System.out.println("Maze:" + maze.getFileName() + " : " + results);
+		// System.out.println("Maze:" + maze.getFileName() + " : " + results);
 
 		// if they are the same just contine to let test pass
 		if (!expected.equals(results)) {
@@ -238,7 +239,8 @@ public class MazeSolverTest {
 	public void mediumSimpleTest() throws Exception {
 		loadMaze("./testMazes/mediumSimple.maze");
 		solveAll();
-		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109, 3518, 340, 1930, 89));
+		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109,
+				3518, 340, 1930, 89));
 	}
 
 	// very slow
