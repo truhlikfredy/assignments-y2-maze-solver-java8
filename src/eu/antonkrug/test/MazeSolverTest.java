@@ -70,6 +70,8 @@ public class MazeSolverTest {
 		resultsDescriptions.add("Size of opened (visit) list");
 	}
 
+	
+	@SuppressWarnings("unused")
 	private String formatResults() {
 		String ret="";
 		int space = results.size()/6;
@@ -176,7 +178,8 @@ public class MazeSolverTest {
 	}
 
 	private void validateResults(List<Integer> expected) throws Exception {
-		System.out.println("Maze:" + maze.getFileName() + " (I[S]CO) "+formatResults());
+//		System.out.println("Maze:" + maze.getFileName() + " (I[S]CO) "+formatResults());
+//		System.out.println(results);
 
 		// if they are the same just contine to let test pass
 		if (!expected.equals(results)) {
@@ -209,76 +212,70 @@ public class MazeSolverTest {
 	public void tinyTest() throws Exception {
 		loadMaze("./testMazes/tiny.maze");
 		solveAll();
-		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58,
-				40, 50, 4, 58, 40, 59, 4));
+		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58, 40, 50, 4, 58, 40, 50, 4));
 	}
 
-//	@Test
-//	public void noSolutionTest() throws Exception {
-//		loadMaze("./testMazes/noSolution.maze");
-//		solveAll();
-//		// we want get -1 as solution, max number of iterated blocks, and 0 blocks
-//		// in queue for visit
-//		validateResults(Arrays.asList(-1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0));
-//	}
-//
-//	@Test
-//	public void noBorderTest() throws Exception {
-//		loadMaze("./testMazes/noBorder.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 50, 40, 46, 5));
-//	}
-//
-//	@Test
-//	public void noStartOrDesitnationTest() throws Exception {
-//		loadMaze("./testMazes/noStartOrDestination.maze");
-//		solveAll();
-//		// want -1 as solution, and all lists 0 (nothing attepted, or even planned
-//		// to attempt)
-//		validateResults(Arrays.asList(-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0));
-//	}
-//
-//	@Test
-//	public void openSpaceTest() throws Exception {
-//		loadMaze("./testMazes/openSpace.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 734, 385,
-//				561, 115));
-//	}
-//
-//	@Test
-//	public void smallSizeHardTest() throws Exception {
-//		loadMaze("./testMazes/hard55x37.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(949, 235, 950, 3, 949, 235, 950, 3, 962, 235, 963, 1, 1228, 239,
-//				735, 28));
-//	}
-//
-//	@Test
-//	public void mediumSizeHardTest() throws Exception {
-//		loadMaze("./testMazes/hard62x150.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(4376, 580, 4377, 8, 4376, 580, 4377, 8, 4498, 580, 4499, 4, 4493,
-//				599, 2547, 113));
-//	}
-//
-//	@Test
-//	public void smallSimpleTest() throws Exception {
-//		loadMaze("./testMazes/smallSimple.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(365, 75, 366, 35, 365, 75, 366, 35, 760, 75, 761, 14, 1722, 78,
-//				901, 8));
-//	}
-//
-//	@Test
-//	public void mediumSimpleTest() throws Exception {
-//		loadMaze("./testMazes/mediumSimple.maze");
-//		solveAll();
-//		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109,
-//				3518, 340, 1930, 89));
-//	}
+	@Test
+	public void noSolutionTest() throws Exception {
+		loadMaze("./testMazes/noSolution.maze");
+		solveAll();
+		// we want get -1 as solution, max number of iterated blocks, and 0 blocks
+		// in queue for visit
+		validateResults(Arrays.asList(-1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0));
+	}
 
-	// very slow
+	@Test
+	public void noBorderTest() throws Exception {
+		loadMaze("./testMazes/noBorder.maze");
+		solveAll();
+		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 60, 37, 61, 1, 50, 40, 46, 5, 50, 40, 46, 5));
+	}
+
+	@Test
+	public void noStartOrDesitnationTest() throws Exception {
+		loadMaze("./testMazes/noStartOrDestination.maze");
+		solveAll();
+		// want -1 as solution, and all lists 0 (nothing attepted, or even planned
+		// to attempt)
+		validateResults(Arrays.asList(-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0));
+	}
+
+	@Test
+	public void openSpaceTest() throws Exception {
+		loadMaze("./testMazes/openSpace.maze");
+		solveAll();
+		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 1052, 160, 1053, 5, 734, 385, 561, 115, 734, 385, 561, 115));
+	}
+
+	@Test
+	public void smallSizeHardTest() throws Exception {
+		loadMaze("./testMazes/hard55x37.maze");
+		solveAll();
+		validateResults(Arrays.asList(949, 235, 950, 3, 949, 235, 950, 3, 962, 235, 963, 1, 962, 235, 963, 1, 1228, 239, 735, 28, 1228, 239, 735, 28));
+	}
+
+	@Test
+	public void mediumSizeHardTest() throws Exception {
+		loadMaze("./testMazes/hard62x150.maze");
+		solveAll();
+		validateResults(Arrays.asList(4376, 580, 4377, 8, 4376, 580, 4377, 8, 4498, 580, 4499, 4, 4498, 580, 4499, 4, 4493, 599, 2547, 113, 4493, 599, 2547, 113));
+	}
+
+	@Test
+	public void smallSimpleTest() throws Exception {
+		loadMaze("./testMazes/smallSimple.maze");
+		solveAll();
+		validateResults(Arrays.asList(365, 75, 366, 35, 365, 75, 366, 35, 760, 75, 761, 14, 760, 75, 761, 14, 1722, 78, 901, 8, 1722, 78, 901, 8));
+	}
+
+	@Test
+	public void mediumSimpleTest() throws Exception {
+		loadMaze("./testMazes/mediumSimple.maze");
+		solveAll();
+		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109, 8216, 201, 8217, 109, 3518, 340, 1930, 89, 3518, 340, 1930, 89));
+	}
+
+	// very very slow
 	// @Test
 	// public void largeTest() throws Exception {
 	// loadMaze("./testMazes/large.maze");
