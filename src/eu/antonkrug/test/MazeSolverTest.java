@@ -3,6 +3,7 @@ package eu.antonkrug.test;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -70,17 +71,16 @@ public class MazeSolverTest {
 		resultsDescriptions.add("Size of opened (visit) list");
 	}
 
-	
 	@SuppressWarnings("unused")
 	private String formatResults() {
-		String ret="";
-		int space = results.size()/6;
-		
-		for (int index=0;index<results.size();index++) {
-			if (index%space==0)	ret=ret+"   ";
-			ret=ret+results.get(index)+" ";
+		String ret = "";
+		int space = results.size() / 6;
+
+		for (int index = 0; index < results.size(); index++) {
+			if (index % space == 0) ret = ret + "   ";
+			ret = ret + results.get(index) + " ";
 		}
-		
+
 		return ret;
 	}
 
@@ -175,11 +175,39 @@ public class MazeSolverTest {
 
 		ImageIO.write(img, "png", outputfile);
 
+		compareResults(outputfile.toString());
+
+	}
+
+	private void compareResults(String fileName) throws Exception {
+		BufferedImage orig = ImageIO.read(new File(fileName+"-orig"));
+		BufferedImage result = ImageIO.read(new File(fileName));
+		
+		for (int x=0;x<orig.getWidth();x++) {
+			for (int y=0;y<orig.getHeight();y++) {
+				if (orig.getRGB(x, y)!=result.getRGB(x, y)) {
+					
+					Graphics error=result.getGraphics();
+					
+					error.setColor(Color.PINK);
+					error.drawOval(x-5, y-5, 10, 10);
+					
+					File outputfile = new File(fileName.replaceAll("\\.png$", "-error.png"));
+					ImageIO.write(result, "png", outputfile);					
+					
+					//do no throw exception because I want to continue and do results signature comparison too 
+					System.out.println("FAIL: Even in rare case the test would pass, consider it as failed!");
+					return;
+				}
+			}
+		}
+		
 	}
 
 	private void validateResults(List<Integer> expected) throws Exception {
-//		System.out.println("Maze:" + maze.getFileName() + " (I[S]CO) "+formatResults());
-//		System.out.println(results);
+		// System.out.println("Maze:" + maze.getFileName() +
+		// " (I[S]CO) "+formatResults());
+		// System.out.println(results);
 
 		// if they are the same just contine to let test pass
 		if (!expected.equals(results)) {
@@ -205,14 +233,15 @@ public class MazeSolverTest {
 	}
 
 	// HASHMAP & CONCURENT HASHMAP should yeld same numbers all the time
-	
+
 	// format of the results (Interations [SizeOfSolution] Closed Opened)
 
 	@Test
 	public void tinyTest() throws Exception {
 		loadMaze("./testMazes/tiny.maze");
 		solveAll();
-		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58, 40, 50, 4, 58, 40, 50, 4));
+		validateResults(Arrays.asList(59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 59, 39, 60, 0, 58,
+				40, 50, 4, 58, 40, 50, 4));
 	}
 
 	@Test
@@ -221,14 +250,16 @@ public class MazeSolverTest {
 		solveAll();
 		// we want get -1 as solution, max number of iterated blocks, and 0 blocks
 		// in queue for visit
-		validateResults(Arrays.asList(-1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0));
+		validateResults(Arrays.asList(-1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0, -1, 1298, 0,
+				-1, 1298, 0));
 	}
 
 	@Test
 	public void noBorderTest() throws Exception {
 		loadMaze("./testMazes/noBorder.maze");
 		solveAll();
-		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 60, 37, 61, 1, 50, 40, 46, 5, 50, 40, 46, 5));
+		validateResults(Arrays.asList(56, 37, 57, 3, 56, 37, 57, 3, 60, 37, 61, 1, 60, 37, 61, 1, 50,
+				40, 46, 5, 50, 40, 46, 5));
 	}
 
 	@Test
@@ -244,35 +275,40 @@ public class MazeSolverTest {
 	public void openSpaceTest() throws Exception {
 		loadMaze("./testMazes/openSpace.maze");
 		solveAll();
-		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 1052, 160, 1053, 5, 734, 385, 561, 115, 734, 385, 561, 115));
+		validateResults(Arrays.asList(960, 160, 961, 6, 960, 160, 961, 6, 1052, 160, 1053, 5, 1052,
+				160, 1053, 5, 734, 385, 561, 115, 734, 385, 561, 115));
 	}
 
 	@Test
 	public void smallSizeHardTest() throws Exception {
 		loadMaze("./testMazes/hard55x37.maze");
 		solveAll();
-		validateResults(Arrays.asList(949, 235, 950, 3, 949, 235, 950, 3, 962, 235, 963, 1, 962, 235, 963, 1, 1228, 239, 735, 28, 1228, 239, 735, 28));
+		validateResults(Arrays.asList(949, 235, 950, 3, 949, 235, 950, 3, 962, 235, 963, 1, 962, 235,
+				963, 1, 1228, 239, 735, 28, 1228, 239, 735, 28));
 	}
 
 	@Test
 	public void mediumSizeHardTest() throws Exception {
 		loadMaze("./testMazes/hard62x150.maze");
 		solveAll();
-		validateResults(Arrays.asList(4376, 580, 4377, 8, 4376, 580, 4377, 8, 4498, 580, 4499, 4, 4498, 580, 4499, 4, 4493, 599, 2547, 113, 4493, 599, 2547, 113));
+		validateResults(Arrays.asList(4376, 580, 4377, 8, 4376, 580, 4377, 8, 4498, 580, 4499, 4, 4498,
+				580, 4499, 4, 4493, 599, 2547, 113, 4493, 599, 2547, 113));
 	}
 
 	@Test
 	public void smallSimpleTest() throws Exception {
 		loadMaze("./testMazes/smallSimple.maze");
 		solveAll();
-		validateResults(Arrays.asList(365, 75, 366, 35, 365, 75, 366, 35, 760, 75, 761, 14, 760, 75, 761, 14, 1722, 78, 901, 8, 1722, 78, 901, 8));
+		validateResults(Arrays.asList(365, 75, 366, 35, 365, 75, 366, 35, 760, 75, 761, 14, 760, 75,
+				761, 14, 1722, 78, 901, 8, 1722, 78, 901, 8));
 	}
 
 	@Test
 	public void mediumSimpleTest() throws Exception {
 		loadMaze("./testMazes/mediumSimple.maze");
 		solveAll();
-		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109, 8216, 201, 8217, 109, 3518, 340, 1930, 89, 3518, 340, 1930, 89));
+		validateResults(Arrays.asList(2078, 201, 2079, 72, 2078, 201, 2079, 72, 8216, 201, 8217, 109,
+				8216, 201, 8217, 109, 3518, 340, 1930, 89, 3518, 340, 1930, 89));
 	}
 
 	// very very slow

@@ -141,7 +141,7 @@ public class MazeSolverBenchmark {
 	}
 
 	@Test
-	public void DFS() throws Exception {
+	public void dfsMine() throws Exception {
 		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("2");
 		aStarAproaches(Aproach.DFS_STACK_MINE);
@@ -151,6 +151,19 @@ public class MazeSolverBenchmark {
 		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("5");
 		aStarAproaches(Aproach.DFS_STACK_MINE);
+	}
+
+	@Test
+	public void dfsJdk() throws Exception {
+		aStarAproaches(Aproach.DFS_STACK_JDK);
+		loadMaze("2");
+		aStarAproaches(Aproach.DFS_STACK_JDK);
+		loadMaze("3");
+		aStarAproaches(Aproach.DFS_STACK_JDK);
+		loadMaze("4");
+		aStarAproaches(Aproach.DFS_STACK_JDK);
+		loadMaze("5");
+		aStarAproaches(Aproach.DFS_STACK_JDK);
 	}
 
 	@Test
@@ -180,7 +193,7 @@ public class MazeSolverBenchmark {
 	}
 
 	@Test
-	public void BFS() throws Exception {
+	public void bfsMine() throws Exception {
 		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("2");
 		aStarAproaches(Aproach.BFS_QUEUE_MINE);
@@ -190,6 +203,19 @@ public class MazeSolverBenchmark {
 		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("5");
 		aStarAproaches(Aproach.BFS_QUEUE_MINE);
+	}
+
+	@Test
+	public void bfsJdk() throws Exception {
+		aStarAproaches(Aproach.BFS_QUEUE_JDK);
+		loadMaze("2");
+		aStarAproaches(Aproach.BFS_QUEUE_JDK);
+		loadMaze("3");
+		aStarAproaches(Aproach.BFS_QUEUE_JDK);
+		loadMaze("4");
+		aStarAproaches(Aproach.BFS_QUEUE_JDK);
+		loadMaze("5");
+		aStarAproaches(Aproach.BFS_QUEUE_JDK);
 	}
 
 	// @Test
