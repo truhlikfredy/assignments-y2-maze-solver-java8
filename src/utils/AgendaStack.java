@@ -4,6 +4,17 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+/**
+ * My implementation of Stack datastructure (implements Agenda so it can be
+ * changed between others)
+ * 
+ * @author Anton Krug
+ * @date 2015/03/12
+ * @version 0.8
+ *
+ * @param <T>
+ */
+
 public class AgendaStack<T> implements Agenda<T> {
 	protected AbstractList<T>	data;
 	protected int							size;
@@ -11,6 +22,16 @@ public class AgendaStack<T> implements Agenda<T> {
 	public AgendaStack() {
 		size = 0;
 		data = new ArrayList<>();
+	}
+
+	/**
+	 * Delete the junk we left behind before accesing directly the internal
+	 * datastructure. Problem is that size and data.size can be different and
+	 * accesing data directly at that moment would give unexpected results. So
+	 * triming the data is necesary.
+	 */
+	private void purge() {
+		data.subList(size, data.size()).clear();
 	}
 
 	@Override
@@ -25,8 +46,18 @@ public class AgendaStack<T> implements Agenda<T> {
 
 	@Override
 	public void add(T item) {
-		data.add(size, item);
-		size++;
+		// data.add(size, item);
+		// data.subList(size, data.size()).clear();
+		// data.add(item);
+
+		if (item != null) {
+			if (size == data.size()) {
+				data.add(item);
+			} else {
+				data.set(size, item);
+			}
+			size++;
+		}
 	}
 
 	@Override
@@ -36,21 +67,27 @@ public class AgendaStack<T> implements Agenda<T> {
 
 	@Override
 	public T pop() {
-		size--;
-		return data.get(size);
+		if (size > 0) {
+			size--;
+			return data.get(size);
+		} else return null;
 	}
 
 	@Override
 	public T peek() {
-		return data.get(size - 1);
+		if (size > 0) {
+			return data.get(size - 1);
+		} else return null;
 	}
 
 	@Override
 	public void remove(int index) {
-		for (int i = index + 1; i < size; i++) {
-			data.set(i - 1, data.get(i));
+		if (index >= 0 && index < size) {
+			for (int i = index + 1; i < size; i++) {
+				data.set(i - 1, data.get(i));
+			}
+			size--;
 		}
-		size--;
 	}
 
 	@Override
@@ -67,6 +104,7 @@ public class AgendaStack<T> implements Agenda<T> {
 
 	@Override
 	public boolean contains(T item) {
+		purge();
 		for (T entry : data) {
 			if (entry.equals(item)) return true;
 		}
@@ -75,6 +113,7 @@ public class AgendaStack<T> implements Agenda<T> {
 
 	@Override
 	public Stream<T> stream() {
+		purge();
 		return data.stream();
 	}
 
@@ -91,9 +130,7 @@ public class AgendaStack<T> implements Agenda<T> {
 
 	@Override
 	public AbstractList<T> getList() {
-		// deleting the junk we left behind before giving acces to internat
-		// datastructure
-		data.subList(size, data.size()).clear();
+		purge();
 		return data;
 	}
 

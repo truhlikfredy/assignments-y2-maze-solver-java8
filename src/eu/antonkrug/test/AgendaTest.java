@@ -11,6 +11,14 @@ import utils.AgendaQueue;
 import utils.AgendaStack;
 import utils.AgendaJdk.Function;
 
+
+/**
+ * All agenda datastructure related tests
+ * 
+ * @author Anton Krug
+ * @date 2015/03/12
+ * @version 1.0
+ */
 public class AgendaTest {
 
 	private AgendaJdk<Integer>		jdkStack;
@@ -69,6 +77,29 @@ public class AgendaTest {
 		popAgenda(1, queue);
 	}
 
+	private void popPushAgenda(String result, Integer resultA, Integer resultB , Agenda<Integer> data) {
+		data.add(90);
+		data.push(22);
+		assertEquals(8, data.size());
+		assertEquals(resultA, data.pop());
+		data.push(55);
+		assertEquals(resultB, data.pop());
+		data.pop();
+		data.push(89);		
+		assertEquals(result, data.toString());
+		assertEquals(7, data.size());
+		assertEquals(7, data.getList().size());
+	}
+	
+	@Test
+	public void popPushTest() {
+		popPushAgenda("[1, 2, 3, 4, 4, 5, 89]",22,55, jdkStack);
+		popPushAgenda("[1, 2, 3, 4, 4, 5, 89]",22,55, stack);
+		
+		popPushAgenda("[4, 4, 5, 90, 22, 55, 89]",1,2, jdkQueue);
+		popPushAgenda("[4, 4, 5, 90, 22, 55, 89]",1,2, queue);
+	}
+	
 	private void peekAgenda(Integer result, Agenda<Integer> data) {
 		assertEquals(6, data.size());
 		assertEquals(result, data.peek());
@@ -93,6 +124,7 @@ public class AgendaTest {
 		data.pop();
 		data.pop();
 		assertEquals(0, data.size());
+		assertEquals(false, data.contains((Integer)(2)));
 		assertEquals(true, data.isEmpty());
 	}
 
@@ -133,7 +165,14 @@ public class AgendaTest {
 		assertEquals(4, data.size());
 		assertEquals(4, data.getList().size());
 		assertEquals("[1, 2, 4, 4]", data.toString());
+
+		//non existing one
+		data.remove((Integer) 15);
+		assertEquals(4, data.size());
+		assertEquals(4, data.getList().size());
+		assertEquals("[1, 2, 4, 4]", data.toString());
 	}
+
 
 	@Test
 	public void removeTest() {
@@ -151,6 +190,46 @@ public class AgendaTest {
 		
 		removeObjectAgenda(jdkQueue);
 		removeObjectAgenda(queue);
+	}
+
+	private void addRemoveAgenda(Agenda<Integer> data) {
+		data.remove(2);
+		data.add(9);
+		assertEquals(6, data.size());
+		assertEquals(6, data.getList().size());
+		assertEquals("[1, 2, 4, 4, 5, 9]", data.toString());
+	}
+
+	private void addRemoveObjectAgenda(Agenda<Integer> data) {
+		data.remove((Integer) 5);
+		data.add(81);
+		assertEquals(6, data.size());
+		assertEquals(6, data.getList().size());
+		assertEquals("[1, 2, 4, 4, 9, 81]", data.toString());
+		
+		//non existing one
+		data.remove((Integer) 15);
+		assertEquals(6, data.size());
+		assertEquals(6, data.getList().size());
+		assertEquals("[1, 2, 4, 4, 9, 81]", data.toString());
+	}
+
+	@Test
+	public void addRemoveTest() {
+		// System.out.println(jdkStack);
+		// System.out.println(stack);
+		
+		addRemoveAgenda(jdkStack);
+		addRemoveAgenda(stack);
+		
+		addRemoveAgenda(jdkQueue);
+		addRemoveAgenda(queue);
+		
+		addRemoveObjectAgenda(jdkStack);
+		addRemoveObjectAgenda(stack);
+		
+		addRemoveObjectAgenda(jdkQueue);
+		addRemoveObjectAgenda(queue);
 	}
 
 }

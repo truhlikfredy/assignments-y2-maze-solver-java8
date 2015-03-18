@@ -21,6 +21,9 @@ public class AgendaJdk<T> implements Agenda<T> {
 
 	private AbstractList<T>	data;
 
+	/**
+	 * Selects how this datastructure should behave (LIFO = QUEUE, FIFO = STACK)
+	 */
 	public enum Function {
 		STACK, QUEUE;
 	}
@@ -94,12 +97,12 @@ public class AgendaJdk<T> implements Agenda<T> {
 	public Stream<T> stream() {
 		return data.stream();
 	}
-	
+
 	@Override
 	public String toString() {
 		return data.toString();
 	}
-	
+
 	@Override
 	public AbstractList<T> getList() {
 		return data;

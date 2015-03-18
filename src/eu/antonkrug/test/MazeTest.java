@@ -11,6 +11,13 @@ import org.junit.Test;
 import eu.antonkrug.*;
 import eu.antonkrug.Maze.Block;
 
+/**
+ * Maze loader tester
+ * 
+ * @author Anton Krug
+ * @date 2015/02/26
+ * @version 1.0
+ */
 public class MazeTest {
 	Maze	maze;
 

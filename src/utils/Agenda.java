@@ -15,10 +15,6 @@ import java.util.stream.Stream;
 
 public interface Agenda<T> {
 	
-//	public enum Datastructure {
-//		MINE, JDK;
-//	}
-	
 	public boolean isEmpty();
 
 	public int size();

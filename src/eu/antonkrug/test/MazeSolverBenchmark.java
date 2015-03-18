@@ -1,5 +1,17 @@
 package eu.antonkrug.test;
 
+import java.util.Properties;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import eu.antonkrug.Maze;
+import eu.antonkrug.MazeSolver;
+import eu.antonkrug.MazeSolver.Aproach;
+import eu.antonkrug.MazeSolverAStar;
+import eu.antonkrug.MazeSolverDFS;
+
 /**
  * @author Anton Krug
  * @date 2015/03/01
@@ -56,17 +68,6 @@ package eu.antonkrug.test;
  * 
  */
 
-import java.util.Properties;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import eu.antonkrug.Maze;
-import eu.antonkrug.MazeSolver;
-import eu.antonkrug.MazeSolver.Aproach;
-import eu.antonkrug.MazeSolverAStar;
-import eu.antonkrug.MazeSolverDFS;
 
 public class MazeSolverBenchmark {
 	private static final int	REPEAT_COUNT	= 1000;
@@ -114,11 +115,19 @@ public class MazeSolverBenchmark {
 			switch (implementationAproach) {
 
 				case BFS_QUEUE_MINE:
-					solver = new MazeSolverDFS(maze);
+					solver = new MazeSolverDFS(maze,Aproach.BFS_QUEUE_MINE);
+					break;
+
+				case BFS_QUEUE_JDK:
+					solver = new MazeSolverDFS(maze,Aproach.BFS_QUEUE_JDK);
 					break;
 
 				case DFS_STACK_MINE:
-					solver = new MazeSolverDFS(maze);
+					solver = new MazeSolverDFS(maze,Aproach.DFS_STACK_MINE);
+					break;
+
+				case DFS_STACK_JDK:
+					solver = new MazeSolverDFS(maze,Aproach.DFS_STACK_JDK);
 					break;
 
 				default:

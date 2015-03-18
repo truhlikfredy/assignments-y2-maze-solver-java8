@@ -11,6 +11,13 @@ import org.junit.Test;
 
 import eu.antonkrug.AStartNode;
 
+/**
+ * Simple test for node datastructure
+ * 
+ * @author Anton Krug
+ * @date 2015/02/26
+ * @version 1.0
+ */
 public class AStartNodeTest {
 	
 	private AStartNode node;
