@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar gui.jar
+java -jar mazeSolverGui.jar

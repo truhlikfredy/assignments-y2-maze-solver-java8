@@ -368,7 +368,7 @@ public class Gui implements ActionListener {
 		statusBarLabel
 				.setText(String
 						.format(
-								"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution)",
+								"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution to apply)",
 								implementationToUse));
 
 		implementationDetect();
@@ -468,7 +468,7 @@ public class Gui implements ActionListener {
 			String iconName, Runnable actionPerformed) {
 		AbstractButton button;
 
-		Icon icon = new ImageIcon("./img/icon_" + iconName + ".png");
+		Icon icon = new ImageIcon(getClass().getResource("/resources/icon_" + iconName + ".png"));
 
 		if (toggle) {
 			button = new JToggleButton(buttonText.toString(), icon);
@@ -621,7 +621,7 @@ public class Gui implements ActionListener {
 
 		try {
 			// draw wall JPG as the wall background
-			BufferedImage wall = ImageIO.read(new File("img/wall.jpg"));
+			BufferedImage wall = ImageIO.read(getClass().getResource("/resources/wall.jpg"));
 
 			// if maze is bigger than background tile the background
 			int iw = wall.getWidth();
@@ -674,7 +674,7 @@ public class Gui implements ActionListener {
 	 * @throws IOException
 	 */
 	private void drawMazeIconsFinish(boolean blankBlock) throws IOException {
-		BufferedImage iconFinish = ImageIO.read(new File("img/finish.png"));
+		BufferedImage iconFinish = ImageIO.read(getClass().getResource("/resources/finish.png"));
 
 		// draw all finish icons
 		for (Point point : solver.getDestinations()) {
@@ -690,7 +690,7 @@ public class Gui implements ActionListener {
 	 * @throws IOException
 	 */
 	private void drawMazeIconsStart(boolean blankBlock) throws IOException {
-		BufferedImage iconStart = ImageIO.read(new File("img/start.png"));
+		BufferedImage iconStart = ImageIO.read(getClass().getResource("/resources/start.png"));
 
 		// draw all start icons
 		for (Point point : maze.getAllBlock(Maze.Block.START)) {
@@ -802,7 +802,7 @@ public class Gui implements ActionListener {
 		Graphics noMazeBufGraphics;
 		noMazeBufGraphics = noMazeBuf.getGraphics();
 
-		BufferedImage wall = ImageIO.read(new File("./img/noMaze.jpg"));
+		BufferedImage wall = ImageIO.read(getClass().getResource("/resources/noMaze.jpg"));
 		noMazeBufGraphics.drawImage(wall, 0, 0, null);
 
 		// noMazeBufGraphics.setColor(Color.red);

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Metrics scope="src" type="PackageRoot" date="2015-03-18" xmlns="http://metrics.sourceforge.net/2003/Metrics-First-Flat">
+<Metrics scope="maze" type="Project" date="2015-03-18" xmlns="http://metrics.sourceforge.net/2003/Metrics-First-Flat">
    <Metric id = "VG" description ="McCabe Cyclomatic Complexity" max ="10" hint ="use Extract-method to split the method up">
-      <Values per = "method" avg = "1.701" stddev = "1.319" max = "7">
-         <Value name="doOneStep" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="9"/>
+      <Values per = "method" avg = "1.694" stddev = "1.314" max = "7">
          <Value name="actionFlushSolver" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
          <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
          <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
@@ -11,7 +10,6 @@
          <Value name="aStarAproaches" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="6"/>
          <Value name="drawOpenClosedCurrentLists" source ="Gui.java" package ="eu.antonkrug" value ="6"/>
          <Value name="evaluatePoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="6"/>
-         <Value name="doOneStep" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="6"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="6"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="6"/>
          <Value name="validateResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="5"/>
@@ -26,7 +24,6 @@
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="canWalkTo" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="getAllBlock" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="4"/>
          <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="4"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="4"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="4"/>
@@ -49,13 +46,10 @@
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTraceFromPoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="backTraceFromPoint" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="backTracePath" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="3"/>
          <Value name="solveStepInit" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTraceFromPoint" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTracePath" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="backTracePath" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTracePath" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="3"/>
@@ -63,8 +57,6 @@
          <Value name="contains" source ="AgendaStack.java" package ="utils" value ="3"/>
          <Value name="indexOf" source ="AgendaStack.java" package ="utils" value ="3"/>
          <Value name="toString" source ="AgendaStack.java" package ="utils" value ="3"/>
-         <Value name="clear" source ="FifoLifo.java" package ="utils" value ="3"/>
-         <Value name="contains" source ="FifoLifo.java" package ="utils" value ="3"/>
          <Value name="drawMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="storeResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="loadMaze" source ="MazeTest.java" package ="eu.antonkrug.test" value ="2"/>
@@ -89,19 +81,16 @@
          <Value name="setHeight" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="setWidth" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addDestinationPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartingPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="solveStepFinish" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="peek" source ="AgendaJdk.java" package ="utils" value ="2"/>
          <Value name="pop" source ="AgendaJdk.java" package ="utils" value ="2"/>
          <Value name="isEmpty" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="peek" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="pop" source ="AgendaStack.java" package ="utils" value ="2"/>
-         <Value name="isEmpty" source ="FifoLifo.java" package ="utils" value ="2"/>
          <Value name="constructorTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="heuresticsTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="noDestinationTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
@@ -177,11 +166,11 @@
          <Value name="buttonActionNoImplemented" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonDisableAll" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="makeFrameButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -232,12 +221,6 @@
          <Value name="getVisitSize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlready" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartingAndDestionationPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
@@ -267,13 +250,6 @@
          <Value name="getVisitSize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="backTracePathPartially" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartPosition" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="backTracePathPartially" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisit" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
@@ -301,6 +277,9 @@
          <Value name="size" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="stream" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="toString" source ="AgendaJdk.java" package ="utils" value ="1"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="1"/>
+         <Value name="peek" source ="AgendaQueue.java" package ="utils" value ="1"/>
+         <Value name="pop" source ="AgendaQueue.java" package ="utils" value ="1"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="getList" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="purge" source ="AgendaStack.java" package ="utils" value ="1"/>
@@ -308,19 +287,11 @@
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="size" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="stream" source ="AgendaStack.java" package ="utils" value ="1"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="containsAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="removeAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="remove" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="retainAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="size" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="1"/>
       </Values>
    </Metric>
    <Metric id = "PAR" description ="Number of Parameters" max ="5" hint ="Move invoked method or pass an object">
-      <Values per = "method" avg = "0.523" stddev = "0.848" max = "5">
+      <Values per = "method" avg = "0.518" stddev = "0.845" max = "5">
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="5"/>
          <Value name="addButtonToPanel" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
          <Value name="popPushAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="4"/>
@@ -367,11 +338,11 @@
          <Value name="buttonIsEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawMazeIconsFinish" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawMazeIconsStart" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawMazeIcons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="makeFrameButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -397,11 +368,6 @@
          <Value name="backTraceFromPoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="markNodeAsVisited" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="backTraceFromPoint" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="doOneStep" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addDestinationPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartingPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
@@ -413,10 +379,6 @@
          <Value name="backTraceFromPoint" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="markNodeAsVisited" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="doOneStep" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartPosition" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
@@ -438,13 +400,6 @@
          <Value name="push" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="1"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="containsAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="contains" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="removeAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="remove" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="retainAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
          <Value name="constructorTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="0"/>
          <Value name="heuresticsTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="0"/>
          <Value name="noDestinationTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="0"/>
@@ -566,12 +521,6 @@
          <Value name="getVisitSize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
          <Value name="getVisitedAlready" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="backTracePath" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisit" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitSize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="addStartingAndDestionationPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
          <Value name="backTracePath" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
          <Value name="backTracePathPartially" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
@@ -598,12 +547,6 @@
          <Value name="getVisitSize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="backTracePath" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="backTracePathPartially" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisit" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitSize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="backTracePath" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="backTracePathPartially" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="getVisit" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
@@ -623,6 +566,9 @@
          <Value name="size" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="stream" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="toString" source ="AgendaJdk.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
+         <Value name="peek" source ="AgendaQueue.java" package ="utils" value ="0"/>
+         <Value name="pop" source ="AgendaQueue.java" package ="utils" value ="0"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="0"/>
          <Value name="getList" source ="AgendaStack.java" package ="utils" value ="0"/>
          <Value name="isEmpty" source ="AgendaStack.java" package ="utils" value ="0"/>
@@ -632,20 +578,15 @@
          <Value name="size" source ="AgendaStack.java" package ="utils" value ="0"/>
          <Value name="stream" source ="AgendaStack.java" package ="utils" value ="0"/>
          <Value name="toString" source ="AgendaStack.java" package ="utils" value ="0"/>
-         <Value name="clear" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="isEmpty" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="size" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NBD" description ="Nested Block Depth" max ="5" hint ="use Extract-method to split the method up">
-      <Values per = "method" avg = "1.21" stddev = "0.857" max = "5">
+      <Values per = "method" avg = "1.208" stddev = "0.853" max = "5">
          <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
          <Value name="compareResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="validateResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="generate" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="doOneStep" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="4"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="4"/>
          <Value name="loadMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="actionLoadMaze" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
@@ -658,7 +599,6 @@
          <Value name="save" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="doOneStep" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="add" source ="AgendaStack.java" package ="utils" value ="3"/>
@@ -700,10 +640,6 @@
          <Value name="backTracePath" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
          <Value name="evaluatePoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="backTraceFromPoint" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="backTracePath" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addDestinationPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartingPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="solvePath" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
@@ -712,8 +648,6 @@
          <Value name="backTracePath" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="backTracePath" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="backTracePath" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="markNodeAsVisited" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="peek" source ="AgendaJdk.java" package ="utils" value ="2"/>
@@ -723,7 +657,6 @@
          <Value name="peek" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="pop" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="toString" source ="AgendaStack.java" package ="utils" value ="2"/>
-         <Value name="contains" source ="FifoLifo.java" package ="utils" value ="2"/>
          <Value name="constructorTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="heuresticsTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="noDestinationTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
@@ -802,11 +735,11 @@
          <Value name="buttonActionNoImplemented" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonDisableAll" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="makeFrameButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -838,12 +771,6 @@
          <Value name="getVisitSize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlready" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartingAndDestionationPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getAproach" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
@@ -867,13 +794,6 @@
          <Value name="getVisitSize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="addStartPosition" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="backTracePathPartially" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStartPosition" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="backTracePathPartially" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
@@ -892,6 +812,9 @@
          <Value name="size" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="stream" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="toString" source ="AgendaJdk.java" package ="utils" value ="1"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="1"/>
+         <Value name="peek" source ="AgendaQueue.java" package ="utils" value ="1"/>
+         <Value name="pop" source ="AgendaQueue.java" package ="utils" value ="1"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="getList" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="isEmpty" source ="AgendaStack.java" package ="utils" value ="1"/>
@@ -900,16 +823,6 @@
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="size" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="stream" source ="AgendaStack.java" package ="utils" value ="1"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="clear" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="containsAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="isEmpty" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="removeAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="remove" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="retainAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="size" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="1"/>
          <Value name="addDestinationPosition" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="addStartPosition" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
@@ -993,8 +906,7 @@
       </Values>
    </Metric>
    <Metric id = "DIT" description ="Depth of Inheritance Tree">
-      <Values per = "type" avg = "2.075" stddev = "0.985" max = "3">
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="5"/>
+      <Values per = "type" avg = "2.073" stddev = "0.973" max = "3">
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTART_CONCURENT[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTAR[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
@@ -1019,12 +931,10 @@
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="2"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="2"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="2"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="2"/>
          <Value name="AStartNodeTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="AgendaTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="1"/>
@@ -1042,7 +952,7 @@
       </Values>
    </Metric>
    <Metric id = "WMC" description ="Weighted methods per Class">
-      <Values per = "type" total = "478" avg = "11.95" stddev = "19.06" max = "100">
+      <Values per = "type" total = "481" avg = "11.732" stddev = "18.877" max = "100">
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="100"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="50"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="38"/>
@@ -1051,13 +961,10 @@
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="29"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="26"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="25"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="24"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="24"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="21"/>
          <Value name="AgendaTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="17"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="17"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="17"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="16"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="15"/>
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="11"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="11"/>
@@ -1065,6 +972,7 @@
          <Value name="AStartNodeTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^ASTART_CONCURENT[" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^ASTAR[" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1087,11 +995,10 @@
          <Value name="Pair" source ="Pair.java" package ="utils" value ="1"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NSC" description ="Number of Children">
-      <Values per = "type" total = "26" avg = "0.65" stddev = "2.34" max = "14">
+      <Values per = "type" total = "26" avg = "0.634" stddev = "2.314" max = "14">
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="5"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
@@ -1128,20 +1035,17 @@
          <Value name="Maze.Block.anonymous#^WALL[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NORM" description ="Number of Overridden Methods">
-      <Values per = "type" total = "26" avg = "0.65" stddev = "0.477" max = "1">
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="10"/>
+      <Values per = "type" total = "28" avg = "0.683" stddev = "0.515" max = "2">
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="2"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1164,9 +1068,7 @@
          <Value name="Maze.Block.anonymous#^START[" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^WALL[" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="1"/>
@@ -1184,22 +1086,18 @@
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "LCOM" description ="Lack of Cohesion of Methods">
-      <Values per = "type" avg = "0.15" stddev = "0.273" max = "0.881">
+      <Values per = "type" avg = "0.147" stddev = "0.27" max = "0.881">
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="0.881"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0.856"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="0.75"/>
          <Value name="MazeSolverTest" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="0.714"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0.683"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="0.633"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0.567"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0.567"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0.567"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0.556"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0.409"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="0.333"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="0.208"/>
@@ -1233,32 +1131,28 @@
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NOF" description ="Number of Attributes">
-      <Values per = "type" total = "86" avg = "2.15" stddev = "3.328" max = "14">
+      <Values per = "type" total = "88" avg = "2.146" stddev = "3.346" max = "14">
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="12"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="10"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="6"/>
+         <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="6"/>
          <Value name="MazeSolverTest" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="5"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="5"/>
          <Value name="AStartNodeTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="AgendaTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="4"/>
-         <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="4"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="2"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="2"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="2"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="2"/>
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="1"/>
@@ -1284,10 +1178,11 @@
          <Value name="Maze.Block.anonymous#^WALL[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NSF" description ="Number of Static Attributes">
-      <Values per = "type" total = "11" avg = "0.275" stddev = "0.741" max = "4">
+      <Values per = "type" total = "11" avg = "0.268" stddev = "0.733" max = "4">
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="1"/>
@@ -1322,21 +1217,18 @@
          <Value name="Maze.Block.anonymous#^WALL[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NOM" description ="Number of Methods">
-      <Values per = "type" total = "277" avg = "6.925" stddev = "9.12" max = "38">
+      <Values per = "type" total = "280" avg = "6.829" stddev = "9.028" max = "38">
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="38"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="29"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="25"/>
@@ -1347,15 +1239,13 @@
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="13"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="13"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="12"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="11"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="11"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="11"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="11"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="11"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="10"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="9"/>
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="7"/>
          <Value name="AStartNodeTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="4"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="3"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1381,11 +1271,10 @@
          <Value name="Pair" source ="Pair.java" package ="utils" value ="1"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NSM" description ="Number of Static Methods">
-      <Values per = "type" total = "4" avg = "0.1" stddev = "0.3" max = "1">
+      <Values per = "type" total = "4" avg = "0.098" stddev = "0.297" max = "1">
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1419,23 +1308,19 @@
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="0"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "SIX" description ="Specialization Index">
-      <Values per = "type" avg = "1.494" stddev = "1.465" max = "3">
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="4.545"/>
+      <Values per = "type" avg = "1.49" stddev = "1.447" max = "3">
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTART_CONCURENT[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTAR[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
@@ -1456,8 +1341,7 @@
          <Value name="Maze.Block.anonymous#^START[" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Maze.Block.anonymous#^WALL[" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="0.2"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="0.182"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="1.333"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="0.182"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="0.182"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="0.167"/>
@@ -1478,15 +1362,14 @@
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Agenda" source ="Agenda.java" package ="utils" value ="0"/>
          <Value name="AgendaJdk.Function" source ="AgendaJdk.java" package ="utils" value ="0"/>
-         <Value name="FifoLifo.ListImplementation" source ="FifoLifo.java" package ="utils" value ="0"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "NOC" description ="Number of Classes">
-      <Values per = "packageFragment" total = "40" avg = "13.333" stddev = "11.785" max = "30">
+      <Values per = "packageFragment" total = "41" avg = "13.667" stddev = "11.557" max = "30">
          <Value name="eu.antonkrug" package ="eu.antonkrug" value ="30"/>
+         <Value name="utils" package ="utils" value ="6"/>
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="5"/>
-         <Value name="utils" package ="utils" value ="5"/>
       </Values>
    </Metric>
    <Metric id = "NOI" description ="Number of Interfaces">
@@ -1500,20 +1383,19 @@
       <Value value="3"/>
    </Metric>
    <Metric id = "TLOC" description ="Total Lines of Code">
-      <Value value="2288"/>
+      <Value value="2307"/>
    </Metric>
    <Metric id = "MLOC" description ="Method Lines of Code">
-      <Values per = "method" total = "1335" avg = "4.751" stddev = "6.464" max = "40">
+      <Values per = "method" total = "1342" avg = "4.725" stddev = "6.436" max = "40">
          <Value name="solveAll" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="40"/>
          <Value name="actionFlushSolver" source ="Gui.java" package ="eu.antonkrug" value ="35"/>
          <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="32"/>
          <Value name="setUp" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="28"/>
          <Value name="implementationDetect" source ="Gui.java" package ="eu.antonkrug" value ="28"/>
-         <Value name="makeFrameButtons" source ="Gui.java" package ="eu.antonkrug" value ="27"/>
+         <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="27"/>
          <Value name="aStarAproaches" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="25"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="24"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="24"/>
-         <Value name="doOneStep" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="24"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="23"/>
          <Value name="generate" source ="Maze.java" package ="eu.antonkrug" value ="23"/>
          <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="22"/>
@@ -1531,7 +1413,6 @@
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="14"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="14"/>
          <Value name="load" source ="Maze.java" package ="eu.antonkrug" value ="13"/>
-         <Value name="doOneStep" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="13"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="13"/>
          <Value name="storeResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="12"/>
          <Value name="testLoadNoBorders" source ="MazeTest.java" package ="eu.antonkrug.test" value ="12"/>
@@ -1539,9 +1420,7 @@
          <Value name="popPushAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="11"/>
          <Value name="save" source ="Maze.java" package ="eu.antonkrug" value ="11"/>
          <Value name="evaluatePoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="11"/>
-         <Value name="backTracePath" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="11"/>
          <Value name="backTracePath" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="11"/>
-         <Value name="backTracePath" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="11"/>
          <Value name="backTracePath" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="11"/>
          <Value name="sizeAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="10"/>
          <Value name="specs" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="10"/>
@@ -1560,7 +1439,6 @@
          <Value name="loadMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="9"/>
          <Value name="actionSolve" source ="Gui.java" package ="eu.antonkrug" value ="9"/>
          <Value name="solvePath" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="9"/>
-         <Value name="clear" source ="FifoLifo.java" package ="utils" value ="9"/>
          <Value name="addRemoveTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
          <Value name="removeObjectAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
          <Value name="removeTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
@@ -1570,8 +1448,6 @@
          <Value name="printDebugMaze" source ="Maze.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTraceFromPoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="8"/>
-         <Value name="backTraceFromPoint" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="8"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTraceFromPoint" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="8"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="8"/>
@@ -1585,8 +1461,6 @@
          <Value name="loadMaze" source ="MazeTest.java" package ="eu.antonkrug.test" value ="6"/>
          <Value name="testLoadErrorNotFound" source ="MazeTest.java" package ="eu.antonkrug.test" value ="6"/>
          <Value name="generateAddWalls" source ="Maze.java" package ="eu.antonkrug" value ="6"/>
-         <Value name="MazeSolverBFS" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="6"/>
-         <Value name="MazeSolverDFS" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="6"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="6"/>
          <Value name="constructorTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="5"/>
          <Value name="setUp" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="5"/>
@@ -1628,13 +1502,11 @@
          <Value name="setHeight" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="setWidth" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="markNodeAsVisited" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="4"/>
          <Value name="markNodeAsVisited" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="markNodeAsVisited" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="4"/>
          <Value name="markNodeAsVisited" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="pop" source ="AgendaQueue.java" package ="utils" value ="4"/>
          <Value name="indexOf" source ="AgendaStack.java" package ="utils" value ="4"/>
          <Value name="pop" source ="AgendaStack.java" package ="utils" value ="4"/>
-         <Value name="contains" source ="FifoLifo.java" package ="utils" value ="4"/>
          <Value name="peekAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="popAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="loadMaze" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="3"/>
@@ -1650,7 +1522,6 @@
          <Value name="addStartingPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
          <Value name="pointsTranslate" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
          <Value name="peek" source ="AgendaStack.java" package ="utils" value ="3"/>
-         <Value name="FifoLifo" source ="FifoLifo.java" package ="utils" value ="3"/>
          <Value name="noDestinationTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="setUp" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
@@ -1661,15 +1532,13 @@
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="initialize" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartPosition" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="addStartPosition" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartingAndDestionationPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartPosition" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="addStartPosition" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartPosition" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="2"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="getList" source ="AgendaStack.java" package ="utils" value ="2"/>
          <Value name="stream" source ="AgendaStack.java" package ="utils" value ="2"/>
-         <Value name="remove" source ="FifoLifo.java" package ="utils" value ="2"/>
          <Value name="Pair" source ="Pair.java" package ="utils" value ="2"/>
          <Value name="setUp" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="setUp" source ="MazeTest.java" package ="eu.antonkrug.test" value ="1"/>
@@ -1722,10 +1591,6 @@
          <Value name="getVisitSize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlready" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverBFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getAproach" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getCurrentStep" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getDestinations" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
@@ -1743,11 +1608,6 @@
          <Value name="getVisitSize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadyAlternative" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitedAlreadySize" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="backTracePathPartially" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisit" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitSize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadyAlternative" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="getVisitedAlreadySize" source ="MazeSolverDFS.java" package ="eu.antonkrug" value ="1"/>
          <Value name="backTracePathPartially" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisit" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
          <Value name="getVisitSize" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="1"/>
@@ -1763,18 +1623,12 @@
          <Value name="size" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="stream" source ="AgendaJdk.java" package ="utils" value ="1"/>
          <Value name="toString" source ="AgendaJdk.java" package ="utils" value ="1"/>
+         <Value name="peek" source ="AgendaQueue.java" package ="utils" value ="1"/>
          <Value name="isEmpty" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="purge" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="push" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="1"/>
          <Value name="size" source ="AgendaStack.java" package ="utils" value ="1"/>
-         <Value name="containsAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="isEmpty" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="removeAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="retainAll" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="size" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
-         <Value name="toArray" source ="FifoLifo.java" package ="utils" value ="1"/>
          <Value name="addDestinationPosition" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="addStartPosition" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
          <Value name="addStartingAndDestionationPositions" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
