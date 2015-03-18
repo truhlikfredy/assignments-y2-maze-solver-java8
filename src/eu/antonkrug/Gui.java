@@ -244,12 +244,12 @@ public class Gui implements ActionListener {
 
 		try {
 			switch (implementationToUse) {
-				case BFS_STACK:
-					solver = new MazeSolverBFS(maze);
+				case BFS_QUEUE_JDK:
+					solver = new MazeSolverBFS(maze,Aproach.BFS_QUEUE_JDK);
 					break;
 
-				case DFS_STACK:
-					solver = new MazeSolverDFS(maze);
+				case DFS_STACK_JDK:
+					solver = new MazeSolverDFS(maze,Aproach.DFS_STACK_JDK);
 					break;
 
 				case ASTAR_HASHMAP:
@@ -350,12 +350,12 @@ public class Gui implements ActionListener {
 		if (buttonIsToggled(GuiButton.BFS) && buttonIsEnabled(GuiButton.BFS)) {
 
 			buttonDisable(GuiButton.BFS);
-			implementationToUse = Aproach.BFS_STACK;
+			implementationToUse = Aproach.BFS_QUEUE_JDK;
 
 		} else if (buttonIsToggled(GuiButton.DFS) && buttonIsEnabled(GuiButton.DFS)) {
 
 			buttonDisable(GuiButton.DFS);
-			implementationToUse = Aproach.DFS_STACK;
+			implementationToUse = Aproach.DFS_STACK_JDK;
 
 		} else if (buttonIsToggled(GuiButton.ASTAR) && buttonIsEnabled(GuiButton.ASTAR)) {
 
@@ -745,12 +745,12 @@ public class Gui implements ActionListener {
 		// detect which implementation is set to be used and show it as selected
 		switch (implementationToUse) {
 
-			case BFS_STACK:
+			case BFS_QUEUE_JDK:
 				buttonToggle(GuiButton.BFS, true);
 				buttonDisable(GuiButton.BFS);
 				break;
 
-			case DFS_STACK:
+			case DFS_STACK_JDK:
 				buttonToggle(GuiButton.DFS, true);
 				buttonDisable(GuiButton.DFS);
 				break;

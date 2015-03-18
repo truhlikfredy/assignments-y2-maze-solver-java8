@@ -2,10 +2,14 @@ package eu.antonkrug;
 
 import java.awt.Point;
 import java.util.stream.Stream;
-import java.util.LinkedList;
+import java.util.AbstractList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Stack;
+
+import utils.Agenda;
+import utils.AgendaJdk;
+import utils.AgendaStack;
+import utils.AgendaJdk.Function;
 
 /**
  * Depth first search using stacks
@@ -23,12 +27,12 @@ import java.util.Stack;
  */
 public class MazeSolverDFS extends MazeSolverBase {
 
-	private Stack<Point>	visit;
-	private Stack<Point>	visitedAlready;
+	private Agenda<Point>	visit;
+	private Agenda<Point>	visitedAlready;
 
 	// not required as such for algorithm but without it GUI woudn't be able
 	// display current path which is the algorithm traversing
-	private Stack<Point>	currentPath;
+	private Agenda<Point>	currentPath;
 
 	/**
 	 * Constructor to initialise fields.
@@ -36,16 +40,35 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverDFS(Maze maze) throws Exception {
-		super(maze, Aproach.DFS_STACK);
+	public MazeSolverDFS(Maze maze, Aproach aproach) throws Exception {
+		super(maze, aproach);
 
 		// not used, but if in future this implementation would be asked if it can
 		// see the destination then it would return correct value
 		this.destinationVisible = false;
 
-		this.visit = new Stack<>();
-		this.currentPath = new Stack<>();
-		this.visitedAlready = new Stack<>();
+		
+//		this.visit = new Stack<>();
+//		this.currentPath = new Stack<>();
+//		this.visitedAlready = new Stack<>();
+		
+		switch (aproach) {
+			case DFS_STACK_JDK:
+				this.visit = new AgendaJdk<>(Function.STACK);
+				this.visitedAlready = new AgendaJdk<>(Function.STACK);
+				this.currentPath = new AgendaJdk<>(Function.STACK);
+				break;
+				
+			case DFS_STACK_MINE:
+				this.visit = new AgendaStack<>();
+				this.visitedAlready = new AgendaStack<>(); 
+				this.currentPath = new AgendaStack<>();
+				break;
+
+			default:
+				throw new Exception("Usuported aproach "+aproach+" called with this solver");
+		}
+		
 
 		this.addStartingAndDestionationPositions();
 	}
@@ -99,8 +122,9 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 * @return
 	 */
 	@Override
-	public List<Point> backTracePathPartially() {
-		return new LinkedList<>(currentPath);
+	public AbstractList<Point> backTracePathPartially() {
+//		return new LinkedList<>(currentPath);
+		return currentPath.getList();
 	}
 
 	/**

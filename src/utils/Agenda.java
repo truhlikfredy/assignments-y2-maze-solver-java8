@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.AbstractList;
 import java.util.stream.Stream;
 
 /**
@@ -13,6 +14,10 @@ import java.util.stream.Stream;
  */
 
 public interface Agenda<T> {
+	
+//	public enum Datastructure {
+//		MINE, JDK;
+//	}
 	
 	public boolean isEmpty();
 
@@ -33,5 +38,7 @@ public interface Agenda<T> {
 	public boolean contains(T item);
 
 	public Stream<T> stream();
-
+	
+	public AbstractList<T> getList();
+	
 }

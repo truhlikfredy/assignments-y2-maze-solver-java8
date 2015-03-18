@@ -2,17 +2,19 @@ package eu.antonkrug;
 
 import java.awt.Point;
 import java.util.stream.Stream;
-import java.util.AbstractList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Queue;
-import java.util.Stack;
+//import java.util.Queue;
+//import java.util.Stack;
+
 
 import utils.Agenda;
-import utils.AgendaStack;
+import utils.AgendaJdk;
+import utils.AgendaJdk.Function;
+import utils.AgendaQueue;
 
 /**
  * Breadth first search using FIFO queue
@@ -30,7 +32,7 @@ import utils.AgendaStack;
  */
 public class MazeSolverBFS extends MazeSolverBase {
 
-	private Queue<Point>			visit;
+	private Agenda<Point>			visit;
 	private Agenda<Point>			visitedAlready;
 
 	// not needed for algorithm, but it makes GUI more pretty
@@ -42,20 +44,32 @@ public class MazeSolverBFS extends MazeSolverBase {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverBFS(Maze maze) throws Exception {
-		super(maze, Aproach.BFS_STACK);
+	public MazeSolverBFS(Maze maze, Aproach aproach) throws Exception {
+		super(maze, aproach);
 
 		// not used, but if in future this implementation would be asked if it can
 		// see the destination then it would return correct value
 		this.destinationVisible = false;
 
 		// as FIFO queue linked list is used
-		this.visit = new LinkedList<>();
-		
-//		AbstractList<Point> aa  = new Stack<>();
-
+//		this.visit = new LinkedList<>();
 //		this.visitedAlready = new Stack<>();
-		this.visitedAlready = new AgendaStack<>(); 
+		
+
+		switch (aproach) {
+			case BFS_QUEUE_JDK:
+				this.visit = new AgendaJdk<>(Function.QUEUE);
+				this.visitedAlready = new AgendaJdk<>(Function.QUEUE); 				
+				break;
+				
+			case BFS_QUEUE_MINE:
+				this.visit = new AgendaQueue<>();
+				this.visitedAlready = new AgendaQueue<>(); 
+				break;
+
+			default:
+				throw new Exception("Usuported aproach "+aproach+" called with this solver");
+		}
 
 		// not needed for the search itself, but gui wants to display higlighted
 		// which path is currently investigated pointing from the current step to

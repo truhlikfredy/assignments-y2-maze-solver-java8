@@ -113,11 +113,11 @@ public class MazeSolverBenchmark {
 
 			switch (implementationAproach) {
 
-				case BFS_STACK:
+				case BFS_QUEUE_MINE:
 					solver = new MazeSolverDFS(maze);
 					break;
 
-				case DFS_STACK:
+				case DFS_STACK_MINE:
 					solver = new MazeSolverDFS(maze);
 					break;
 
@@ -133,15 +133,15 @@ public class MazeSolverBenchmark {
 
 	@Test
 	public void DFS() throws Exception {
-		aStarAproaches(Aproach.DFS_STACK);
+		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("2");
-		aStarAproaches(Aproach.DFS_STACK);
+		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("3");
-		aStarAproaches(Aproach.DFS_STACK);
+		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("4");
-		aStarAproaches(Aproach.DFS_STACK);
+		aStarAproaches(Aproach.DFS_STACK_MINE);
 		loadMaze("5");
-		aStarAproaches(Aproach.DFS_STACK);
+		aStarAproaches(Aproach.DFS_STACK_MINE);
 	}
 
 	@Test
@@ -172,15 +172,15 @@ public class MazeSolverBenchmark {
 
 	@Test
 	public void BFS() throws Exception {
-		aStarAproaches(Aproach.BFS_STACK);
+		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("2");
-		aStarAproaches(Aproach.BFS_STACK);
+		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("3");
-		aStarAproaches(Aproach.BFS_STACK);
+		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("4");
-		aStarAproaches(Aproach.BFS_STACK);
+		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 		loadMaze("5");
-		aStarAproaches(Aproach.BFS_STACK);
+		aStarAproaches(Aproach.BFS_QUEUE_MINE);
 	}
 
 	// @Test

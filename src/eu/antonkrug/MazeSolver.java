@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * This is just abstract interface what each algorithm has to have, so when 
+ * This is just abstract interface what each algorithm has to have, so when
  * multiple aproaches are implementented they can be used by the same GUI
  * 
  * @author Anton Krug
@@ -20,7 +20,7 @@ public interface MazeSolver {
 	 * All implemented aproaches to solve a maze
 	 */
 	public enum Aproach {
-		BFS_STACK, DFS_STACK, ASTAR_CONCURENT_HASHMAP, ASTAR_HASHMAP,
+		BFS_QUEUE_MINE, BFS_QUEUE_JDK, DFS_STACK_MINE, DFS_STACK_JDK, ASTAR_CONCURENT_HASHMAP, ASTAR_HASHMAP,
 		// KOLOBOKE,
 		// FASTUTIL_HASHMAP
 		;
