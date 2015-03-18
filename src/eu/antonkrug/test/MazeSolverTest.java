@@ -147,25 +147,25 @@ public class MazeSolverTest {
 		drawOpenClosedCurrentLists(img, width * 0, height * 1);
 
 		solvers.add(Aproach.BFS_QUEUE_JDK);
-		solver = new MazeSolverBFS(maze, Aproach.BFS_QUEUE_JDK);
+		solver = new MazeSolverBfs(maze, Aproach.BFS_QUEUE_JDK);
 		storeResults();
 		drawMaze(img, width * 1, height * 0);
 		drawOpenClosedCurrentLists(img, width * 1, height * 0);
 
 		solvers.add(Aproach.BFS_QUEUE_MINE);
-		solver = new MazeSolverBFS(maze, Aproach.BFS_QUEUE_MINE);
+		solver = new MazeSolverBfs(maze, Aproach.BFS_QUEUE_MINE);
 		storeResults();
 		drawMaze(img, width * 1, height * 1);
 		drawOpenClosedCurrentLists(img, width * 1, height * 1);
 
 		solvers.add(Aproach.DFS_STACK_JDK);
-		solver = new MazeSolverDFS(maze, Aproach.DFS_STACK_JDK);
+		solver = new MazeSolverDfs(maze, Aproach.DFS_STACK_JDK);
 		storeResults();
 		drawMaze(img, width * 2, height * 0);
 		drawOpenClosedCurrentLists(img, width * 2, height * 0);
 
 		solvers.add(Aproach.DFS_STACK_MINE);
-		solver = new MazeSolverDFS(maze, Aproach.DFS_STACK_MINE);
+		solver = new MazeSolverDfs(maze, Aproach.DFS_STACK_MINE);
 		storeResults();
 		drawMaze(img, width * 2, height * 1);
 		drawOpenClosedCurrentLists(img, width * 2, height * 1);

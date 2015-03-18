@@ -30,7 +30,7 @@ import utils.AgendaQueue;
  * Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-public class MazeSolverBFS extends MazeSolverBase {
+public class MazeSolverBfs extends MazeSolverBase {
 
 	private Agenda<Point>			visit;
 	private Agenda<Point>			visitedAlready;
@@ -44,7 +44,7 @@ public class MazeSolverBFS extends MazeSolverBase {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverBFS(Maze maze, Aproach aproach) throws Exception {
+	public MazeSolverBfs(Maze maze, Aproach aproach) throws Exception {
 		super(maze, aproach);
 
 		// not used, but if in future this implementation would be asked if it can

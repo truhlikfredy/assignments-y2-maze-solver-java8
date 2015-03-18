@@ -25,7 +25,7 @@ import utils.AgendaJdk.Function;
  * file, via any medium is strictly prohibited Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
-public class MazeSolverDFS extends MazeSolverBase {
+public class MazeSolverDfs extends MazeSolverBase {
 
 	private Agenda<Point>	visit;
 	private Agenda<Point>	visitedAlready;
@@ -40,7 +40,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 	 * @param maze
 	 *          Reqiress to be give already loaded maze
 	 */
-	public MazeSolverDFS(Maze maze, Aproach aproach) throws Exception {
+	public MazeSolverDfs(Maze maze, Aproach aproach) throws Exception {
 		super(maze, aproach);
 
 		// not used, but if in future this implementation would be asked if it can
@@ -157,7 +157,20 @@ public class MazeSolverDFS extends MazeSolverBase {
 		// the previous direction and if that not possible then any point. This
 		// would change behaviour in open fields.
 
-		// if dead end backtrack
+		// check if dead end and then backtrack
+		nextMove=backTrack(nextMove);
+
+		if (DEBUG) System.out.println(nextMove);
+		return nextMove;
+	}
+	
+	/**
+	 * In case dead end was reached do backtracking
+	 * 
+	 * @param nextMove
+	 * @return
+	 */
+	private Point backTrack(Point nextMove) {
 		if (nextMove == null) {
 
 			currentPath.pop();
@@ -176,9 +189,7 @@ public class MazeSolverDFS extends MazeSolverBase {
 		} else {
 			// if something was found (no deadend) display is as current path
 			currentPath.push(nextMove);
-		}
-
-		if (DEBUG) System.out.println(nextMove);
+		}		
 		return nextMove;
 	}
 

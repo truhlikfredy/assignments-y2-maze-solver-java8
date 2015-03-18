@@ -10,7 +10,8 @@ import eu.antonkrug.Maze;
 import eu.antonkrug.MazeSolver;
 import eu.antonkrug.MazeSolver.Aproach;
 import eu.antonkrug.MazeSolverAStar;
-import eu.antonkrug.MazeSolverDFS;
+import eu.antonkrug.MazeSolverBfs;
+import eu.antonkrug.MazeSolverDfs;
 
 /**
  * @author Anton Krug
@@ -20,7 +21,7 @@ import eu.antonkrug.MazeSolverDFS;
  * 
  * WARNING this will solve a maze 1000 times, it can take some time!
  * On old core 2 duo 2.4Ghz cpu running JDK 8 on Debain Wheezy it can take 
- * around 120s (2 minutes) to finish all benchmarks.
+ * around 10 minutes to finish all benchmarks.
  * 
  *  Benchmark 1 - medium maze (1 start,1 destination)
  *  
@@ -33,38 +34,83 @@ import eu.antonkrug.MazeSolverDFS;
  *  Benchmark 5 - medium maze (1 start, 1 destination, but lot's of empty space
  *                and 2 different solutions)
  *  
- *  Results:
- *
+ *  Results before Agenda refactor:
  *  
-//System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
-//Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
-//Memory:	1841823744 - Available: 118897648
-//Count:	1000 times repeated benchmark
-//---------------------------------------
-//
-//Benchmark 1 ASTAR_CONCURENT_HASHMAP:	17096 ms
-//Benchmark 2 ASTAR_CONCURENT_HASHMAP:	2040 ms
-//Benchmark 3 ASTAR_CONCURENT_HASHMAP:	5 ms
-//Benchmark 4 ASTAR_CONCURENT_HASHMAP:	4066 ms
-//Benchmark 5 ASTAR_CONCURENT_HASHMAP:	2853 ms
-//
-//Benchmark 1 BFS_STACK:	39182 ms
-//Benchmark 2 BFS_STACK:	2030 ms
-//Benchmark 3 BFS_STACK:	1 ms
-//Benchmark 4 BFS_STACK:	10283 ms
-//Benchmark 5 BFS_STACK:	1059 ms
-//
-//Benchmark 1 DFS_STACK:	39134 ms
-//Benchmark 2 DFS_STACK:	2031 ms
-//Benchmark 3 DFS_STACK:	0 ms
-//Benchmark 4 DFS_STACK:	10294 ms
-//Benchmark 5 DFS_STACK:	1115 ms
-//
-//Benchmark 1 ASTAR_HASHMAP:	5343 ms
-//Benchmark 2 ASTAR_HASHMAP:	24 ms
-//Benchmark 3 ASTAR_HASHMAP:	0 ms
-//Benchmark 4 ASTAR_HASHMAP:	1041 ms
-//Benchmark 5 ASTAR_HASHMAP:	1010 ms
+System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
+Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
+Memory:	1841823744 - Available: 118897648
+Count:	1000 times repeated benchmark
+---------------------------------------
+
+Benchmark 1 ASTAR_CONCURENT_HASHMAP:	17096 ms
+Benchmark 2 ASTAR_CONCURENT_HASHMAP:	2040 ms
+Benchmark 3 ASTAR_CONCURENT_HASHMAP:	5 ms
+Benchmark 4 ASTAR_CONCURENT_HASHMAP:	4066 ms
+Benchmark 5 ASTAR_CONCURENT_HASHMAP:	2853 ms
+
+Benchmark 1 BFS_STACK:	39182 ms
+Benchmark 2 BFS_STACK:	2030 ms
+Benchmark 3 BFS_STACK:	1 ms
+Benchmark 4 BFS_STACK:	10283 ms
+Benchmark 5 BFS_STACK:	1059 ms
+
+Benchmark 1 DFS_STACK:	39134 ms
+Benchmark 2 DFS_STACK:	2031 ms
+Benchmark 3 DFS_STACK:	0 ms
+Benchmark 4 DFS_STACK:	10294 ms
+Benchmark 5 DFS_STACK:	1115 ms
+
+Benchmark 1 ASTAR_HASHMAP:	5343 ms
+Benchmark 2 ASTAR_HASHMAP:	24 ms
+Benchmark 3 ASTAR_HASHMAP:	0 ms
+Benchmark 4 ASTAR_HASHMAP:	1041 ms
+Benchmark 5 ASTAR_HASHMAP:	1010 ms
+ * 
+ * 
+ *  Results after Agenda refactor:
+ * 
+System:	Linux - amd64 - 3.2.0-4-amd64 - CPUs: 2
+Java:	Oracle Corporation - Java(TM) SE Runtime Environment - 1.8.0_31-b13
+Memory:	1841823744 - Available: 118263768
+Count:	1000 times repeated benchmark
+---------------------------------------
+
+Benchmark 1 BFS_QUEUE_JDK:	148466 ms
+Benchmark 2 BFS_QUEUE_JDK:	6978 ms
+Benchmark 3 BFS_QUEUE_JDK:	1 ms
+Benchmark 4 BFS_QUEUE_JDK:	12073 ms
+Benchmark 5 BFS_QUEUE_JDK:	9124 ms
+
+Benchmark 1 DFS_STACK_JDK:	39454 ms
+Benchmark 2 DFS_STACK_JDK:	2016 ms
+Benchmark 3 DFS_STACK_JDK:	0 ms
+Benchmark 4 DFS_STACK_JDK:	11019 ms
+Benchmark 5 DFS_STACK_JDK:	1234 ms
+
+Benchmark 1 ASTAR_CONCURENT_HASHMAP:	16314 ms
+Benchmark 2 ASTAR_CONCURENT_HASHMAP:	2117 ms
+Benchmark 3 ASTAR_CONCURENT_HASHMAP:	1 ms
+Benchmark 4 ASTAR_CONCURENT_HASHMAP:	4061 ms
+Benchmark 5 ASTAR_CONCURENT_HASHMAP:	2998 ms
+
+Benchmark 1 BFS_QUEUE_MINE:	190856 ms
+Benchmark 2 BFS_QUEUE_MINE:	9038 ms
+Benchmark 3 BFS_QUEUE_MINE:	1 ms
+Benchmark 4 BFS_QUEUE_MINE:	15807 ms
+Benchmark 5 BFS_QUEUE_MINE:	14050 ms
+
+Benchmark 1 ASTAR_HASHMAP:	5337 ms
+Benchmark 2 ASTAR_HASHMAP:	12 ms
+Benchmark 3 ASTAR_HASHMAP:	0 ms
+Benchmark 4 ASTAR_HASHMAP:	1023 ms
+Benchmark 5 ASTAR_HASHMAP:	146 ms
+
+Benchmark 1 DFS_STACK_MINE:	72229 ms
+Benchmark 2 DFS_STACK_MINE:	4255 ms
+Benchmark 3 DFS_STACK_MINE:	0 ms
+Benchmark 4 DFS_STACK_MINE:	19083 ms
+Benchmark 5 DFS_STACK_MINE:	3058 ms
+
  * 
  */
 
@@ -115,19 +161,19 @@ public class MazeSolverBenchmark {
 			switch (implementationAproach) {
 
 				case BFS_QUEUE_MINE:
-					solver = new MazeSolverDFS(maze,Aproach.BFS_QUEUE_MINE);
+					solver = new MazeSolverBfs(maze,Aproach.BFS_QUEUE_MINE);
 					break;
 
 				case BFS_QUEUE_JDK:
-					solver = new MazeSolverDFS(maze,Aproach.BFS_QUEUE_JDK);
+					solver = new MazeSolverBfs(maze,Aproach.BFS_QUEUE_JDK);
 					break;
 
 				case DFS_STACK_MINE:
-					solver = new MazeSolverDFS(maze,Aproach.DFS_STACK_MINE);
+					solver = new MazeSolverDfs(maze,Aproach.DFS_STACK_MINE);
 					break;
 
 				case DFS_STACK_JDK:
-					solver = new MazeSolverDFS(maze,Aproach.DFS_STACK_JDK);
+					solver = new MazeSolverDfs(maze,Aproach.DFS_STACK_JDK);
 					break;
 
 				default:

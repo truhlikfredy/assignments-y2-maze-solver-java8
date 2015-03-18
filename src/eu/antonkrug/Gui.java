@@ -247,11 +247,11 @@ public class Gui implements ActionListener {
 		try {
 			switch (implementationToUse) {
 				case BFS_QUEUE_JDK:
-					solver = new MazeSolverBFS(maze, Aproach.BFS_QUEUE_JDK);
+					solver = new MazeSolverBfs(maze, Aproach.BFS_QUEUE_JDK);
 					break;
 
 				case DFS_STACK_JDK:
-					solver = new MazeSolverDFS(maze, Aproach.DFS_STACK_JDK);
+					solver = new MazeSolverDfs(maze, Aproach.DFS_STACK_JDK);
 					break;
 
 				case ASTAR_HASHMAP:
@@ -344,33 +344,26 @@ public class Gui implements ActionListener {
 		}
 	}
 
+	private boolean buttonIsToggledNEnabled(GuiButton button) {
+		return buttonIsToggled(button) && buttonIsEnabled(button);
+	}
+
 	/**
 	 * Action for all implementation select buttons
 	 */
 	private void actionImplementationSelect() {
+		HashMap<GuiButton, Aproach> buttonAproachMapping = new HashMap<>();
 
-		if (buttonIsToggled(GuiButton.BFS) && buttonIsEnabled(GuiButton.BFS)) {
+		buttonAproachMapping.put(GuiButton.BFS, Aproach.BFS_QUEUE_JDK);
+		buttonAproachMapping.put(GuiButton.DFS, Aproach.DFS_STACK_JDK);
+		buttonAproachMapping.put(GuiButton.ASTAR, Aproach.ASTAR_HASHMAP);
+		buttonAproachMapping.put(GuiButton.ASTART_CONCURENT, Aproach.ASTAR_CONCURENT_HASHMAP);
 
-			buttonDisable(GuiButton.BFS);
-			implementationToUse = Aproach.BFS_QUEUE_JDK;
-
-		} else if (buttonIsToggled(GuiButton.DFS) && buttonIsEnabled(GuiButton.DFS)) {
-
-			buttonDisable(GuiButton.DFS);
-			implementationToUse = Aproach.DFS_STACK_JDK;
-
-		} else if (buttonIsToggled(GuiButton.ASTAR) && buttonIsEnabled(GuiButton.ASTAR)) {
-
-			buttonDisable(GuiButton.ASTAR);
-			implementationToUse = Aproach.ASTAR_HASHMAP;
-
-		} else if (buttonIsToggled(GuiButton.ASTART_CONCURENT)
-				&& buttonIsEnabled(GuiButton.ASTART_CONCURENT)) {
-
-			buttonDisable(GuiButton.ASTART_CONCURENT);
-			implementationToUse = Aproach.ASTAR_CONCURENT_HASHMAP;
-
-		}
+		buttonAproachMapping.entrySet().stream().filter(item -> buttonIsToggledNEnabled(item.getKey()))
+				.limit(1).forEach(item -> {
+					buttonDisable(item.getKey());
+					implementationToUse = item.getValue();
+				});
 
 		statusBarLabel
 				.setText(String
@@ -449,7 +442,7 @@ public class Gui implements ActionListener {
 	 * Do one step with all safe checks
 	 */
 	private void actionStepChecks() {
-		//make sure it will not execute at same time (button + timmer)
+		// make sure it will not execute at same time (button + timmer)
 		if (stepButtonPressed == false) {
 			stepButtonPressed = true;
 			if (!solver.isDoNotSolveAgain()) {
