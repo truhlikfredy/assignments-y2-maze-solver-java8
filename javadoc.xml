@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="public" author="true" classpath="/home/fredy/install/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar:lib/stdlib-package.jar:/home/fredy/install/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar" destdir="doc" doctitle="Maze Assigment" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.8" sourcefiles="src/eu/antonkrug/MazeSolverDFS.java" sourcepath="src" splitindex="true" use="true" version="true"/>
-    </target>
-</project>

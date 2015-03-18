@@ -813,7 +813,7 @@ public class Gui implements ActionListener {
 		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
 		uiPane.add(mazePanel, BorderLayout.CENTER);
 
-		makeFrameButtons(uiPane);
+		createGuiButtons(uiPane);
 
 		frame.pack();
 	}
@@ -821,7 +821,7 @@ public class Gui implements ActionListener {
 	/**
 	 * Buttons and desired actions for buttons
 	 */
-	private void makeFrameButtons(JPanel parent) {
+	private void createGuiButtons(JPanel parent) {
 		actions = new HashMap<>();
 
 		JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
