@@ -132,6 +132,8 @@ public class MazeSolverBfs extends MazeSolverBase {
 	 */
 	@Override
 	public List<Point> backTracePathPartially() {
+		
+		if (currentStep==null) return new LinkedList<Point>();
 
 		Point nextMove = null;
 		// try find traced path near the last position

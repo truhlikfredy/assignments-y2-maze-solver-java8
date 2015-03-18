@@ -16,8 +16,8 @@ import java.util.Map.Entry;
 //import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 /**
- * Single threaded, multithread, koloboke and fastutil implementation of A* using 
- * hash maps as main datastructure to hold open and closed lists.
+ * Single threaded, multithread, koloboke and fastutil implementation of A*
+ * using hash maps as main datastructure to hold open and closed lists.
  * 
  * @author Anton Krug
  * @date 2015/02/22
@@ -25,9 +25,9 @@ import java.util.Map.Entry;
  * @requires Java 8!
  */
 
-/* Copyright (C) Anton Krug - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
+/*
+ * Copyright (C) Anton Krug - All Rights Reserved Unauthorized copying of this
+ * file, via any medium is strictly prohibited Proprietary and confidential
  * Written by Anton Krug <anton.krug@gmail.com>, February 2015
  */
 public class MazeSolverAStar extends MazeSolverBase {
@@ -134,18 +134,21 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 */
 	@Override
 	public List<Point> backTracePathPartially() {
-		
-		//try find traced path near the last position
+
+		// try find traced path near the last position, but in case it's null then
+		// just continue, the backtrace is made to handle null pointers
 		Point currentStep = this.currentStep;
-		for (Point direction : allDirections) {
+		if (currentStep != null) {
+			for (Point direction : allDirections) {
 
-			Point checkPoint = pointsTranslate(currentStep, direction);
+				Point checkPoint = pointsTranslate(currentStep, direction);
 
-			if (visitedAlready.containsKey(checkPoint)) {
-				currentStep = checkPoint;
+				if (visitedAlready.containsKey(checkPoint)) {
+					currentStep = checkPoint;
+				}
 			}
 		}
-		
+
 		return backTraceFromPoint(currentStep);
 	}
 
@@ -162,7 +165,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 
 		Point currentStep = destinationPoint;
 
-		//traverse the path till start reached
+		// traverse the path till start reached
 		while (currentStep != null) {
 			if (DEBUG) System.out.println(currentStep);
 			path.add(currentStep);

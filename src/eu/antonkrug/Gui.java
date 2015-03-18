@@ -227,6 +227,11 @@ public class Gui implements ActionListener {
 	 * Will quit the GUI
 	 */
 	private void actionExit() {
+		// on lovely windows you have to stop timers to get the application to exit,
+		// good i did some testing on non-linux platforms as well
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+		}
 		// frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 		frame.setVisible(false);
 		frame.dispose();
@@ -1007,7 +1012,10 @@ public class Gui implements ActionListener {
 
 		mazePanel.remove(0);
 		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
-		frame.pack();
+		
+		//do not resize it anymore, but force it to redraw
+		frame.revalidate();
+		// frame.pack();
 	}
 
 }
