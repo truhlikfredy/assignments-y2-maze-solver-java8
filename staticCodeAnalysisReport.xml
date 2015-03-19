@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Metrics scope="maze" type="Project" date="2015-03-18" xmlns="http://metrics.sourceforge.net/2003/Metrics-First-Flat">
+<Metrics scope="maze-gui" type="Project" date="2015-03-19" xmlns="http://metrics.sourceforge.net/2003/Metrics-First-Flat">
    <Metric id = "VG" description ="McCabe Cyclomatic Complexity" max ="10" hint ="use Extract-method to split the method up">
-      <Values per = "method" avg = "1.694" stddev = "1.314" max = "7">
+      <Values per = "method" avg = "1.687" stddev = "1.314" max = "7">
          <Value name="actionFlushSolver" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
          <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
-         <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
          <Value name="implementationDetect" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
+         <Value name="maze" source ="GuiDraw.java" package ="eu.antonkrug" value ="7"/>
          <Value name="generateAddWalls" source ="Maze.java" package ="eu.antonkrug" value ="7"/>
          <Value name="aStarAproaches" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="6"/>
-         <Value name="drawOpenClosedCurrentLists" source ="Gui.java" package ="eu.antonkrug" value ="6"/>
+         <Value name="openClosedCurrentLists" source ="GuiDraw.java" package ="eu.antonkrug" value ="6"/>
          <Value name="evaluatePoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="6"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="6"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="6"/>
@@ -18,13 +18,14 @@
          <Value name="backTracePath" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="5"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="5"/>
          <Value name="solvePath" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="5"/>
+         <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="5"/>
          <Value name="compareResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="drawOpenClosedCurrentLists" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="canWalkTo" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="getAllBlock" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="4"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="4"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="4"/>
          <Value name="formatResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="3"/>
@@ -35,9 +36,9 @@
          <Value name="actionLoadMaze" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="actionSaveMaze" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="actionStepChecks" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawArrow" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawMazeIconsFinish" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawMazeIconsStart" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="arrow" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="mazeIconsFinish" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="mazeIconsStart" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Maze.Block#getEnum" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="border" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="fill" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
@@ -45,7 +46,6 @@
          <Value name="save" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTraceFromPoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="solveStepInit" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="backTraceFromPoint" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
@@ -66,6 +66,7 @@
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionAnimate" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionDestinationIgnoreToggle" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionPerformed" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionSolve" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addButtonToPanel" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
@@ -74,8 +75,8 @@
          <Value name="buttonIsEnabled" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="buttonIsToggled" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="buttonToggle" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawMazeIcons" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawSolvedPath" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="preSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="mazeIcons" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
          <Value name="loadLineOfMaze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="load" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="setHeight" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
@@ -161,20 +162,26 @@
          <Value name="Gui.GuiButton.anonymous#^SOLVE[#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^STEP[#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="actionImplementationSelect" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonActionNoImplemented" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonDisableAll" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="postSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="swapMazePanel" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setBlocksDimensions" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setMaze" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setSolver" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBarException" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBar" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="solvedPath" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="swapMazePanel" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^EMPTY[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^FINISH[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^NULL[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
@@ -291,21 +298,23 @@
       </Values>
    </Metric>
    <Metric id = "PAR" description ="Number of Parameters" max ="5" hint ="Move invoked method or pass an object">
-      <Values per = "method" avg = "0.518" stddev = "0.845" max = "5">
+      <Values per = "method" avg = "0.54" stddev = "0.874" max = "5">
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="5"/>
          <Value name="addButtonToPanel" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
          <Value name="popPushAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="drawArrow" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="arrow" source ="GuiDraw.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="setBlocksDimensions" source ="GuiDraw.java" package ="eu.antonkrug" value ="4"/>
          <Value name="drawMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="drawOpenClosedCurrentLists" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="setH" source ="AStartNode.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
          <Value name="peekAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="popAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="buttonToggle" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawOpenClosedCurrentLists" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="openClosedCurrentLists" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
          <Value name="generateAddWalls" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="loadLineOfMaze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
@@ -339,14 +348,17 @@
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonIsToggled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawMazeIconsFinish" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawMazeIconsStart" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawMazeIcons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="swapMazePanel" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="mazeIconsFinish" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="mazeIconsStart" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="mazeIcons" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setMaze" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setSolver" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBarException" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBar" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="swapMazePanel" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block#getEnum" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addFinish" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="addStart" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
@@ -474,12 +486,14 @@
          <Value name="buttonActionNoImplemented" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="buttonDisableAll" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
-         <Value name="drawSolvedPath" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="implementationDetect" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="postSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="preSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="stepExecute" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="maze" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="solvedPath" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^EMPTY[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^FINISH[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^NULL[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
@@ -581,23 +595,23 @@
       </Values>
    </Metric>
    <Metric id = "NBD" description ="Nested Block Depth" max ="5" hint ="use Extract-method to split the method up">
-      <Values per = "method" avg = "1.208" stddev = "0.853" max = "5">
-         <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
+      <Values per = "method" avg = "1.21" stddev = "0.854" max = "5">
+         <Value name="maze" source ="GuiDraw.java" package ="eu.antonkrug" value ="5"/>
          <Value name="compareResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="validateResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="4"/>
          <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="generate" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="4"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="4"/>
          <Value name="loadMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="3"/>
          <Value name="actionLoadMaze" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="actionSaveMaze" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="actionStepChecks" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawOpenClosedCurrentLists" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="stepExecute" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="openClosedCurrentLists" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
          <Value name="fill" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="printDebugMaze" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="save" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="3"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="3"/>
@@ -616,6 +630,7 @@
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionAnimate" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionDestinationIgnoreToggle" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionFlushSolver" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionSolve" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addButtonToPanel" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
@@ -624,13 +639,13 @@
          <Value name="buttonIsEnabled" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="buttonIsToggled" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="buttonToggle" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawArrow" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawMazeIconsFinish" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawMazeIconsStart" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawMazeIcons" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawSolvedPath" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="implementationDetect" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="preSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="arrow" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="mazeIconsFinish" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="mazeIconsStart" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="mazeIcons" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
          <Value name="Maze.Block#getEnum" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="border" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="generateAddWalls" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
@@ -729,7 +744,6 @@
          <Value name="Gui.GuiButton.anonymous#^SOLVE[#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton.anonymous#^STEP[#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton#toString" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="actionImplementationSelect" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="actionPerformed" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="buttonActionNoImplemented" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -737,14 +751,21 @@
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="postSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="swapMazePanel" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setBlocksDimensions" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setMaze" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setSolver" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBarException" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBar" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="solvedPath" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="swapMazePanel" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^EMPTY[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^FINISH[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^NULL[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
@@ -878,35 +899,35 @@
       </Values>
    </Metric>
    <Metric id = "CE" description ="Efferent Coupling">
-      <Values per = "packageFragment" avg = "3" stddev = "2.16" max = "5">
+      <Values per = "packageFragment" avg = "3.333" stddev = "2.357" max = "5">
+         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="5"/>
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="5"/>
-         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="4"/>
          <Value name="utils" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "RMI" description ="Instability">
-      <Values per = "packageFragment" avg = "0.5" stddev = "0.408" max = "1">
+      <Values per = "packageFragment" avg = "0.519" stddev = "0.409" max = "1">
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="1"/>
-         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.5"/>
+         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.556"/>
          <Value name="utils" package ="utils" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "RMA" description ="Abstractness">
-      <Values per = "packageFragment" avg = "0.116" stddev = "0.082" max = "0.182">
-         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.182"/>
+      <Values per = "packageFragment" avg = "0.111" stddev = "0.079" max = "0.167">
+         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.167"/>
          <Value name="utils" package ="utils" value ="0.167"/>
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "RMD" description ="Normalized Distance">
-      <Values per = "packageFragment" avg = "0.384" stddev = "0.343" max = "0.833">
+      <Values per = "packageFragment" avg = "0.37" stddev = "0.346" max = "0.833">
          <Value name="utils" package ="utils" value ="0.833"/>
-         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.318"/>
+         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="0.278"/>
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="0"/>
       </Values>
    </Metric>
    <Metric id = "DIT" description ="Depth of Inheritance Tree">
-      <Values per = "type" avg = "2.073" stddev = "0.973" max = "3">
+      <Values per = "type" avg = "2.048" stddev = "0.975" max = "3">
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTART_CONCURENT[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTAR[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
@@ -942,6 +963,7 @@
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="1"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="1"/>
@@ -952,14 +974,15 @@
       </Values>
    </Metric>
    <Metric id = "WMC" description ="Weighted methods per Class">
-      <Values per = "type" total = "481" avg = "11.732" stddev = "18.877" max = "100">
-         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="100"/>
+      <Values per = "type" total = "491" avg = "11.69" stddev = "16.376" max = "74">
+         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="74"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="50"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="38"/>
          <Value name="MazeSolverTest" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="34"/>
-         <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="32"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="34"/>
+         <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="33"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="29"/>
-         <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="26"/>
+         <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="27"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="25"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="24"/>
          <Value name="AgendaTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="17"/>
@@ -998,7 +1021,7 @@
       </Values>
    </Metric>
    <Metric id = "NSC" description ="Number of Children">
-      <Values per = "type" total = "26" avg = "0.634" stddev = "2.314" max = "14">
+      <Values per = "type" total = "26" avg = "0.619" stddev = "2.288" max = "14">
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="5"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
@@ -1027,6 +1050,7 @@
          <Value name="Gui.GuiButton.anonymous#^SOLVE[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.GuiButton.anonymous#^STEP[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^EMPTY[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^FINISH[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
@@ -1044,7 +1068,7 @@
       </Values>
    </Metric>
    <Metric id = "NORM" description ="Number of Overridden Methods">
-      <Values per = "type" total = "28" avg = "0.683" stddev = "0.515" max = "2">
+      <Values per = "type" total = "28" avg = "0.667" stddev = "0.519" max = "2">
          <Value name="AgendaQueue" source ="AgendaQueue.java" package ="utils" value ="2"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1079,6 +1103,7 @@
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="0"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
@@ -1090,9 +1115,10 @@
       </Values>
    </Metric>
    <Metric id = "LCOM" description ="Lack of Cohesion of Methods">
-      <Values per = "type" avg = "0.147" stddev = "0.27" max = "0.881">
-         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="0.881"/>
+      <Values per = "type" avg = "0.162" stddev = "0.285" max = "0.858">
+         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="0.858"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="0.856"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0.829"/>
          <Value name="MazeSolverTest" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="0.714"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0.683"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="0.633"/>
@@ -1136,9 +1162,10 @@
       </Values>
    </Metric>
    <Metric id = "NOF" description ="Number of Attributes">
-      <Values per = "type" total = "88" avg = "2.146" stddev = "3.346" max = "14">
+      <Values per = "type" total = "96" avg = "2.286" stddev = "3.397" max = "14">
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
-         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="12"/>
+         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="10"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="10"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="10"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="6"/>
          <Value name="MazeSolver.Aproach" source ="MazeSolver.java" package ="eu.antonkrug" value ="6"/>
@@ -1182,7 +1209,7 @@
       </Values>
    </Metric>
    <Metric id = "NSF" description ="Number of Static Attributes">
-      <Values per = "type" total = "11" avg = "0.268" stddev = "0.733" max = "4">
+      <Values per = "type" total = "11" avg = "0.262" stddev = "0.726" max = "4">
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="1"/>
@@ -1210,6 +1237,7 @@
          <Value name="Gui.GuiButton.anonymous#^SOLVE[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.GuiButton.anonymous#^STEP[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^EMPTY[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^FINISH[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^NULL[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
@@ -1228,13 +1256,14 @@
       </Values>
    </Metric>
    <Metric id = "NOM" description ="Number of Methods">
-      <Values per = "type" total = "280" avg = "6.829" stddev = "9.028" max = "38">
-         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="38"/>
+      <Values per = "type" total = "287" avg = "6.833" stddev = "8.375" max = "29">
+         <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="29"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="29"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="25"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="22"/>
          <Value name="MazeSolverTest" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="18"/>
          <Value name="AgendaTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="17"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="16"/>
          <Value name="AgendaStack" source ="AgendaStack.java" package ="utils" value ="15"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="13"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="13"/>
@@ -1274,7 +1303,7 @@
       </Values>
    </Metric>
    <Metric id = "NSM" description ="Number of Static Methods">
-      <Values per = "type" total = "4" avg = "0.098" stddev = "0.297" max = "1">
+      <Values per = "type" total = "4" avg = "0.095" stddev = "0.294" max = "1">
          <Value name="MazeSolverBenchmark" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="1"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.GuiButton" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
@@ -1299,6 +1328,7 @@
          <Value name="Gui.GuiButton.anonymous#^SOLVE[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.GuiButton.anonymous#^STEP[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^EMPTY[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block.anonymous#^FINISH[" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
@@ -1320,7 +1350,7 @@
       </Values>
    </Metric>
    <Metric id = "SIX" description ="Specialization Index">
-      <Values per = "type" avg = "1.49" stddev = "1.447" max = "3">
+      <Values per = "type" avg = "1.454" stddev = "1.448" max = "3">
          <Value name="Gui.GuiButton.anonymous#^ANIMATE[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTART_CONCURENT[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="Gui.GuiButton.anonymous#^ASTAR[" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
@@ -1355,6 +1385,7 @@
          <Value name="MazeTest" source ="MazeTest.java" package ="eu.antonkrug.test" value ="0"/>
          <Value name="Gui" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[" source ="Gui.java" package ="eu.antonkrug" value ="0"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="Maze.Block" source ="Maze.java" package ="eu.antonkrug" value ="0"/>
          <Value name="MazeSolver" source ="MazeSolver.java" package ="eu.antonkrug" value ="0"/>
@@ -1366,8 +1397,8 @@
       </Values>
    </Metric>
    <Metric id = "NOC" description ="Number of Classes">
-      <Values per = "packageFragment" total = "41" avg = "13.667" stddev = "11.557" max = "30">
-         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="30"/>
+      <Values per = "packageFragment" total = "42" avg = "14" stddev = "12.028" max = "31">
+         <Value name="eu.antonkrug" package ="eu.antonkrug" value ="31"/>
          <Value name="utils" package ="utils" value ="6"/>
          <Value name="eu.antonkrug.test" package ="eu.antonkrug.test" value ="5"/>
       </Values>
@@ -1383,33 +1414,32 @@
       <Value value="3"/>
    </Metric>
    <Metric id = "TLOC" description ="Total Lines of Code">
-      <Value value="2307"/>
+      <Value value="2368"/>
    </Metric>
    <Metric id = "MLOC" description ="Method Lines of Code">
-      <Values per = "method" total = "1342" avg = "4.725" stddev = "6.436" max = "40">
+      <Values per = "method" total = "1366" avg = "4.694" stddev = "6.418" max = "40">
          <Value name="solveAll" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="40"/>
          <Value name="actionFlushSolver" source ="Gui.java" package ="eu.antonkrug" value ="35"/>
-         <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="32"/>
+         <Value name="actionGenerateMaze" source ="Gui.java" package ="eu.antonkrug" value ="33"/>
          <Value name="setUp" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="28"/>
          <Value name="implementationDetect" source ="Gui.java" package ="eu.antonkrug" value ="28"/>
          <Value name="createGuiButtons" source ="Gui.java" package ="eu.antonkrug" value ="27"/>
+         <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="27"/>
          <Value name="aStarAproaches" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="25"/>
-         <Value name="createGuiElements" source ="Gui.java" package ="eu.antonkrug" value ="24"/>
          <Value name="doOneStep" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="24"/>
          <Value name="openSaveDialog" source ="Gui.java" package ="eu.antonkrug" value ="23"/>
          <Value name="generate" source ="Maze.java" package ="eu.antonkrug" value ="23"/>
-         <Value name="drawMaze" source ="Gui.java" package ="eu.antonkrug" value ="22"/>
-         <Value name="drawOpenClosedCurrentLists" source ="Gui.java" package ="eu.antonkrug" value ="21"/>
+         <Value name="maze" source ="GuiDraw.java" package ="eu.antonkrug" value ="22"/>
+         <Value name="openClosedCurrentLists" source ="GuiDraw.java" package ="eu.antonkrug" value ="21"/>
          <Value name="backTracePath" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="20"/>
-         <Value name="stepExecute" source ="Gui.java" package ="eu.antonkrug" value ="17"/>
+         <Value name="stepExecute" source ="Gui.java" package ="eu.antonkrug" value ="19"/>
          <Value name="MazeSolverDfs" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="17"/>
          <Value name="drawOpenClosedCurrentLists" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="16"/>
-         <Value name="actionImplementationSelect" source ="Gui.java" package ="eu.antonkrug" value ="16"/>
          <Value name="MazeSolverBfs" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="16"/>
          <Value name="compareResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="15"/>
+         <Value name="actionImplementationSelect" source ="Gui.java" package ="eu.antonkrug" value ="15"/>
          <Value name="validateResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="14"/>
          <Value name="actionAnimate" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
-         <Value name="drawSolvedPath" source ="Gui.java" package ="eu.antonkrug" value ="14"/>
          <Value name="MazeSolverAStar" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="14"/>
          <Value name="backTrack" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="14"/>
          <Value name="load" source ="Maze.java" package ="eu.antonkrug" value ="13"/>
@@ -1418,16 +1448,18 @@
          <Value name="testLoadNoBorders" source ="MazeTest.java" package ="eu.antonkrug.test" value ="12"/>
          <Value name="doOneStep" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="12"/>
          <Value name="popPushAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="11"/>
+         <Value name="actionLoadMaze" source ="Gui.java" package ="eu.antonkrug" value ="11"/>
+         <Value name="actionSolve" source ="Gui.java" package ="eu.antonkrug" value ="11"/>
          <Value name="save" source ="Maze.java" package ="eu.antonkrug" value ="11"/>
          <Value name="evaluatePoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="11"/>
          <Value name="backTracePath" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="11"/>
          <Value name="backTracePath" source ="MazeSolverDfs.java" package ="eu.antonkrug" value ="11"/>
          <Value name="sizeAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="10"/>
          <Value name="specs" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="10"/>
-         <Value name="actionLoadMaze" source ="Gui.java" package ="eu.antonkrug" value ="10"/>
          <Value name="actionStepChecks" source ="Gui.java" package ="eu.antonkrug" value ="10"/>
          <Value name="addButtonToPanel" source ="Gui.java" package ="eu.antonkrug" value ="10"/>
-         <Value name="drawArrow" source ="Gui.java" package ="eu.antonkrug" value ="10"/>
+         <Value name="arrow" source ="GuiDraw.java" package ="eu.antonkrug" value ="10"/>
+         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="10"/>
          <Value name="MazeSolverBase" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="10"/>
          <Value name="addRemoveObjectAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="9"/>
          <Value name="bfsJdk" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="9"/>
@@ -1437,8 +1469,8 @@
          <Value name="dfsMine" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="9"/>
          <Value name="hashMap" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="9"/>
          <Value name="loadMaze" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="9"/>
-         <Value name="actionSolve" source ="Gui.java" package ="eu.antonkrug" value ="9"/>
          <Value name="solvePath" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="9"/>
+         <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="9"/>
          <Value name="addRemoveTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
          <Value name="removeObjectAgenda" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
          <Value name="removeTest" source ="AgendaTest.java" package ="eu.antonkrug.test" value ="8"/>
@@ -1447,19 +1479,18 @@
          <Value name="border" source ="Maze.java" package ="eu.antonkrug" value ="8"/>
          <Value name="printDebugMaze" source ="Maze.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTraceFromPoint" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="8"/>
-         <Value name="backTracePathPartially" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="8"/>
          <Value name="backTraceFromPoint" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="8"/>
-         <Value name="backTracePathPartially" source ="MazeSolverBfs.java" package ="eu.antonkrug" value ="8"/>
          <Value name="AgendaJdk" source ="AgendaJdk.java" package ="utils" value ="8"/>
          <Value name="add" source ="AgendaStack.java" package ="utils" value ="8"/>
          <Value name="formatResults" source ="MazeSolverTest.java" package ="eu.antonkrug.test" value ="7"/>
          <Value name="setH" source ="AStartNode.java" package ="eu.antonkrug" value ="7"/>
-         <Value name="drawMazeIcons" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#accept" source ="Gui.java" package ="eu.antonkrug" value ="7"/>
+         <Value name="mazeIcons" source ="GuiDraw.java" package ="eu.antonkrug" value ="7"/>
          <Value name="solveStepInit" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="7"/>
          <Value name="toString" source ="AgendaStack.java" package ="utils" value ="7"/>
          <Value name="loadMaze" source ="MazeTest.java" package ="eu.antonkrug.test" value ="6"/>
          <Value name="testLoadErrorNotFound" source ="MazeTest.java" package ="eu.antonkrug.test" value ="6"/>
+         <Value name="preSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="6"/>
          <Value name="generateAddWalls" source ="Maze.java" package ="eu.antonkrug" value ="6"/>
          <Value name="remove" source ="AgendaStack.java" package ="utils" value ="6"/>
          <Value name="constructorTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="5"/>
@@ -1468,8 +1499,10 @@
          <Value name="testLoadLarge" source ="MazeTest.java" package ="eu.antonkrug.test" value ="5"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="5"/>
          <Value name="AStartNode" source ="AStartNode.java" package ="eu.antonkrug" value ="5"/>
-         <Value name="drawMazeIconsFinish" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
-         <Value name="drawMazeIconsStart" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
+         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
+         <Value name="postSolvePathButtons" source ="Gui.java" package ="eu.antonkrug" value ="5"/>
+         <Value name="mazeIconsFinish" source ="GuiDraw.java" package ="eu.antonkrug" value ="5"/>
+         <Value name="mazeIconsStart" source ="GuiDraw.java" package ="eu.antonkrug" value ="5"/>
          <Value name="fill" source ="Maze.java" package ="eu.antonkrug" value ="5"/>
          <Value name="getAllBlock" source ="Maze.java" package ="eu.antonkrug" value ="5"/>
          <Value name="solveStepFinish" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="5"/>
@@ -1495,7 +1528,8 @@
          <Value name="Gui.GuiButton#getEnum" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="buttonIsEnabled" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
          <Value name="buttonIsToggled" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
-         <Value name="swapMazePanel" source ="Gui.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="setBlocksDimensions" source ="GuiDraw.java" package ="eu.antonkrug" value ="4"/>
+         <Value name="swapMazePanel" source ="GuiDraw.java" package ="eu.antonkrug" value ="4"/>
          <Value name="Maze.Block#getEnum" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="canWalkTo" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
          <Value name="setDimenstions" source ="Maze.java" package ="eu.antonkrug" value ="4"/>
@@ -1516,7 +1550,9 @@
          <Value name="buttonDisable" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="buttonEnable" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
          <Value name="buttonToggle" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="GuiDraw" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
+         <Value name="solvedPath" source ="GuiDraw.java" package ="eu.antonkrug" value ="3"/>
          <Value name="loadLineOfMaze" source ="Maze.java" package ="eu.antonkrug" value ="3"/>
          <Value name="addDestinationPosition" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
          <Value name="addStartingPositions" source ="MazeSolverBase.java" package ="eu.antonkrug" value ="3"/>
@@ -1524,11 +1560,10 @@
          <Value name="peek" source ="AgendaStack.java" package ="utils" value ="3"/>
          <Value name="noDestinationTest" source ="AStartNodeTest.java" package ="eu.antonkrug.test" value ="2"/>
          <Value name="setUp" source ="MazeSolverBenchmark.java" package ="eu.antonkrug.test" value ="2"/>
-         <Value name="actionExit" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="actionPerformed" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="buttonDisableAll" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
-         <Value name="drawBlock" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
          <Value name="main" source ="Gui.java" package ="eu.antonkrug" value ="2"/>
+         <Value name="block" source ="GuiDraw.java" package ="eu.antonkrug" value ="2"/>
          <Value name="Maze" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="initialize" source ="Maze.java" package ="eu.antonkrug" value ="2"/>
          <Value name="addStartPosition" source ="MazeSolverAStar.java" package ="eu.antonkrug" value ="2"/>
@@ -1573,7 +1608,10 @@
          <Value name="buttonIsToggledNEnabled" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Gui.anonymous#~openSaveDialog~Z[#getDescription" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
          <Value name="run" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
-         <Value name="setStatusBarException" source ="Gui.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setMaze" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setSolver" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBarException" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
+         <Value name="setStatusBar" source ="GuiDraw.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^EMPTY[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^FINISH[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>
          <Value name="Maze.Block.anonymous#^NULL[#getChar" source ="Maze.java" package ="eu.antonkrug" value ="1"/>

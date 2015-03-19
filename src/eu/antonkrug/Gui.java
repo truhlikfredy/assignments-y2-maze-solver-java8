@@ -5,9 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,11 +19,11 @@ import eu.antonkrug.MazeSolver.Aproach;
 import utils.Pair;
 
 /**
- * The main class which will start up GUI and handle all action eventss
+ * The main class which will start up GUI and handle all action events
  * 
  * @author Anton Krug
  * @date 2015/02/22
- * @version 1
+ * @version 1.3
  * @requires Java 8!
  * 
  */
@@ -150,7 +148,7 @@ public class Gui implements ActionListener {
 	private Timer																				animationTimer;
 	private JFrame																			frame;
 	private JPanel																			implementationPanel;
-	private JLabel																			statusBarLabel;
+	// private JLabel statusBarLabel;
 
 	// maze related fields
 	private MazeSolver																	solver;
@@ -158,9 +156,9 @@ public class Gui implements ActionListener {
 
 	private Maze																				maze;
 	private JPanel																			mazePanel;
-	private ImageIcon																		mazeImage;
-	private Graphics																		mazeImageGFX;
+
 	private boolean																			stepButtonPressed;
+	private GuiDraw																			draw;
 
 	/**
 	 * Constructor which will create frame, but will not make it public
@@ -270,10 +268,9 @@ public class Gui implements ActionListener {
 				default:
 					throw new Exception("Not implemented aproach for solver selected");
 			}
-
-			drawMaze();
-			statusBarLabel.setText("Maze loaded and solver implementation now used: "
-					+ solver.getAproach());
+			draw.setSolver(solver);
+			draw.maze();
+			draw.setStatusBar("Maze loaded and solver implementation now used: " + solver.getAproach());
 
 			// when flushed or loaded allow /disable some buttons
 			// buttonEnable(GuiButton.SAVE);
@@ -287,7 +284,7 @@ public class Gui implements ActionListener {
 			buttonDisable(GuiButton.FLUSH);
 
 		} catch (Exception lackingNodesException) {
-			setStatusBarException(lackingNodesException);
+			draw.setStatusBarException(lackingNodesException);
 		}
 	}
 
@@ -296,6 +293,7 @@ public class Gui implements ActionListener {
 	 */
 	private void actionGenerateMaze() {
 		maze = new Maze();
+		draw.setMaze(maze);
 
 		try {
 			maze.setWidth((short) (55));
@@ -345,7 +343,7 @@ public class Gui implements ActionListener {
 			actionFlushSolver();
 
 		} catch (Exception e) {
-			setStatusBarException(e);
+			draw.setStatusBarException(e);
 		}
 	}
 
@@ -370,11 +368,10 @@ public class Gui implements ActionListener {
 					implementationToUse = item.getValue();
 				});
 
-		statusBarLabel
-				.setText(String
-						.format(
-								"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution to apply)",
-								implementationToUse));
+		draw.setStatusBar(String
+				.format(
+						"In NEXT solver initialization a %s implementation will be used (load new maze, or flush solution to apply)",
+						implementationToUse));
 
 		implementationDetect();
 	}
@@ -385,6 +382,7 @@ public class Gui implements ActionListener {
 	 */
 	private void actionLoadMaze() {
 		maze = new Maze();
+		draw.setMaze(maze);
 
 		String fileName = openSaveDialog(false);
 
@@ -395,7 +393,7 @@ public class Gui implements ActionListener {
 				actionFlushSolver();
 
 			} catch (Exception loadException) {
-				setStatusBarException(loadException);
+				draw.setStatusBarException(loadException);
 			}
 		}
 	}
@@ -419,9 +417,32 @@ public class Gui implements ActionListener {
 			try {
 				maze.save(fileName + ".maze");
 			} catch (Exception e) {
-				setStatusBarException(e);
+				draw.setStatusBarException(e);
 			}
 		}
+	}
+
+	/**
+	 * Do buttons manipulation before running solvePath
+	 */
+	private void preSolvePathButtons() {
+		if (animationTimer.isRunning()) {
+			animationTimer.stop();
+			buttonEnable(GuiButton.LOAD);
+			buttonEnable(GuiButton.GENERATE);
+			buttonToggle(GuiButton.ANIMATE, false);
+		}
+	}
+
+	/**
+	 * Do buttons manipulation after solvePath was run
+	 */
+	private void postSolvePathButtons() {
+		buttonDisable(GuiButton.SOLVE);
+		buttonDisable(GuiButton.STEP);
+		buttonEnable(GuiButton.FLUSH);
+		buttonDisable(GuiButton.ANIMATE);
+		buttonDisable(GuiButton.DESTINATION_IGNORE);
 	}
 
 	/**
@@ -430,7 +451,9 @@ public class Gui implements ActionListener {
 	private void actionSolve() {
 		if (solver.solvePath() > 0) {
 
-			drawSolvedPath();
+			preSolvePathButtons();
+			draw.solvedPath();
+			postSolvePathButtons();
 
 		} else {
 			// when solution is not found disable some buttons
@@ -439,7 +462,7 @@ public class Gui implements ActionListener {
 			buttonDisable(GuiButton.ANIMATE);
 			buttonEnable(GuiButton.FLUSH);
 
-			statusBarLabel.setText("Something wrong (no origin, or no possible path)");
+			draw.setStatusBar("Something wrong (no origin, or no possible path)");
 		}
 	}
 
@@ -453,7 +476,7 @@ public class Gui implements ActionListener {
 			if (!solver.isDoNotSolveAgain()) {
 				stepExecute();
 			} else {
-				statusBarLabel.setText("Something wrong (no origin, or no possible path)");
+				draw.setStatusBar("Something wrong (no origin, or no possible path)");
 				buttonDisable(GuiButton.STEP);
 			}
 			stepButtonPressed = false;
@@ -493,7 +516,7 @@ public class Gui implements ActionListener {
 	 */
 	@SuppressWarnings("unused")
 	private void buttonActionNoImplemented() {
-		statusBarLabel.setText("This button action is not implemented yet");
+		draw.setStatusBar("This button action is not implemented yet");
 	}
 
 	/**
@@ -565,173 +588,6 @@ public class Gui implements ActionListener {
 	}
 
 	/**
-	 * Will draw simple arrow inside block. Useful to see where parent of given
-	 * node is
-	 * 
-	 * @param gfx
-	 * @param at
-	 * @param to
-	 * @param color
-	 */
-	private void drawArrow(Graphics gfx, Point at, Point to, Color color) {
-		if (at != null && to != null) {
-			int difX = to.x - at.x;
-			int difY = to.y - at.y;
-
-			// calculate middle of AT point
-			int pixMiddleX = at.x * BLOCK_SPACING_WIDTH + BLOCK_WIDTH / 2;
-			int pixMiddleY = at.y * BLOCK_SPACING_HEIGHT + BLOCK_HEIGHT / 2;
-
-			// daw line torwards TO point
-			int pixEndX = pixMiddleX + difX * BLOCK_WIDTH / 2;
-			int pixEndY = pixMiddleY + difY * BLOCK_HEIGHT / 2;
-
-			gfx.setColor(color);
-			gfx.drawLine(pixMiddleX, pixMiddleY, pixEndX, pixEndY);
-		}
-	}
-
-	/**
-	 * Paste into the maze block a image file (icon)
-	 * 
-	 * @param gfx
-	 * @param position
-	 * @param icon
-	 */
-	private void drawBlock(Graphics gfx, Point position, BufferedImage icon) {
-		gfx.drawImage(icon, position.x * BLOCK_SPACING_WIDTH + 1,
-				position.y * BLOCK_SPACING_HEIGHT + 1, null);
-	}
-
-	/**
-	 * Just fill maze block with given color
-	 * 
-	 * @param gfx
-	 * @param position
-	 * @param color
-	 */
-	private void drawBlock(Graphics gfx, Point position, Color color) {
-		gfx.setColor(color);
-		gfx.fillRect(position.x * BLOCK_SPACING_WIDTH, position.y * BLOCK_SPACING_HEIGHT, BLOCK_WIDTH,
-				BLOCK_HEIGHT);
-	}
-
-	/**
-	 * Draw whole maze graphics
-	 */
-	private void drawMaze() {
-		BufferedImage noMazeBuf = new BufferedImage(maze.getWidth() * BLOCK_SPACING_WIDTH,
-				maze.getHeight() * BLOCK_SPACING_HEIGHT, BufferedImage.TYPE_INT_RGB);
-		mazeImageGFX = noMazeBuf.getGraphics();
-
-		try {
-			// draw wall JPG as the wall background
-			BufferedImage wall = ImageIO.read(getClass().getResource("/resources/wall.jpg"));
-
-			// if maze is bigger than background tile the background
-			int iw = wall.getWidth();
-			int ih = wall.getHeight();
-			if (iw > 0 && ih > 0) {
-				for (int x = 0; x < noMazeBuf.getWidth(); x += iw) {
-					for (int y = 0; y < noMazeBuf.getHeight(); y += ih) {
-						mazeImageGFX.drawImage(wall, x, y, null);
-					}
-				}
-			}
-
-			// draw all empty blocks, starts and destinations
-			for (Point point : maze.getAllBlock(Maze.Block.EMPTY)) {
-				drawBlock(mazeImageGFX, point, Color.WHITE);
-			}
-
-			drawMazeIcons(true);
-
-			// replace the old maze graphics inside the jframe with this one
-			swapMazePanel(noMazeBuf);
-
-		} catch (IOException loadingImgFilesException) {
-			setStatusBarException(loadingImgFilesException);
-		}
-
-	}
-
-	/**
-	 * Draw both start and finish icons
-	 * 
-	 * @param blankBlock
-	 */
-	private void drawMazeIcons(boolean blankBlock) {
-		try {
-			drawMazeIconsStart(blankBlock);
-			drawMazeIconsFinish(blankBlock);
-
-			mazePanel.repaint();
-
-		} catch (IOException loadingImgFilesException) {
-			setStatusBarException(loadingImgFilesException);
-		}
-	}
-
-	/**
-	 * Draw finish icons
-	 * 
-	 * @param blankBlock
-	 * @throws IOException
-	 */
-	private void drawMazeIconsFinish(boolean blankBlock) throws IOException {
-		BufferedImage iconFinish = ImageIO.read(getClass().getResource("/resources/finish.png"));
-
-		// draw all finish icons
-		for (Point point : solver.getDestinations()) {
-			if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-			drawBlock(mazeImageGFX, point, iconFinish);
-		}
-	}
-
-	/**
-	 * Draw start icon
-	 * 
-	 * @param blankBlock
-	 * @throws IOException
-	 */
-	private void drawMazeIconsStart(boolean blankBlock) throws IOException {
-		BufferedImage iconStart = ImageIO.read(getClass().getResource("/resources/start.png"));
-
-		// draw all start icons
-		for (Point point : maze.getAllBlock(Maze.Block.START)) {
-			if (blankBlock) drawBlock(mazeImageGFX, point, Color.WHITE);
-			drawBlock(mazeImageGFX, point, iconStart);
-		}
-	}
-
-	/**
-	 * Draw higlighted the solved path
-	 */
-	private void drawSolvedPath() {
-
-		if (animationTimer.isRunning()) {
-			animationTimer.stop();
-			buttonEnable(GuiButton.LOAD);
-			buttonEnable(GuiButton.GENERATE);
-			buttonToggle(GuiButton.ANIMATE, false);
-		}
-
-		// draw the blocks from the open and closed list (visit and visited),
-		// current path, and start,end icons
-		drawOpenClosedCurrentLists(solver.backTracePath(), false);
-
-		statusBarLabel.setText(String.format("Solution found, took %d ms and took %d iterations.",
-				solver.timeTaken(), solver.getVisitedAlreadySize()));
-
-		// when solution is found disable some buttons
-		buttonDisable(GuiButton.SOLVE);
-		buttonDisable(GuiButton.STEP);
-		buttonEnable(GuiButton.FLUSH);
-		buttonDisable(GuiButton.ANIMATE);
-		buttonDisable(GuiButton.DESTINATION_IGNORE);
-	}
-
-	/**
 	 * Will change selected buttons depending on the implementation is selected
 	 */
 	private void implementationDetect() {
@@ -780,7 +636,7 @@ public class Gui implements ActionListener {
 	 */
 	private void createGuiElements() throws Exception {
 		// creates window with minimum resolution
-		frame = new JFrame("Maze solver");
+		frame = new JFrame("Maze solver data structures assignment by Anton Krug");
 		frame.setMinimumSize(new Dimension(900, 500));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -790,7 +646,7 @@ public class Gui implements ActionListener {
 		frame.add(statusBarPanel, BorderLayout.SOUTH);
 		statusBarPanel.setPreferredSize(new Dimension(frame.getWidth(), 24));
 		statusBarPanel.setLayout(new BoxLayout(statusBarPanel, BoxLayout.X_AXIS));
-		statusBarLabel = new JLabel("App started");
+		JLabel statusBarLabel = new JLabel("");
 		statusBarPanel.add(statusBarLabel);
 
 		// border
@@ -812,7 +668,7 @@ public class Gui implements ActionListener {
 
 		// noMazeBufGraphics.setColor(Color.red);
 		// noMazeBufGraphics.drawString("No maze", 100, 100);
-		mazeImage = new ImageIcon(noMazeBuf);
+		ImageIcon mazeImage = new ImageIcon(noMazeBuf);
 
 		// make the maze scrollable and resizes by content window
 		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
@@ -821,6 +677,10 @@ public class Gui implements ActionListener {
 		createGuiButtons(uiPane);
 
 		frame.pack();
+
+		draw = new GuiDraw(statusBarLabel, mazePanel, frame);
+		draw.setBlocksDimensions(BLOCK_SPACING_WIDTH, BLOCK_SPACING_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+		draw.setStatusBar("App loaded");
 	}
 
 	/**
@@ -916,10 +776,6 @@ public class Gui implements ActionListener {
 		frame.setVisible(true);
 	}
 
-	private void setStatusBarException(Exception exception) {
-		statusBarLabel.setText(exception.toString());
-	}
-
 	/**
 	 * Execunte 1 step inside the solving algorithm
 	 */
@@ -936,86 +792,20 @@ public class Gui implements ActionListener {
 
 			// draw the blocks from the open and closed list (visit and visited),
 			// current path, and start,end icons
-			drawOpenClosedCurrentLists(solver.backTracePathPartially(), true);
+			draw.openClosedCurrentLists(solver.backTracePathPartially(), true);
 
-			statusBarLabel.setText(String.format("Made step #%d nodesToVisit=%d, next step is %s",
+			draw.setStatusBar(String.format("Made step #%d nodesToVisit=%d, next step is %s",
 					solver.getVisitedAlreadySize(), solver.getVisitSize(), solver.getCurrentStep()));
 
 		} else {
 			if (solver.solveStepFinish() < 0) {
-				statusBarLabel.setText("No solution found");
+				draw.setStatusBar("No solution found");
 			} else {
-				drawSolvedPath();
+				preSolvePathButtons();
+				draw.solvedPath();
+				postSolvePathButtons();
 			}
 		}
-	}
-
-	/**
-	 * Draw colored block from all avaiable list to visualise better what is the
-	 * solver doing.
-	 * 
-	 * Open list is list of blocks planed for visiting Closed list is list of
-	 * blocks which were already visited
-	 * 
-	 * Current path is highlighted part between start and current step
-	 * 
-	 */
-	private void drawOpenClosedCurrentLists(List<Point> currentPath, boolean drawCurrentStep) {
-		Map<Point, Point> backtraceCache = null;
-
-		// draw closed list
-		if (solver.getVisitedAlready() == null) {
-
-			// non map alternative
-			solver.getVisitedAlreadyAlternative().forEach(
-					point -> drawBlock(mazeImageGFX, point, Color.LIGHT_GRAY));
-
-		} else {
-			backtraceCache = solver.getVisitedAlready();
-
-			// map aprroach (can draw arrows on the blocks)
-			backtraceCache.entrySet().forEach(node -> {
-				drawBlock(mazeImageGFX, node.getKey(), Color.LIGHT_GRAY);
-				drawArrow(mazeImageGFX, node.getKey(), node.getValue(), Color.GRAY);
-			});
-
-		}
-
-		// draw open list
-		solver.getVisit().forEach(point -> drawBlock(mazeImageGFX, point, Color.CYAN));
-
-		// draw current path
-		for (Point point : currentPath) {
-			drawBlock(mazeImageGFX, point, Color.GREEN);
-
-			// if the data are avaiable then draw arrows on current path as well
-			if (backtraceCache != null) {
-				drawArrow(mazeImageGFX, point, backtraceCache.get(point), Color.BLUE);
-			}
-		}
-
-		// higlight next planed block
-		if (drawCurrentStep && solver.getCurrentStep() != null)
-			drawBlock(mazeImageGFX, solver.getCurrentStep(), Color.RED);
-
-		// draw the start / finish icons over the blocks
-		drawMazeIcons(false);
-	}
-
-	/**
-	 * Will remove all Jpane and replace it with new one contain new image
-	 * 
-	 * @param buffer
-	 */
-	private void swapMazePanel(BufferedImage buffer) {
-		mazeImage = new ImageIcon(buffer);
-
-		mazePanel.remove(0);
-		mazePanel.add(new JScrollPane(new JLabel(mazeImage)), BorderLayout.CENTER);
-		
-		//do not resize it anymore, but force it to redraw
-		frame.revalidate();
-		// frame.pack();
 	}
 
 }
