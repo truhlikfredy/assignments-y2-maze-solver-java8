@@ -32,7 +32,7 @@ import java.util.Map.Entry;
  */
 public class MazeSolverAStar extends MazeSolverBase {
 
-	private Map<Point, AStartNode>	visit;
+	private Map<Point, AStarNode>	visit;
 	private Map<Point, Point>				visitedAlready;
 
 	/**
@@ -84,7 +84,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 	 */
 	@Override
 	public void addStartPosition(Point origin) throws Exception {
-		visit.put(origin, new AStartNode(null, 0, origin, destinations));
+		visit.put(origin, new AStarNode(null, 0, origin, destinations));
 		this.origin = origin;
 	}
 
@@ -200,7 +200,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 		// mark this point as visited
 		markNodeAsVisited(currentPosition);
 
-		Entry<Point, AStartNode> min = null;
+		Entry<Point, AStarNode> min = null;
 
 		// Check if we just didn't deleted the very last point in the visit list
 		if (visit.size() > 0) {
@@ -245,7 +245,7 @@ public class MazeSolverAStar extends MazeSolverBase {
 		if (!maze.canWalkTo(testPoint)) return;
 
 		try {
-			AStartNode proposedNode = new AStartNode(currentPoint, visit.get(currentPoint).getG(),
+			AStarNode proposedNode = new AStarNode(currentPoint, visit.get(currentPoint).getG(),
 					testPoint, destinations);
 
 			// will replace if it's not found already or when it found a entry, but
