@@ -79,9 +79,9 @@ public class Maze {
 
 	}
 
-	// 1000 + 1 border + 1 border = 1002
-	private final static short	MAX_MAZE_HEIGHT	= 1002;
-	private final static short	MAX_MAZE_WIDTH	= 1002;
+	// 1000 + 1 border + 1 border = 1002 for 1000x1000 if i want
+	private final static short	MAX_MAZE_HEIGHT	= 600;
+	private final static short	MAX_MAZE_WIDTH	= 600;
 
 	private List<Point>					allDirections;
 
