@@ -51,4 +51,3 @@ Lines of code        |   2368 |       |
 ![solvers]
 (https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/04.png)
 
-
