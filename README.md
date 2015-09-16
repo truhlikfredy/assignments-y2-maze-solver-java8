@@ -10,16 +10,18 @@ More information is in readMe.pdf.
 
 # Features
 * Bread first, deep first, Astar and multithreaded Astar solvers.
+  * Astar can consider or ignore heurestics in decision making.
 * Option to use Java or own implementation of stacks and queues.
 * Able to open mazes up to 600x600 blocks (if needed this size cap can be disabled).
 * Simple maze generator.
-* Few mazes suplied
+* Few mazes files suplied.
+* When build all graphics and required resources are build into jar.
 * Tested on Windows / Linux.
-* JUint tests.
-  *  Datastructures coverage
+* JUint tests:
+  *  Datastructures coverage.
   *  All solvers coverage.
-* Benchmark to compare performance between implementations
-* JavaDoc
+* Benchmark to compare performance between implementations.
+* JavaDoc.
 
 ![solved maze]
 (https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/01.jpg)
