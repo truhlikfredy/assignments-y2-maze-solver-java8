@@ -5,8 +5,7 @@ Contains multiple different datastructures as part of the assigment specs, but d
 And few more solvers as well, one of the solvers is multithreaded, because just small portion was possible to execute in concurent fassion, lot of overhead cause it not perform as well. Partly this was expected, but wanted to experiment with it anyway.
 More information is in readMe.pdf.
 
-![Title screen image]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/00.jpg)
+![Title screen image](/screenShots/00.jpg)
 
 # Features
 * Bread first, deep first, Astar and multithreaded Astar solvers.
@@ -23,13 +22,11 @@ More information is in readMe.pdf.
 * Benchmark to compare performance between implementations.
 * JavaDoc.
 
-![solved maze]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/01.jpg)
+![solved maze](/screenShots/01.jpg)
 
 # Inheritance between solvers
 
-![packages]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/06.png)
+![packages](/screenShots/06.png)
 
 # Metric statistics
 
@@ -44,12 +41,9 @@ Lines of code        |   2368 |       |
 
 # Different solvers can find different solution path
 
-![solvers]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/02.png)
+![solvers](/screenShots/02.png)
 
-![solvers]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/03.png)
+![solvers](/screenShots/03.png)
 
-![solvers]
-(https://raw.githubusercontent.com/truhlikfredy/commitsFromPrivateRepos/master/screenShotsM/04.png)
+![solvers](/screenShots/04.png)
 
